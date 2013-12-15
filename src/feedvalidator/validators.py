@@ -901,7 +901,7 @@ class longitude(text):
       self.log(InvalidLongitude({"parent":self.parent.name, "element":self.name, "value":self.value}))
 
 class httpURL(text):
-  http_re = re.compile("http://" + addr_spec.domain_re + '(?::\d+)?' + '(/|$)', re.IGNORECASE)
+  http_re = re.compile("(http|https)://" + addr_spec.domain_re + '(?::\d+)?' + '(/|$)', re.IGNORECASE)
   def validate(self):
     if not self.http_re.match(self.value):
       self.log(InvalidURLAttribute({"parent":self.parent.name, "element":self.name, "value":self.value}))
