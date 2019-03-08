@@ -58,9 +58,12 @@ ol.codeListing li code {
   background: transparent;
   color: black;
   margin-left: 2em;
+  white-space: normal !important;
+
 }
 
 ol.codeListing li code.b {
   background: yellow;
   color: black;
 }
+
