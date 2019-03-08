@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+<style type="text/css" media="screen">
+@import "css/common.css";
+@import "css/validator.css";
+@import "css/documentation.css";
+@import "css/validator/base.css";
+</style>
+    <title>W3C Feed Validation Service, for Atom and RSS</title>
+    <script type="text/javascript" src="scripts/mootools.js"></script>
+    <script type="text/javascript" src="scripts/w3c-validator.js"></script>
+  </head>
+
+  <body>
+        <div id="banner">
+          <h1 id="title">
+                  <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="http://validator.w3.org/images/w3c.png" /></a>
+    <a href="./"><span>Feed Validation Service</span></a>
+    </h1>
+    			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+        </div>
+
+     <div id="head">
+                                                                                                           
+      </div><!-- end of "head" -->
+
+
+ <div id="frontforms">
+ 	<ul id="tabset_tabs">
+ 		<li><a href="#validate-by-uri"><span>Validate by</span> URI</a></li>
+ 		<li><a href="#validate-by-input"><span>Validate by</span> Direct Input</a></li>
+ 	</ul>
+ <div id="fields">
+         
+<fieldset id="validate-by-uri" class="tabset_content front"><legend class="tabset_label">Validate by URI</legend>
+<form action="check.cgi" method="get">
+    <p class="instructions">
+	Validate a feed online:     
+   </p>
+<p>
+<label title="Address of page to Validate" for="url">Address:</label>
+<input name="url" id="url" type="text" size="40" />
+</p>
+<p class="submit_button">
+<input title="Submit for validation" type="submit" value="Check" />
+</p>
+</form>
+</fieldset>
+
+      <fieldset id="validate-by-input"  class="tabset_content front"><legend class="tabset_label">Validate by direct input</legend>
+        <form action="check.cgi" method="post">
+<p>
+ <label title="Paste a complete Feed (Atom, RSS) here" for="rawdata"></label>
+  <textarea name="rawdata" id="rawdata" rows="12" cols="75"></textarea>
+  <input type="hidden" name="manual" id="manual" value="1" />
+</p>
+<p class="submit_button">
+<input title="Submit for validation" type="submit" value="Check" />
+</p>
+</form>
+</fieldset>
+
+</div><!-- fields -->
+</div> <!-- frontforms -->
+<div class="intro">
+      <p>This is the W3C Feed Validation Service, a free service that checks the syntax 
+	of Atom or RSS feeds. The <a href="http://validator.w3.org/">Markup Validation Service</a> is also available if you wish to validate regular Web pages.</p>
+	<div id="w3c-include">
+		<script type="text/javascript" src="//www.w3.org/QA/Tools/w3c-include.js"></script>
+	</div>
+
+</div>
+   <ul class="navbar" id="menu">
+       <li>
+       <a href="" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+       <li><a href="about.html" title="Information About this Service">About...</a></li>
+       <li><a href="whatsnew.html" title="The changes made to this service recently">News</a></li>
+       <li><a href="docs/" accesskey="3" title="Documentation for this Service">Docs</a></li>
+   </ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br />
+This service uses the <a href="http://sourceforge.net/projects/feedvalidator">Feed validator software</a>.
+</address>
+</div>
+</body>
+</html>
+
