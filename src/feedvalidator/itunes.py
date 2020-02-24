@@ -63,6 +63,9 @@ class itunes_channel(itunes):
       self.log(UndefinedElement({"parent":self.name.replace("_",":"), "element":self.child}))
     return rfc2396_full(), noduplicates()
 
+  def do_itunes_type(self):
+    return channeltype(), noduplicates()
+
 class itunes_item(itunes):
   supported_formats = ['m4a', 'mp3', 'mov', 'mp4', 'm4v', 'pdf', 'epub']
 
@@ -91,6 +94,18 @@ class itunes_item(itunes):
 
   def do_itunes_duration(self):
     return duration(), noduplicates()
+
+  def do_itunes_title(self):
+    return text(), noduplicates()
+
+  def do_itunes_episode(self):
+    return positiveInteger(), noduplicates()
+
+  def do_itunes_season(self):
+    return positiveInteger(), noduplicates()
+
+  def do_itunes_episodeType(self):
+    return episodetype(), noduplicates()
 
 class owner(validatorBase):
   def validate(self):
@@ -306,3 +321,10 @@ class yesnoclean(text):
     if not self.value.lower() in ['yes','no','clean']:
       self.log(InvalidYesNoClean({"parent":self.parent.name, "element":self.name,"value":self.value}))
 
+class channeltype(enumeration):
+  error = InvalidItunesChannelType
+  valuelist = ["episodic", "serial"]
+
+class episodetype(enumeration):
+  error = InvalidItunesEpisodeType
+  valuelist = ["full", "trailer", "bonus"]
