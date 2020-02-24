@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rubys/feedvalidator.svg)](https://travis-ci.org/rubys/feedvalidator)
+[![Build Status](https://travis-ci.org/w3c/feedvalidator.svg)](https://travis-ci.org/w3c/feedvalidator)
 
 Some tests, and some functionality, will not be enabled unless a full set
 of 32-bit character encodings are available through Python.
