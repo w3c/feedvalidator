@@ -165,7 +165,7 @@ class media_restriction(text,rfc2396_full,iso3166):
     relationship = self.attrs.get((None, 'relationship'))
     if not relationship:
       self.log(MissingAttribute({"parent":self.parent.name, "element":self.name, "attr":"relationship"}))
-    elif relationship not in ['allow','disallow']:
+    elif relationship not in ['allow','deny']:
       self.log(InvalidMediaRestrictionRel({"parent":self.parent.name, "element":self.name, "attr":"relationship", "value":relationship}))
 
     type = self.attrs.get((None, 'type'))
