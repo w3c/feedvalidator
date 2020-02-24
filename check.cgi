@@ -348,7 +348,7 @@ def checker_app(environ, start_response):
             else:
                 url = sanitizeURL(url)
                 try:
-                    params = feedvalidator.validateURL(escapeURL(url), firstOccurrenceOnly=1, wantRawData=1)
+                    params = feedvalidator.validateURL(url, firstOccurrenceOnly=1, wantRawData=1)
                     events = params['loggedEvents']
                     rawdata = params['rawdata']
                     feedType = params['feedType']
