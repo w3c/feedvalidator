@@ -7,8 +7,12 @@ __copyright__ = "Copyright (c) 2002 Sam Ruby and Mark Pilgrim"
 from .base import BaseFormatter
 import feedvalidator
 import os
-LANGUAGE = os.environ.get('LANGUAGE', 'en_US:en').split(':')[1]
-lang = __import__('feedvalidator.i18n.%s' % LANGUAGE, globals(), locals(), LANGUAGE)
+LANGUAGE = os.environ.get('LANGUAGE', 'en_US:en').split(':')[-1]
+try:
+  lang = __import__('feedvalidator.i18n.%s' % LANGUAGE, globals(), locals(), LANGUAGE)
+except ImportError:
+  LANGUAGE = 'en'
+  lang = __import__('feedvalidator.i18n.%s' % LANGUAGE, globals(), locals(), LANGUAGE)
 
 class Formatter(BaseFormatter):
   def getMessage(self, event):
