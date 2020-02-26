@@ -279,7 +279,9 @@ class HTMLValidator(HTMLParser):
           for evil in checkStyle(value):
             self.log(DangerousStyleAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":"style", "value":evil}))
         elif name.lower() not in self.acceptable_attributes:
-          self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
+          # data-* attributes are acceptable
+          if name.lower()[:5] != "data-":
+            self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
 
     self.stack.append(tag)
 
