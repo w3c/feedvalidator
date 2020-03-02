@@ -102,8 +102,8 @@ class eater(validatorBase):
     # eat children
     self.push(self.__class__(), name, attrs)
 
-from feedvalidator.vendor.HTMLParser import HTMLParser, HTMLParseError
-class HTMLValidator(HTMLParser):
+from html5lib.html5parser import HTMLParser, ParseError
+class HTMLValidator:
   htmltags = [
     "a", "abbr", "acronym", "address", "applet", "area", "article", "aside",
     "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body",
@@ -241,24 +241,26 @@ class HTMLValidator(HTMLParser):
      'zoomAndPan']
 
   def log(self,msg):
-    offset = [self.element.line + self.getpos()[0] - 1 -
+    offset = [self.element.line - 1 -
               self.element.dispatcher.locator.getLineNumber(),
               -self.element.dispatcher.locator.getColumnNumber()]
     self.element.log(msg, offset)
 
   def __init__(self,value,element):
     self.element=element
-    self.stack = []
     self.valid = True
-    HTMLParser.__init__(self)
+    self.parser = HTMLParser(strict=True)
     if value.lower().find('<?import ') >= 0:
       self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":"?import"}))
     try:
-      self.feed(value)
-      self.close()
+      etree = self.parser.parseFragment(value)
       if self.valid:
         self.log(ValidHtml({"parent":self.element.parent.name, "element":self.element.name}))
-    except HTMLParseError as msg:
+      from pprint import pprint
+      for tag in etree.iter():
+        if tag.tag != "DOCUMENT_FRAGMENT":
+          self.handle_tag(tag.tag.split('}')[-1], tag.attrib, tag.text)
+    except ParseError as msg:
       element = self.element
       offset = [element.line - element.dispatcher.locator.getLineNumber(),
                 - element.dispatcher.locator.getColumnNumber()]
@@ -266,15 +268,14 @@ class HTMLValidator(HTMLParser):
       if match: offset[0] += int(match.group(1))-1
       element.log(NotHtml({"parent":element.parent.name, "element":element.name, "message":"Invalid HTML", "value": str(msg)}),offset)
 
-  def handle_starttag(self, tag, attributes):
+  def handle_tag(self, tag, attributes, text):
     if tag.lower() not in self.htmltags:
       self.log(NotHtml({"parent":self.element.parent.name, "element":self.element.name,"value":tag, "message": "Non-html tag"}))
       self.valid = False
     elif tag.lower() not in HTMLValidator.acceptable_elements:
-      if not 'embed' in self.stack and not 'object' in self.stack:
-        self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":tag}))
+      self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":tag}))
     else:
-      for (name,value) in attributes:
+      for (name,value) in attributes.iteritems():
         if name.lower() == 'style':
           for evil in checkStyle(value):
             self.log(DangerousStyleAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":"style", "value":evil}))
@@ -283,21 +284,6 @@ class HTMLValidator(HTMLParser):
           if name.lower()[:5] != "data-":
             self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
 
-    self.stack.append(tag)
-
-  def handle_endtag(self, tag):
-    if tag in self.stack:
-      while self.stack[-1] != tag: self.stack.pop()
-      self.stack.pop()
-
-  def handle_charref(self, name):
-    if name.startswith('x'):
-      value = int(name[1:],16)
-    else:
-      value = int(name)
-    if 0x80 <= value <= 0x9F or value == 0xfffd:
-      self.log(BadCharacters({"parent":self.element.parent.name,
-        "element":self.element.name, "value":"&#" + name + ";"}))
 
 #
 # Scub CSS properties for potentially evil intent

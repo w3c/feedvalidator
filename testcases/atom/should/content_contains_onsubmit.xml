@@ -10,6 +10,6 @@
 
 <feed xmlns="http://www.w3.org/2005/Atom">
 <entry>
-<content type="text/html" mode="escaped">&lt;a onload="doevil()"&gt;clickme&lt;/script&gt;</content>
+<content type="text/html" mode="escaped">&lt;a onload="doevil()"&gt;clickme&lt;/a&gt;</content>
 </entry>
 </feed>

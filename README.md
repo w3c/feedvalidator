@@ -3,6 +3,8 @@
 Some tests, and some functionality, will not be enabled unless a full set
 of 32-bit character encodings are available through Python.
 
+The feedvalidator relies on html5lib for parsing HTML.
+
 The package 'iconvcodec' provides the necessary codecs, if your underlying
 operating system supports them. Its web page is at
 <http://cjkpython.i18n.org/#iconvcodec>, and a range of packages are
