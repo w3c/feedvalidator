@@ -4,12 +4,12 @@
 -->
 
 <!--
-  Description:  entry content should not contain META tag
+  Description:  entry content should not contain object tag
   Expect:       SecurityRisk{parent:entry,element:content}
 -->
 
 <feed xmlns="http://www.w3.org/2005/Atom">
 <entry>
-<content type="text/html" mode="escaped">&lt;object&gt;</content>
+<content type="text/html" mode="escaped">&lt;object&gt;&lt;/object&gt;</content>
 </entry>
 </feed>
