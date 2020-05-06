@@ -256,9 +256,10 @@ class HTMLValidator:
       etree = self.parser.parseFragment(value)
       if self.valid:
         self.log(ValidHtml({"parent":self.element.parent.name, "element":self.element.name}))
-      from pprint import pprint
       for tag in etree.iter():
-        if tag.tag != "DOCUMENT_FRAGMENT":
+        # tag.tag is DOCUMENT_FRAGMENT for the "root" element
+        # and is a function when hitting comments which we're happy to ignore
+        if tag.tag != "DOCUMENT_FRAGMENT" and not(callable(tag.tag)):
           self.handle_tag(tag.tag.split('}')[-1], tag.attrib, tag.text)
     except ParseError as msg:
       element = self.element
