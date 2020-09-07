@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Introduction to Atom</title>
-<style media="screen">
-  @import "../css/common.css";
-  @import "../css/documentation.css";
-  #main h2 { font-size: 200%; }
-  pre { padding-left: 3em; }
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../css/common.css";
+@import "../css/validator.css";
+@import "../css/documentation.css";
+@import "../css/validator/base.css";
 </style>
-<script><!-- --></script>
-</head>
-<body>
+    <title>Introduction to Atom</title>
+  </head>
 
-<div id="logo">
-<h1><a href="/"><span id="feed"><span id="f">F</span><span id="e1">E</span><span id="e2">E</span></span><span id="d">D</span> Validator</a></h1>
-<p>Introduction to Atom</p>
-<a class="skip" href="#startnavigation">Jump to navigation</a>
-</div> <!--logo-->
-
-<div id="main">
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
 
 <h2>Contents</h2>
 <ul>
@@ -75,8 +72,7 @@ produced by the
 </ul>
 
 <h3>Sample feed<a id="sampleFeed" name="sampleFeed"> </a></h3>
-<pre>
-&lt;?xml version="1.0" encoding="utf-8"?&gt;
+<pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;feed xmlns="http://www.w3.org/2005/Atom"&gt;
 
   &lt;title&gt;Example Feed&lt;/title&gt;
@@ -106,7 +102,7 @@ A Feed consists of some metadata, followed by any number of entries.
 <p>Here's a list of the required feed elements, each with a brief description, and an example.</p>
 
 <table cellspacing="10">
-<tr>
+<tbody><tr>
 <th>Element</th>
 <th>Description</th>
 </tr>
@@ -133,13 +129,13 @@ as the title of the associated website.  This value should not be blank.
 significant way.
 <pre>&lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;</pre></td>
 </tr>
-</table>
+</tbody></table>
 
 <h3>Recommended feed elements<a id="recommendedFeedElements" name="recommendedFeedElements"> </a></h3>
 Atom makes a number of additional requirements and recommendations for feed elements that you should to be aware of.  They are as follows:
 
 <table cellspacing="10">
-<tr>
+<tbody><tr>
 <th>Element</th>
 <th>Description</th>
 </tr>
@@ -164,12 +160,12 @@ info <a href="#person">here</a>.
 <pre>&lt;link&nbsp;rel="self" href="/feed"&nbsp;/&gt;</pre></td>
 </tr>
 
-</table>
+</tbody></table>
 
 <h3>Optional feed elements<a id="optionalFeedElements" name="optionalFeedElements"> </a></h3>
 <p>Here's a list of optional feed elements.</p>
 <table cellspacing="10">
-<tr>
+<tbody><tr>
 <th>Element</th>
 <th>Description</th>
 </tr>
@@ -211,7 +207,7 @@ info <a href="#person">here</a>.
 <tr>
 <td valign="top">rights</td>
 <td valign="top">Conveys information about rights, e.g. copyrights, held in and over the feed.  More info <a href="#text">here</a>.
-<pre>&lt;rights&gt; &copy; 2005 John Doe &lt;/rights&gt;</pre></td>
+<pre>&lt;rights&gt; © 2005 John Doe &lt;/rights&gt;</pre></td>
 </tr>
 
 <tr>
@@ -219,7 +215,7 @@ info <a href="#person">here</a>.
 <td valign="top">Contains a human-readable description or subtitle for the feed.  More info <a href="#text">here</a>.
 <pre>&lt;subtitle&gt;all your examples are belong to us&lt;/subtitle&gt;</pre></td>
 </tr>
-</table>
+</tbody></table>
 
 <h2>Elements of &lt;entry&gt;</h2>
 
@@ -230,7 +226,7 @@ An example of an entry would be a single post on a weblog.
 <p>Here's a list of the required feed elements, each with a brief description, and an example.</p>
 
 <table cellspacing="10">
-<tr>
+<tbody><tr>
 <th>Element</th>
 <th>Description</th>
 </tr>
@@ -262,13 +258,13 @@ will have different updated timestamps.
 <pre>&lt;updated&gt;2003-12-13T18:30:02-05:00&lt;/updated&gt;</pre></td>
 </tr>
 
-</table>
+</tbody></table>
 
 <h3>Recommended elements of &lt;entry&gt;<a id="recommendedEntryElements" name="recommendedEntryElements"> </a></h3>
 Atom makes a number of additional requirements and recommendations for entry elements that you should to be aware of.  They are as follows:
 
 <table cellspacing="10">
-<tr>
+<tbody><tr>
 <th>Element</th>
 <th>Description</th>
 </tr>
@@ -304,13 +300,13 @@ More info <a href="#person">here</a>.
 <pre>&lt;summary&gt;Some text.&lt;/summary&gt;</pre></td>
 </tr>
 
-</table>
+</tbody></table>
 
 <h3>Optional elements of &lt;entry&gt;<a id="optionalEntryElements" name="optionalEntryElements"> </a></h3>
 <p>Here's a list of optional feed elements.</p>
 
 <table cellspacing="10">
-<tr>
+<tbody><tr>
 <th>Element</th>
 <th>Description</th>
 </tr>
@@ -354,7 +350,7 @@ entry is a copy.
 &lt;/source&gt;</pre></td>
 </tr>
 
-</table>
+</tbody></table>
 
 <h2>Common Constructs</h2>
 
@@ -431,25 +427,39 @@ entry is a copy.
 <a name="startnavigation" id="startnavigation"></a>
 <div class="navbarWrapper">
     <div class="navbarContent">
-        <img class="borderTL" src="../images/borderTL.gif" alt="" width="14" height="14" />
-        <img class="borderTR" src="../images/borderTR.gif" alt="" width="14" height="14" />
+        <img class="borderTL" src="../images/borderTL.gif" alt="" width="14" height="14">
+        <img class="borderTR" src="../images/borderTR.gif" alt="" width="14" height="14">
 <p>
-<a href="/">Home</a> &middot;
-<a href="/about.html">About</a> &middot;
-<a href="/news/">News</a> &middot;
-<a href="/docs/">Docs</a> &middot;
+<a href="/">Home</a> ·
+<a href="/about.html">About</a> ·
+<a href="/news/">News</a> ·
+<a href="/docs/">Docs</a> ·
 <a href="/terms.html">Terms</a>
 </p>
 
         <div class="roundedCornerSpacer">&nbsp;</div>
     </div><!-- .content -->
     <div class="bottomCorners">
-        <img class="borderBL" src="../images/borderBL.gif" alt="" width="14" height="14" />
-        <img class="borderBR" src="../images/borderBR.gif" alt="" width="14" height="14" />
+        <img class="borderBL" src="../images/borderBL.gif" alt="" width="14" height="14">
+        <img class="borderBR" src="../images/borderBR.gif" alt="" width="14" height="14">
     </div><!-- .bottomCorners -->
 </div><!-- .contentWrapper -->
 </div><!-- .centered -->
-</div><!-- .main -->
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="./" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
+</div>
 
-</body>
-</html>
+
+
+</body></html>
