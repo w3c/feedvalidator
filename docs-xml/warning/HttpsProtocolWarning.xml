@@ -1,0 +1,13 @@
+<fvdoc>
+<div xmlns='http://www.w3.org/1999/xhtml'>
+  <div id='message'>
+    <p>Warning when fetching content over HTTPs</p>
+</div>
+<div id='explanation'>
+  <p>The feedvalidator noticed something amiss when fetching feed content over https - most likely, the server is configured to use weak signature algorithms irrespective of what the client is requesting.</p>
+</div>
+<div id='solution'>
+  <p>Make sure the server from which the feed is provided is correctly configured to use the latest recommended signature algorithms.</p>
+</div>
+</div>
+</fvdoc>
