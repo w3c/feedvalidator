@@ -12,6 +12,7 @@ else:
   Timeout = timeoutsocket.Timeout
 
 import urllib2
+import ssl
 from . import logging
 from .logging import *
 from xml.sax import SAXException
@@ -189,9 +190,21 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
   request.add_header("Accept-encoding", "gzip, deflate")
   request.add_header("User-Agent", "FeedValidator/1.3")
   usock = None
+  ctx2 = ssl.create_default_context()
+  ctx1 = ssl.create_default_context()
+  ctx2.set_ciphers('ALL:@SECLEVEL=2')
+  ctx1.set_ciphers('ALL:@SECLEVEL=1')
   try:
     try:
-      usock = urllib2.urlopen(request)
+      try:
+        usock = urllib2.urlopen(request, context=ctx2)
+      except urllib2.URLError as x:
+        import re
+        if True or re.search("WRONG_SIGNATURE_TYPE", x.reason):
+          loggedEvents.append(HttpsProtocolWarning({'message': "Weak signature used by HTTPS server"}))
+          usock = urllib2.urlopen(request, context=ctx1)
+        else:
+          raise x
       rawdata = usock.read(MAXDATALENGTH)
       if usock.read(1):
         raise ValidationFailure(logging.ValidatorLimit({'limit': 'feed length > ' + str(MAXDATALENGTH) + ' bytes'}))

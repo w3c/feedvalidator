@@ -109,6 +109,7 @@ messages = {
   TextXml:                 "Content type of text/xml with no charset",
   Uncompressed:            "Response is not compressed",
   HttpProtocolError:       'Response includes bad HTTP header name: "%(header)s"',
+  HttpsProtocolWarning:    'Warning when fetching content over HTTPs: "%(message)s"',
   NonCanonicalURI:         'Identifier "%(uri)s" is not in canonical form (the canonical form would be "%(curi)s")',
   InvalidRDF:              'RDF parsing error: %(message)s',
   InvalidDuration:         'Invalid duration',
