@@ -22,7 +22,7 @@ from . import xmlEncoding
 from . import mediaTypes
 from httplib import BadStatusLine
 
-MAXDATALENGTH = 2000000
+MAXDATALENGTH = 5000000
 
 def sniffPossibleFeed(rawdata):
   """ Use wild heuristics to detect something that might be intended as a feed."""
