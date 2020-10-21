@@ -4,7 +4,7 @@
 -->
 
 <!--
-  Description:  valid media restriction - disallow
+  Description:  valid media restriction - deny
   Expect:       !Error
 -->
 
@@ -18,7 +18,7 @@
                 <link>http://www.foo.com/item1.htm</link>
                 <media:content url="http://www.foo.com/trailer.mov" 
                 fileSize="12216320" type="video/quicktime" expression="sample"/>
-                <media:restriction relationship="disallow"/>
+                <media:restriction relationship="deny"/>
         </item>
 </channel>
 </rss>

@@ -1,0 +1,14 @@
+<fvdoc>
+<div xmlns='http://www.w3.org/1999/xhtml'>
+<div id='message'>
+<p><code>foo</code> is not one of the predefined iTunes channel type</p>
+</div>
+<div id='explanation'>
+<p>itunes:type can only be populated using one of the predefined values "episodic" or "serial", as listed in the
+<a href="http://www.apple.com/itunes/podcasts/techspecs.html#_Toc526931698">specification</a>.</p>
+</div>
+<div id='solution'>
+<p>Change the attribute value to one of the allowed values "episodic" or "serial".</p>
+</div>
+</div>
+</fvdoc>

@@ -1,30 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
 <style type="text/css" media="screen">@import "../css/common.css";
 @import "../css/validator.css";
 @import "../css/documentation.css";
 @import "../css/validator/base.css";
 </style>
-
     <title>Documentation of the SOAP 1.2 Web Service Interface for The W3C Feed Validation Service</title>
-
-    <!-- SSI Template Version: $Id: soap.html,v 1.4 2007/10/09 01:24:06 ot Exp $ -->
   </head>
 
   <body>
-        <div id="banner">
-          <h1 id="title">
-                  <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="http://validator.w3.org/images/w3c.png" /></a>
-    <a href="./"><span>Feed Validation Service</span></a>
-    </h1>
-    			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
-        </div>
-
-
-<div class="doc" id="main"><!-- This DIV encapsulates everything in this page - necessary for the positioning -->
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc"><!-- This DIV encapsulates everything in this page - necessary for the positioning -->
 
 
 <h2>Feed Validator Web Service API</h2>
@@ -60,7 +52,7 @@ which you can use in your own applications.</p>
 
 <p>Below is a table of the parameter you can use to send a query to the W3C Feed Validator.</p>
 <p>If you want to use W3c's public validation server, use the parameters below
- in conjunction with the following base URI:<br />
+ in conjunction with the following base URI:<br>
 <kbd>http://validator.w3.org/feed/check.cgi</kbd> .</p>
 <p>Note</p>
 <ul>
@@ -75,7 +67,7 @@ between requests. The Feed Validation service is a free, public service for all,
 is appreciated. thanks.</p>
 
 <table class="refdoc">
-<tr>
+<tbody><tr>
 <th>Parameter</th><th>Description</th><th>Default value</th>
 </tr>
 <tr>
@@ -99,7 +91,7 @@ is appreciated. thanks.</p>
   be triggered. See <a href="soap12format">below for the SOAP 1.2 response format description</a>.</td>
   <td>unset</td>
 </tr>
-</table>
+</tbody></table>
 
 <h3 id="soap12format">SOAP format description</h3>
 
@@ -116,12 +108,12 @@ Should this happen, this documentation will be updated and the changes listed be
 
 <p>A SOAP response for the validation of a document (invalid) will look like this:</p>
 <pre style="font-size: smaller"> 
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;env:Envelope xmlns:env=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"&gt;
 &lt;env:Body&gt;
 &lt;m:feedvalidationresponse 
-  env:encodingStyle=&quot;http://www.w3.org/2003/05/soap-encoding&quot; 
-  xmlns:m=&quot;http://www.w3.org/2005/10/feed-validator&quot;&gt;
+  env:encodingStyle="http://www.w3.org/2003/05/soap-encoding" 
+  xmlns:m="http://www.w3.org/2005/10/feed-validator"&gt;
       &lt;m:uri&gt;http://www.w3.org/QA/news.rss&lt;/m:uri&gt; 
       &lt;m:checkedby&gt;http://qa-dev.w3.org/feed/check.cgi&lt;/m:checkedby&gt;
       &lt;m:date&gt;2005-11-11T11:48:24.491627&lt;/m:date&gt;
@@ -159,7 +151,7 @@ Should this happen, this documentation will be updated and the changes listed be
 <h4 id="soap12response">SOAP1.2 response format reference</h4>
 
 <table class="refdoc">
-<tr><th>element</th><th>description</th></tr>
+<tbody><tr><th>element</th><th>description</th></tr>
 <tr>
   <th id="soap12_markupvalidationresponse">markupvalidationresponse</th>
   <td>The main element of the validation response. Encloses all other information about the validation results.</td>
@@ -206,7 +198,7 @@ Should this happen, this documentation will be updated and the changes listed be
   <td>a child of <a href="#soap12_errorlist">errorlist</a>, contains the information on a single 
   validation error. </td>
 </tr>
-</table>
+</tbody></table>
 <p><strong>Note</strong>: <code>warnings</code>, <code>warningcount</code>, 
 <code>warninglist</code> and <code>warning</code>, 
 as well as
@@ -224,7 +216,7 @@ are similar to, respectively,
 element, but also the <code>warning</code> element are <code>line</code>, <code>col</code> and
 <code>message</code>, defined below:</p>
 <table class="refdoc">
-<tr><th>element</th><th>description</th></tr>
+<tbody><tr><th>element</th><th>description</th></tr>
 <tr>
   <th id="soap12_line">line</th>
   <td>Within the source code of the validated document, refers to the line where the error was detected.</td>
@@ -253,7 +245,7 @@ element, but also the <code>warning</code> element are <code>line</code>, <code>
   <th id="soap12_value">value</th>
   <td>if applicable the value of the element, attribute or content which triggered the message</td>
 </tr>
-</table>
+</tbody></table>
 
 <h3 id="libraries">Code Libraries</h3>
 
@@ -270,20 +262,20 @@ two libraries created to access this service:</p>
 public mailing-list, and we will add it to the list here.</p>
 
 </div><!-- main -->
-
 <ul class="navbar" id="menu">
     <li>
-    <a href="../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service"><strong>Home</strong></a></li>
+    <a href="../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
     <li><a href="../about.html" title="Information About this Service">About...</a></li>
     <li><a href="../whatsnew.html" title="The changes made to this service recently">News</a></li>
-    <li><a href="../docs/" accesskey="3" title="Documentation for this Service">Docs</a></li>
+    <li><a href="./" accesskey="3" title="Documentation for this Service">Docs</a></li>
 </ul>
-
 <div id="footer">
-  <address>
-Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br />
-This service uses the <a href="http://sourceforge.net/projects/feedvalidator">Feed validator software</a>.
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
 </address>
 </div>
-</body>
-</html>
+
+
+
+</body></html>

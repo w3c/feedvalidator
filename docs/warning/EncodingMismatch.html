@@ -1,24 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Your feed appears to be encoded as “this”, but your server is reporting “that”</title>
-<style media="screen">@import "../../css/common.css";
-@import "../../css/documentation.css";</style>
-<script><!-- --></script>
-<link rel="start" href="http://feedvalidator.org/docs/" title="Home" />
-</head>
-<body>
-<div id="logo">
-<h1><a href="../../"><span id="feed"><span id="f">F</span><span id="e1">E</span><span id="e2">E</span></span><span id="d">D</span> Validator</a></h1>
-<p>Documentation</p>
-<a class="skip" href="#startnavigation">Jump to navigation</a>
-</div> <!--logo-->
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+<style type="text/css" media="screen">@import "../../css/common.css";
+@import "../../css/validator.css";
+@import "../../css/documentation.css";
+@import "../../css/validator/base.css";
+</style>
+    <title>Your feed appears to be encoded as “this”, but your server is reporting “that”</title>
+  </head>
 
-<div id="main">
+  <body>
+    <div id="banner">
+      <h1 id="title">
+              <a href="http://www.w3.org/"><img alt="W3C" width="110" height="61" id="logo" src="/images/w3c.png"></a>
+<a href="./"><span>Feed Validation Service</span></a>
+</h1>
+			  <p id="tagline">Check the syntax of Atom or RSS feeds</p>
+    </div>
+    <div id="main" class="doc">
 <h2>Message</h2>
 <div class="docbody">
-<p>Your feed appears to be encoded as &ldquo;<code>this</code>&rdquo;, but your server is reporting &ldquo;<code>that</code>&rdquo;</p>
+<p>Your feed appears to be encoded as “<code>this</code>”, but your server is reporting “<code>that</code>”</p>
 </div>
 <h2>Explanation</h2>
 
@@ -40,7 +41,7 @@ general XML types -  preferably <code>application/xml</code>.</p>
 <p>Another possible cause is the use of single quotes to delimit the charset parameter in the http header, whereas the http definition of <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2">Basic Rules</a> only permits the use of double quotes.  The result is somewhat confusing messages such as:</p>
 <blockquote>
 <p>
-Your feed appears to be encoded as &ldquo;utf-8&rdquo;, but your server is reporting &ldquo;'utf-8'&rdquo;
+Your feed appears to be encoded as “utf-8”, but your server is reporting “'utf-8'”
 </p>
 </blockquote>
 </div>
@@ -65,34 +66,21 @@ characters in an feed served as US-ASCII.</p>
 <p>You might be able to find help in one of <a href="../howto/resources.html">these fine resources</a>.</p>
 </div>
 
-</div><!--main-->
-<div class="centered">
-<a name="startnavigation" id="startnavigation"></a>
-<div class="navbarWrapper">
-    <div class="navbarContent">
-        <img class="borderTL" src="../../images/borderTL.gif" alt="" width="14" height="14" />
-        <img class="borderTR" src="../../images/borderTR.gif" alt="" width="14" height="14" />
-
-<p>
-<a href="../../">Home</a> &middot;
-<a href="../../about.html">About</a> &middot;
-<a href="../../news/">News</a> &middot;
-<a href="../../docs/">Docs</a> &middot;
-<a href="../../terms.html">Terms</a>
-</p>
-
-        <div class="roundedCornerSpacer">&nbsp;</div>
-    </div><!-- .content -->
-    <div class="bottomCorners">
-        <img class="borderBL" src="../../images/borderBL.gif" alt="" width="14" height="14" />
-        <img class="borderBR" src="../../images/borderBR.gif" alt="" width="14" height="14" />
-    </div><!-- .bottomCorners -->
-</div><!-- .contentWrapper -->
-</div><!-- .centered -->
-
-<div class="centered">
-<address>Copyright &copy; 2002-4 <a href="http://diveintomark.org/">Mark Pilgrim</a> and <a href="http://www.intertwingly.net/blog/">Sam Ruby</a></address>
+</div><!-- main -->
+<ul class="navbar" id="menu">
+    <li>
+    <a href="../../" accesskey="1" title="Go to the Home Page for The W3C Feed Validation Service">Home</a></li>
+    <li><a href="../../about.html" title="Information About this Service">About...</a></li>
+    <li><a href="../../whatsnew.html" title="The changes made to this service recently">News</a></li>
+    <li><a href="../" accesskey="3" title="Documentation for this Service">Docs</a></li>
+</ul>
+<div id="footer">
+<address>
+Maintained by the <a href="http://www.w3.org/QA/Tools/qa-dev">W3C qa-dev group</a><br>
+This service uses the <a href="https://github.com/w3c/feedvalidator">Feed validator software</a>.
+</address>
 </div>
 
-</body>
-</html>
+
+
+</body></html>

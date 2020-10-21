@@ -1,0 +1,18 @@
+<message type="info">
+	<title>If you would like to create a banner that links to this page (i.e. this validation result), do the following:</title>
+	<description>
+		<ol>
+			<li><p>Download <a href="%(HOMEPATH)s/images/%(graphic)s">the "valid %(feedType)s" banner</a>.</p></li>
+			<li><p>Upload the image to your own server.  (This step is important.  Please do not link directly to the image on this server.)</p></li>
+			<li>
+				<p>Add this HTML to your page (change the image <code>src</code> attribute if necessary):</p>
+				<pre><code>&lt;a href=&quot;%(HOMEURL)s?url=%(srcUrl)s&quot;&gt;
+    &lt;img src=&quot;%(graphic)s&quot; alt=&quot;[Valid Atom 1.0]&quot; title=&quot;Validate my Atom 1.0 feed&quot; /&gt;
+&lt;/a&gt;</code></pre>
+			</li>
+		</ol>
+		<p>If you would like to create a text link instead, here is the URL you can use:</p>
+		<a href="%(HOMEURL)s?url=%(url)s">%(HOMEURL)s?url=%(url)s</a>
+	</description>
+</message>
+<status value="passed"/>

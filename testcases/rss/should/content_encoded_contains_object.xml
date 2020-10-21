@@ -13,7 +13,7 @@
 <item>
 <title>Foo</title>
 <link>http://purl.org/rss/2.0/?item</link>
-<content:encoded>&lt;object&gt;</content:encoded>
+<content:encoded>&lt;object&gt;&lt;/object&gt;</content:encoded>
 </item>
 </channel>
 </rss>

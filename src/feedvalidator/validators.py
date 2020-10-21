@@ -102,59 +102,59 @@ class eater(validatorBase):
     # eat children
     self.push(self.__class__(), name, attrs)
 
-from feedvalidator.vendor.HTMLParser import HTMLParser, HTMLParseError
-class HTMLValidator(HTMLParser):
+from html5lib.html5parser import HTMLParser, ParseError
+class HTMLValidator:
   htmltags = [
     "a", "abbr", "acronym", "address", "applet", "area", "article", "aside",
-    "audio", "b", "base", "basefont", "bdo", "big", "blockquote", "body",
+    "audio", "b", "base", "basefont", "bdi", "bdo", "big", "blockquote", "body",
     "br", "button", "canvas", "caption", "center", "cite", "code", "col",
-    "colgroup", "command", "datagrid", "datalist", "dd", "del", "details",
-    "dialog", "dir", "div", "dfn", "dl", "dt", "em", "event-source",
+    "colgroup", "command", "data", "datagrid", "datalist", "dd", "del", "details", "dfn",
+    "dialog", "dir", "div", "dl", "dt", "em", "eventsource",
     "fieldset", "figcaption", "figure", "font", "footer", "form", "frame",
-    "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr",
+    "frameset", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr",
     "html", "i", "iframe", "img", "input", "ins", "isindex", "kbd", "label",
-    "legend", "li", "link", "m", "map", "menu", "meta", "meter", "nav",
-    "noframes", "noscript", "object", "ol", "output", "optgroup", "option",
-    "p", "param", "pre", "progress", "q", "s", "samp", "script", "section",
-    "select", "small", "source", "span", "strike", "strong", "style", "sub",
-    "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time",
-    "title", "tr", "tt", "u", "ul", "var", "xmp", "plaintext", "embed",
+    "legend", "li", "link", "m", "main", "mark", "map", "menu", "meta", "meter", "nav",
+    "noframes", "noscript", "object", "ol", "optgroup", "option", "output",
+    "p", "param", "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section",
+    "select", "slot", "small", "source", "span", "strike", "strong", "style", "sub", "summary",
+    "sup", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time",
+    "title", "tr", "track", "tt", "u", "ul", "var", "xmp", "plaintext", "embed",
     "comment", "listing", "video", "wbr"]
 
   acceptable_elements = ['a', 'abbr', 'acronym', 'address', 'area', 'article',
-    'aside', 'audio', 'b', 'big', 'blockquote', 'br', 'button', 'canvas',
+    'aside', 'audio', 'b', 'bdi', 'big', 'blockquote', 'br', 'button', 'canvas',
     'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'command',
-    'datagrid', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir',
-    'div', 'dl', 'dt', 'em', 'event-source', 'fieldset', "figcaption", 'figure',
+    'data', 'datagrid', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir',
+    'div', 'dl', 'dt', 'em', 'eventsource', 'fieldset', "figcaption", 'figure',
     'footer', 'font', 'form', 'header', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'hr', 'i', 'img', 'input', 'ins', 'keygen', 'kbd', 'label', 'legend', 'li',
-    'm', 'map', 'menu', 'meter', 'multicol', 'nav', 'nextid', 'ol', 'output',
-    'optgroup', 'option', 'p', 'pre', 'progress', 'q', 's', 'samp', 'section',
+    'hgroup', 'hr', 'i', 'img', 'input', 'ins', 'keygen', 'kbd', 'label', 'legend', 'li',
+    'm', 'main', 'map', 'mark', 'menu', 'meter', 'multicol', 'nav', 'nextid', 'ol', 'output',
+    'optgroup', 'option', 'p', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section',
     'select', 'small', 'sound', 'source', 'spacer', 'span', 'strike', 'strong',
-    'sub', 'sup', 'table', 'tbody', 'td', 'textarea', 'time', 'tfoot', 'th',
-    'thead', 'tr', 'tt', 'u', 'ul', 'var', 'video', 'noscript', 'wbr']
+    'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'time', 'tfoot', 'th',
+    'thead', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'noscript', 'wbr']
 
   acceptable_attributes = ['abbr', 'accept', 'accept-charset', 'accesskey',
-    'action', 'align', 'alt', 'autoplay', 'autocomplete', 'autofocus', 'axis',
+    'action', 'align', 'allow', 'allowfullscreen', 'allowpaymentrequest', 'alt', 'as', 'autoplay', 'autocapitalize', 'autocomplete', 'autofocus', 'autoplay', 'axis',
     'background', 'balance', 'bgcolor', 'bgproperties', 'border',
     'bordercolor', 'bordercolordark', 'bordercolorlight', 'bottompadding',
     'cellpadding', 'cellspacing', 'ch', 'challenge', 'char', 'charoff',
     'choff', 'charset', 'checked', 'cite', 'class', 'clear', 'color', 'cols',
-    'colspan', 'compact', 'contenteditable', 'coords', 'data', 'datafld',
-    'datapagesize', 'datasrc', 'datetime', 'default', 'delay', 'dir',
-    'disabled', 'draggable', 'dynsrc', 'enctype', 'end', 'face', 'for',
-    'form', 'frame', 'galleryimg', 'gutter', 'headers', 'height', 'hidefocus',
+    'colspan', 'compact', 'contenteditable', 'coords', 'crossorigin', 'data', 'datafld',
+    'datapagesize', 'datasrc', 'datetime', 'decoding', 'default', 'delay', 'dir', 'dirname',
+    'disabled', 'download', 'draggable', 'dynsrc', 'enctype','end', 'enterkeyhint', 'face', 'for',
+    'form', 'formenctype',  'frame', 'galleryimg', 'gutter', 'headers', 'height', 'hidefocus',
     'hidden', 'high', 'href', 'hreflang', 'hspace', 'icon', 'id', 'inputmode',
-    'ismap', 'keytype', 'label', 'leftspacing', 'lang', 'list', 'longdesc',
+    'is', 'ismap', 'itemid', 'itemprop', 'itemref', 'itemscope', 'itemtype', 'kind','keytype', 'label', 'lang', 'leftspacing', 'loading', 'list', 'longdesc',
     'loop', 'loopcount', 'loopend', 'loopstart', 'low', 'lowsrc', 'max',
-    'maxlength', 'media', 'method', 'min', 'multiple', 'name', 'nohref',
-    'noshade', 'nowrap', 'open', 'optimum', 'pattern', 'ping', 'point-size',
-    'prompt', 'pqg', 'radiogroup', 'readonly', 'rel', 'repeat-max',
-    'repeat-min', 'replace', 'required', 'rev', 'rightspacing', 'rows',
-    'rowspan', 'rules', 'scope', 'selected', 'shape', 'size', 'span', 'src',
-    'srcset', 
+    'maxlength', 'media', 'method', 'min', 'minlength', 'multiple', 'muted', 'name', 'nohref', 'nonce',
+    'noshade', 'nowrap', 'open', 'optimum', 'pattern', 'ping', 'placeholder', 'playsinline', 'point-size', 'poster', 'preload',
+    'prompt', 'pqg', 'radiogroup', 'readonly', 'referrerpolicy', 'rel', 'repeat-max',
+    'repeat-min', 'replace', 'required', 'rev', 'reversed', 'rightspacing', 'rows',
+    'rowspan', 'rules', 'scope', 'selected', 'shape', 'size', 'sizes', 'span', 'spellcheck', 'src',
+    'srclang', 'srcset',
     'start', 'step', 'summary', 'suppress', 'tabindex', 'target', 'template',
-    'title', 'toppadding', 'type', 'unselectable', 'usemap', 'urn', 'valign',
+    'title', 'toppadding', 'translate', 'type', 'unselectable', 'usemap', 'urn', 'valign',
     'value', 'variable', 'volume', 'vspace', 'vrml', 'width', 'wrap',
     'xml:lang', 'xmlns']
 
@@ -241,24 +241,27 @@ class HTMLValidator(HTMLParser):
      'zoomAndPan']
 
   def log(self,msg):
-    offset = [self.element.line + self.getpos()[0] - 1 -
+    offset = [self.element.line - 1 -
               self.element.dispatcher.locator.getLineNumber(),
               -self.element.dispatcher.locator.getColumnNumber()]
     self.element.log(msg, offset)
 
   def __init__(self,value,element):
     self.element=element
-    self.stack = []
     self.valid = True
-    HTMLParser.__init__(self)
+    self.parser = HTMLParser(strict=True)
     if value.lower().find('<?import ') >= 0:
       self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":"?import"}))
     try:
-      self.feed(value)
-      self.close()
+      etree = self.parser.parseFragment(value)
       if self.valid:
         self.log(ValidHtml({"parent":self.element.parent.name, "element":self.element.name}))
-    except HTMLParseError as msg:
+      for tag in etree.iter():
+        # tag.tag is DOCUMENT_FRAGMENT for the "root" element
+        # and is a function when hitting comments which we're happy to ignore
+        if tag.tag != "DOCUMENT_FRAGMENT" and not(callable(tag.tag)):
+          self.handle_tag(tag.tag.split('}')[-1], tag.attrib, tag.text)
+    except ParseError as msg:
       element = self.element
       offset = [element.line - element.dispatcher.locator.getLineNumber(),
                 - element.dispatcher.locator.getColumnNumber()]
@@ -266,36 +269,22 @@ class HTMLValidator(HTMLParser):
       if match: offset[0] += int(match.group(1))-1
       element.log(NotHtml({"parent":element.parent.name, "element":element.name, "message":"Invalid HTML", "value": str(msg)}),offset)
 
-  def handle_starttag(self, tag, attributes):
+  def handle_tag(self, tag, attributes, text):
     if tag.lower() not in self.htmltags:
       self.log(NotHtml({"parent":self.element.parent.name, "element":self.element.name,"value":tag, "message": "Non-html tag"}))
       self.valid = False
     elif tag.lower() not in HTMLValidator.acceptable_elements:
-      if not 'embed' in self.stack and not 'object' in self.stack:
-        self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":tag}))
+      self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":tag}))
     else:
-      for (name,value) in attributes:
+      for (name,value) in attributes.iteritems():
         if name.lower() == 'style':
           for evil in checkStyle(value):
             self.log(DangerousStyleAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":"style", "value":evil}))
         elif name.lower() not in self.acceptable_attributes:
-          self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
+          # data-* attributes are acceptable
+          if name.lower()[:5] != "data-":
+            self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
 
-    self.stack.append(tag)
-
-  def handle_endtag(self, tag):
-    if tag in self.stack:
-      while self.stack[-1] != tag: self.stack.pop()
-      self.stack.pop()
-
-  def handle_charref(self, name):
-    if name.startswith('x'):
-      value = int(name[1:],16)
-    else:
-      value = int(name)
-    if 0x80 <= value <= 0x9F or value == 0xfffd:
-      self.log(BadCharacters({"parent":self.element.parent.name,
-        "element":self.element.name, "value":"&#" + name + ";"}))
 
 #
 # Scub CSS properties for potentially evil intent

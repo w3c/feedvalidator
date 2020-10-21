@@ -120,7 +120,7 @@ input#url, input#uri, input#file, input#uploaded_file, input#keywords, input#sho
 	border: 1px solid #bbb;
 	border-top: 1px solid #777;
 	border-bottom: 1px solid #ddd;
-	background: #fefefe url(http://validator.w3.org/images/textbg.png) no-repeat top left;
+	background: #fefefe url(https://validator.w3.org/images/textbg.png) no-repeat top left;
 	padding: 0.2em 0.2em;
 	max-width: 1000px;
 	font-variant: normal;
@@ -149,14 +149,14 @@ a.submit {
 	width: 10em;
 	text-align: center;
 	margin: 0 auto;
-	background: url(http://validator.w3.org/images/button-left.png) no-repeat center left;
+	background: url(https://validator.w3.org/images/button-left.png) no-repeat center left;
 	text-decoration: none;
 }
 
 a.submit span {
 	display: block;
 	padding: 1.2em 2em;
-	background: url(http://validator.w3.org/images/button-right.png) no-repeat center right;
+	background: url(https://validator.w3.org/images/button-right.png) no-repeat center right;
 }
 
 textarea {
@@ -178,7 +178,7 @@ form#validation input {
         border-right: 2px solid #444;                                                                                                       
         border-top: 1px solid #aaa;                                                                                                         
         border-left: 1px solid #aaa;                                                                                                        
-        background: #eee url(http://validator.w3.org/images/grad.png) repeat-x top left;                                                    
+        background: #eee url(https://validator.w3.org/images/grad.png) repeat-x top left;                                                    
         cursor: pointer;                                                                                                                    
 }
 form#validation input:active {                                                                                                              
@@ -197,7 +197,7 @@ form#validation input#url, form#validation input#rawdata {
         border: 1px solid #bbb;
         border-top: 1px solid #777;
         border-bottom: 1px solid #ddd;
-        background: #fefefe url(http://validator.w3.org/images/textbg.png) no-repeat top left;
+        background: #fefefe url(https://validator.w3.org/images/textbg.png) no-repeat top left;
 
 }
 
@@ -215,7 +215,7 @@ p.submit_button input {
 	border-right: 2px solid #444;
 	border-top: 1px solid #aaa;
 	border-left: 1px solid #aaa;
-	background: #eee url(http://validator.w3.org/images/grad.png) repeat-x top left;
+	background: #eee url(https://validator.w3.org/images/grad.png) repeat-x top left;
 	cursor: pointer;
 }
 
@@ -287,7 +287,7 @@ h1#title {
 	background-color: #365D95;
 	color: #fdfdfd;
 	font-size: 1.6em;
-	background: url(http://validator.w3.org/images/head-bl.png) bottom left no-repeat;
+	background: url(https://validator.w3.org/images/head-bl.png) bottom left no-repeat;
 	padding-bottom: 0.430em;
 }
 h1#title a, h1#title a img {
@@ -310,7 +310,7 @@ h1#title img {
 }
 
 div#banner {
-	background: #365D95 url(http://validator.w3.org/images/head-br.png) bottom right no-repeat;
+	background: #365D95 url(https://validator.w3.org/images/head-br.png) bottom right no-repeat;
 	margin: 1.5em 2em;
 }
 
@@ -358,18 +358,18 @@ ul#tabset_tabs li {
 	cursor: pointer;
 	float: left;
 	margin-right: 0.245em;
-	background: #DADDE3 url(http://validator.w3.org/images/tab-tl.png) no-repeat top left;
+	background: #DADDE3 url(https://validator.w3.org/images/tab-tl.png) no-repeat top left;
 	border-bottom: 1px solid #CBD0DB;
 }
 
 ul#tabset_tabs li.selected {
-	background: #EAEBEE url(http://validator.w3.org/images/round-tl.png) no-repeat top left;
+	background: #EAEBEE url(https://validator.w3.org/images/round-tl.png) no-repeat top left;
 	border-bottom: 1px solid #EAEBEE;
 }
 
 ul#tabset_tabs li.selected a:link, ul#tabset_tabs li.selected a:visited {
 	color: #1f2126;
-	background: #EAEBEE url(http://validator.w3.org/images/round-tr.png) no-repeat top right;
+	background: #EAEBEE url(https://validator.w3.org/images/round-tr.png) no-repeat top right;
 }
 
 ul#tabset_tabs li span {
@@ -384,7 +384,7 @@ ul#tabset_tabs li a:link, ul#tabset_tabs li a:visited {
 	color: #365D95;
 	display: block;
 	padding: 0.515em 1.3em 0.215em 0.8em;
-	background: #DADDE3 url(http://validator.w3.org/images/tab-tr.png) no-repeat top right;
+	background: #DADDE3 url(https://validator.w3.org/images/tab-tr.png) no-repeat top right;
 	margin-left: 0.5em;
 	font-size: 0.9em;
 	font-weight: bold;
@@ -414,7 +414,7 @@ div#frontforms {
 
 div#fields {
 	clear: both;
-	background: #EAEBEE url(http://validator.w3.org/images/round-tr.png) no-repeat top right;
+	background: #EAEBEE url(https://validator.w3.org/images/round-tr.png) no-repeat top right;
 	padding: 0.5em 1.3em;
 	border-bottom: 1px solid #DCDDE0;
 }
@@ -440,11 +440,11 @@ legend a:link, legend a:visited, legend a:hover, legend a:active {
 legend.toggletext {
 	cursor: pointer;
 	padding-left: 0.8em;
-	background: #EAEBEE url(http://validator.w3.org/images/arrow-closed.png) 0 1.2em no-repeat;
+	background: #EAEBEE url(https://validator.w3.org/images/arrow-closed.png) 0 1.2em no-repeat;
 }
 
 legend.toggled {
-	background: #EAEBEE url(http://validator.w3.org/images/arrow-open.png) 0 1.4em no-repeat;
+	background: #EAEBEE url(https://validator.w3.org/images/arrow-open.png) 0 1.4em no-repeat;
 }
 
 p.instructions {
@@ -467,7 +467,7 @@ div.options {
 
 div.options, p.submit_button, p.instructions, p#note {
 	border-top: 1px solid #cbcdd5;
-	background: #EAEBEE url(http://validator.w3.org/images/double.png) left top repeat-x;
+	background: #EAEBEE url(https://validator.w3.org/images/double.png) left top repeat-x;
 }
 
 p.submit_button {
@@ -492,7 +492,7 @@ p#note {
 ul#menu {
 	text-align: center;
 	margin: 1em 2em;
-	background: #EAEBEE url(http://validator.w3.org/images/round-br.png) no-repeat bottom right;
+	background: #EAEBEE url(https://validator.w3.org/images/round-br.png) no-repeat bottom right;
 	padding: 0.5em 0 0.3em;
 	border-top: 1px solid #DCDDE0;
 }

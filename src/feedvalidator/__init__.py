@@ -37,7 +37,7 @@ def sniffPossibleFeed(rawdata):
   lastline = rawdata.strip().split('\n')[-1].strip()
   return lastline in ['</rss>','</feed>','</rdf:RDF>', '</kml>']
 
-def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfURIs=None, mediaType=None):
+def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfURIs=None, mediaType=None, groupEvents=0):
   """validate RSS from string, returns validator object"""
   from xml.sax import make_parser, handler
   from .base import SAXDispatcher
@@ -57,6 +57,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
 
   validator = SAXDispatcher(base, selfURIs or [base], encoding)
   validator.setFirstOccurrenceOnly(firstOccurrenceOnly)
+  validator.setGroupEvents(groupEvents)
 
   if mediaType == 'application/atomsvc+xml':
     validator.setFeedType(TYPE_APP_SERVICE)
@@ -181,7 +182,7 @@ def validateString(aString, firstOccurrenceOnly=0, fallback=None, base=""):
   else:
     return {"loggedEvents": loggedEvents}
 
-def validateURL(url, firstOccurrenceOnly=1, wantRawData=0):
+def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
   """validate RSS from URL, returns events list, or (events, rawdata) tuple"""
   loggedEvents = []
   request = urllib2.Request(url)
@@ -313,8 +314,8 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0):
       return {'loggedEvents': loggedEvents}
 
     rawdata = rawdata.replace('\r\n', '\n').replace('\r', '\n') # normalize EOL
-    validator = _validate(rawdata, firstOccurrenceOnly, loggedEvents, baseURI, encoding, selfURIs, mediaType=mediaType)
-
+    validator = _validate(rawdata, firstOccurrenceOnly, loggedEvents, baseURI, encoding, selfURIs, mediaType=mediaType, groupEvents=groupEvents)
+  
     # Warn about mismatches between media type and feed version
     if mediaType and validator.feedType:
       mediaTypes.checkAgainstFeedType(mediaType, validator.feedType, validator.loggedEvents)

@@ -92,6 +92,8 @@ class InvalidHttpGUID(InvalidValue): pass
 class InvalidLanguage(InvalidValue): pass
 class InvalidUpdatePeriod(InvalidValue): pass
 class InvalidItunesCategory(InvalidValue): pass
+class InvalidItunesEpisodeType(InvalidValue): pass
+class InvalidItunesChannelType(InvalidValue): pass
 class ObsoleteItunesCategory(Warning): pass
 class InvalidYesNo(InvalidValue): pass
 class InvalidYesNoClean(InvalidValue): pass

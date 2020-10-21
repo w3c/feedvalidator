@@ -2,7 +2,7 @@
 
 <!--
   Description:  "smart quote" double escaped
-  Expect:       BadCharacters{parent:item,element:description}
+  Expect:       NotHtml{parent:item,element:description}
 -->
 
 <rss version="2.0">

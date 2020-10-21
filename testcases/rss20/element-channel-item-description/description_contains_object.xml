@@ -16,7 +16,7 @@
 <item>
 <title>Foo</title>
 <link>http://purl.org/rss/2.0/?item</link>
-<description>&lt;object&gt;</description>
+<description>&lt;object&gt;&lt;/object&gt;</description>
 </item>
 </channel>
 </rss>

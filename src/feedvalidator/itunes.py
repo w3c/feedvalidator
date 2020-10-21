@@ -63,6 +63,9 @@ class itunes_channel(itunes):
       self.log(UndefinedElement({"parent":self.name.replace("_",":"), "element":self.child}))
     return rfc2396_full(), noduplicates()
 
+  def do_itunes_type(self):
+    return channeltype(), noduplicates()
+
 class itunes_item(itunes):
   supported_formats = ['m4a', 'mp3', 'mov', 'mp4', 'm4v', 'pdf', 'epub']
 
@@ -91,6 +94,18 @@ class itunes_item(itunes):
 
   def do_itunes_duration(self):
     return duration(), noduplicates()
+
+  def do_itunes_title(self):
+    return text(), noduplicates()
+
+  def do_itunes_episode(self):
+    return positiveInteger(), noduplicates()
+
+  def do_itunes_season(self):
+    return positiveInteger(), noduplicates()
+
+  def do_itunes_episodeType(self):
+    return episodetype(), noduplicates()
 
 class owner(validatorBase):
   def validate(self):
@@ -150,17 +165,144 @@ class category(subcategory):
 
 valid_itunes_categories = {
   "Arts": [
+    "Books",
     "Design",
     "Fashion & Beauty",
     "Food",
-    "Literature",
     "Performing Arts",
     "Visual Arts"],
   "Business": [
-    "Business News",
     "Careers",
+    "Entrepreneurship",
+    "Investing",
+    "Management",
+    "Marketing",
+    "Non-Profit"
+  ],
+  "Comedy": [
+    "Comedy Interviews",
+    "Improv",
+    "Stand-Up"
+  ],
+  "Education": [
+    "Courses",
+    "How To",
+    "Language Learning",
+    "Self-Improvement"
+  ],
+  "Fiction": [
+    "Comedy Fiction",
+    "Drama",
+    "Science Fiction"
+  ],
+  "Government": [],
+  "History": [],
+  "Health & Fitness": [
+    "Alternative Health",
+    "Fitness",
+    "Medicine",
+    "Mental Health",
+    "Nutrition",
+    "Sexuality"
+  ],
+  "Kids & Family": [
+    "Education for Kids",
+    "Parenting",
+    "Pets & Animals",
+    "Stories for Kids"],
+  "Leisure": [
+    "Animation & Manga",
+    "Automotive",
+    "Aviation",
+    "Crafts",
+    "Games",
+    "Hobbies",
+    "Home & Garden",
+    "Video Games"
+  ],
+  "Music": [
+    "Music Commentary",
+    "Music History",
+    "Music Interviews"],
+  "News": [
+    "Business News",
+    "Daily News",
+    "Entertainment News",
+    "News Commentary",
+    "Politics",
+    "Sports News",
+    "Tech News"
+  ],
+  "Religion & Spirituality": [
+    "Buddhism",
+    "Christianity",
+    "Hinduism",
+    "Islam",
+    "Judaism",
+    "Spirituality"],
+  "Science": [
+    "Astronomy",
+    "Chemistry",
+    "Earth Sciences",
+    "Life Sciences",
+    "Mathematics",
+    "Natural Sciences",
+    "Nature",
+    "Physics",
+    "Social Sciences"
+  ],
+  "Society & Culture": [
+    "Documentary",
+    "Personal Journals",
+    "Philosophy",
+    "Places & Travel",
+    "Relationships"],
+  "Sports": [
+    "Baseball",
+    "Basketball",
+    "Cricket",
+    "Fantasy Sports",
+    "Football",
+    "Golf",
+    "Hockey",
+    "Rugby",
+    "Running",
+    "Soccer",
+    "Swimming",
+    "Tennis",
+    "Volleyball",
+    "Wilderness",
+    "Wrestling"],
+  "Technology": [],
+  "True Crime": [],
+  "TV & Film": [
+    "After Shows",
+    "Film History",
+    "Film Interviews",
+    "Film Reviews",
+    "TV Reviews"]
+}
+
+old_itunes_categories = {
+  "Arts": [
+    "Literature"
+  ],
+  "Arts & Entertainment": [
+    "Architecture",
+    "Design",
+    "Entertainment",
+    "Games",
+    "Performing Arts",
+    "Photography",
+    "Poetry",
+    "Science Fiction"],
+  "Audio Blogs": [],
+  "Business": [
+    "Careers",
+    "Finance",
     "Investing",
     "Management & Marketing",
+    "News",
     "Shopping"],
   "Comedy": [],
   "Education": [
@@ -169,6 +311,8 @@ valid_itunes_categories = {
     "K-12",
     "Language Courses",
     "Training"],
+  "Family": [],
+  "Food": [],
   "Games & Hobbies": [
     "Automotive",
     "Aviation",
@@ -182,69 +326,9 @@ valid_itunes_categories = {
     "Regional"],
   "Health": [
     "Alternative Health",
-    "Fitness & Nutrition",
-    "Self-Help",
-    "Sexuality"],
-  "Kids & Family": [],
-  "Music": [],
-  "News & Politics": [],
-  "Religion & Spirituality": [
-    "Buddhism",
-    "Christianity",
-    "Hinduism",
-    "Islam",
-    "Judaism",
-    "Other",
-    "Spirituality"],
-  "Science & Medicine": [
-    "Medicine",
-    "Natural Sciences",
-    "Social Sciences"],
-  "Society & Culture": [
-    "History",
-    "Personal Journals",
-    "Philosophy",
-    "Places & Travel"],
-  "Sports & Recreation": [
-    "Amateur",
-    "College & High School",
-    "Outdoor",
-    "Professional"],
-  "Technology": [
-    "Gadgets",
-    "Tech News",
-    "Podcasting",
-    "Software How-To"],
-  "TV & Film": [],
-}
-
-old_itunes_categories = {
-  "Arts & Entertainment": [
-    "Architecture",
-    "Books",
-    "Design",
-    "Entertainment",
-    "Games",
-    "Performing Arts",
-    "Photography",
-    "Poetry",
-    "Science Fiction"],
-  "Audio Blogs": [],
-  "Business": [
-    "Careers",
-    "Finance",
-    "Investing",
-    "Management",
-    "Marketing"],
-  "Comedy": [],
-  "Education": [
-    "Higher Education",
-    "K-12"],
-  "Family": [],
-  "Food": [],
-  "Health": [
     "Diet & Nutrition",
     "Fitness",
+    "Fitness & Nutrition",
     "Relationships",
     "Self-Help",
     "Sexuality"],
@@ -266,8 +350,7 @@ old_itunes_categories = {
     "Spanish",
     "Swedish"],
   "Movies & Television": [],
-  "Music": [],
-  "News": [],
+  "News & Politics": [],
   "Politics": [],
   "Public Radio": [],
   "Religion & Spirituality": [
@@ -277,9 +360,20 @@ old_itunes_categories = {
     "Judaism",
     "New Age",
     "Philosophy",
+    "Other",
     "Spirituality"],
-  "Science": [],
-  "Sports": [],
+  "Science & Medicine": [
+    "Medicine",
+    "Natural Sciences",
+    "Social Sciences"],
+  "Society & Culture": [
+      "History"
+  ],
+  "Sports & Recreation": [
+    "Amateur",
+    "College & High School",
+    "Outdoor",
+    "Professional"],
   "Talk Radio": [],
   "Technology": [
     "Computers",
@@ -290,6 +384,8 @@ old_itunes_categories = {
     "Operating Systems",
     "Podcasting",
     "Smart Phones",
+    "Software How-To",
+    "Tech News",
     "Text/Speech"],
   "Transportation": [
     "Automotive",
@@ -306,3 +402,10 @@ class yesnoclean(text):
     if not self.value.lower() in ['yes','no','clean']:
       self.log(InvalidYesNoClean({"parent":self.parent.name, "element":self.name,"value":self.value}))
 
+class channeltype(enumeration):
+  error = InvalidItunesChannelType
+  valuelist = ["episodic", "serial"]
+
+class episodetype(enumeration):
+  error = InvalidItunesEpisodeType
+  valuelist = ["full", "trailer", "bonus"]
