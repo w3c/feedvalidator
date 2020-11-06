@@ -142,6 +142,7 @@ class UnexpectedWhitespace(Error): pass
 class ValidatorLimit(Error): pass
 
 class HttpProtocolError(Error): pass
+class HttpsProtocolError(Error): pass
 class HttpsProtocolWarning(Warning): pass
 
 class InvalidRDF(Error): pass

@@ -199,10 +199,11 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
       try:
         usock = urllib2.urlopen(request, context=ctx2)
       except urllib2.URLError as x:
-        import re
-        if True or re.search("WRONG_SIGNATURE_TYPE", x.reason):
+        if "WRONG_SIGNATURE_TYPE" in x.reason[1]:
           loggedEvents.append(HttpsProtocolWarning({'message': "Weak signature used by HTTPS server"}))
           usock = urllib2.urlopen(request, context=ctx1)
+        elif "CERTIFICATE_VERIFY_FAILED" in x.reason[1]:
+          raise logging.HttpsProtocolError({'message': "HTTPs server has incorrect certificate configuration"})
         else:
           raise x
       rawdata = usock.read(MAXDATALENGTH)
@@ -225,6 +226,8 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
 
     except BadStatusLine as status:
       raise ValidationFailure(logging.HttpError({'status': status.__class__}))
+    except logging.HttpsProtocolError as x:
+      raise ValidationFailure(x)
 
     except urllib2.HTTPError as status:
       rawdata = status.read()

@@ -1,0 +1,18 @@
+<!DOCTYPE fvdoc [
+<!ENTITY ldquo "&#8220;">
+<!ENTITY rdquo "&#8221;">
+<!ENTITY rsquo "&#8217;">
+]>
+<fvdoc>
+<div xmlns='http://www.w3.org/1999/xhtml'>
+<div id='message'>
+<p>Error when fetching content over HTTPs</p>
+</div>
+<div id='explanation'>
+<p>An error occured when trying to verify the certificate of the HTTPs server - most likely, the server is not configured with the full chain of intermediate certificates.</p>
+</div>
+<div id='solution'>
+<p>An SSL verification tool may help identify the specific issue.</p>
+</div>
+</div>
+</fvdoc>
