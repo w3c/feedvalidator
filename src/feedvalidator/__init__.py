@@ -199,6 +199,8 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
       try:
         usock = urllib2.urlopen(request, context=ctx2)
       except urllib2.URLError as x:
+        if isinstance(x.reason, socket.timeout):
+          raise ValidationFailure(logging.IOError({"message": 'Server timed out', "exception":x}))
         if "WRONG_SIGNATURE_TYPE" in x.reason[1]:
           loggedEvents.append(HttpsProtocolWarning({'message': "Weak signature used by HTTPS server"}))
           usock = urllib2.urlopen(request, context=ctx1)
