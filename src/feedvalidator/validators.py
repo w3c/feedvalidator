@@ -6,17 +6,15 @@ from .base import validatorBase
 from .logging import *
 import re, time, datetime
 from .uri import canonicalForm, urljoin
-from rfc822 import AddressList, parsedate, parsedate_tz, mktime_tz
+from email.utils import getaddresses, parsedate, parsedate_tz, mktime_tz
 import collections
 from functools import reduce
 
 rdfNS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
 def implausible_822(value):
-  if value[0] < 1990: return True
-
   try:
-    from rfc822 import parsedate_tz, mktime_tz
+    from email.utils import parsedate_tz, mktime_tz
   except:
     # no time zone functions available, granularity is a day
     pvalue=parsedate(value)
@@ -787,7 +785,7 @@ class email(addr_spec,nonhtml):
   def validate(self):
 
     value=self.value
-    list = AddressList(value)
+    list = getaddresses([value])
     if len(list)==1: value=list[0][1]
 
     nonhtml.validate(self)
