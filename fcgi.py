@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2002, 2003, 2005 Allan Saddi <allan@saddi.com>
 # All rights reserved.
 #
