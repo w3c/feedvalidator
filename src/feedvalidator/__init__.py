@@ -42,7 +42,6 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
   """validate RSS from string, returns validator object"""
   from xml.sax import make_parser, handler
   from .base import SAXDispatcher
-  from exceptions import UnicodeError
   from io import StringIO
 
   if re.match("^\s+<\?xml",aString) and re.search("<generator.*wordpress.*</generator>",aString):
