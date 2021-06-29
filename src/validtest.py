@@ -5,7 +5,7 @@ __version__ = "$Revision$"
 __copyright__ = "Copyright (c) 2002 Sam Ruby and Mark Pilgrim"
 
 import feedvalidator
-import unittest, new, os, sys, glob, re
+import unittest, types, os, sys, glob, re
 from feedvalidator.logging import Message,SelfDoesntMatchLocation,MissingSelf
 from feedvalidator import compatibility
 from feedvalidator.formatter.application_test import Formatter
@@ -130,7 +130,7 @@ def buildTestSuite():
     xmlBase  = os.path.abspath(xmlfile).replace(basedir,"http://www.feedvalidator.org")
     testName = 'test_' + xmlBase.replace(os.path.sep, "/")
     testFunc = buildTestCase(xmlfile, xmlBase, description, method, exc, params)
-    instanceMethod = new.instancemethod(testFunc, None, TestCase)
+    instanceMethod = types.MethodType(testFunc, TestCase)
     setattr(TestCase, testName, instanceMethod)
   return unittest.TestLoader().loadTestsFromTestCase(TestCase)
 
