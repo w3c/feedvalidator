@@ -77,9 +77,8 @@ def getDescription(xmlfile):
 
   """
 
-  stream = open(xmlfile)
-  xmldoc = stream.read()
-  stream.close()
+  with open(xmlfile, encoding='utf-8', errors='replace') as stream:
+      xmldoc = stream.read()
 
   search_results = desc_re.search(xmldoc)
   if search_results:
