@@ -25,7 +25,7 @@ class EncodingTestCase(unittest.TestCase):
   def testEncodingMatches(self):
     try:
       enc = xmlEncoding.detect(self.bytes)
-    except UnicodeError as u:
+    except UnicodeDecodeError as u:
       self.fail("'" + self.filename + "' should not cause an exception (" + str(u) + ")")
 
     self.assertTrue(enc, 'An encoding must be returned for all valid files ('
@@ -38,7 +38,7 @@ class EncodingTestCase(unittest.TestCase):
 
     try:
       encoding = xmlEncoding.detect(self.bytes, eventLog)
-    except UnicodeError as u:
+    except UnicodeDecodeError as u:
       self.fail("'" + self.filename + "' should not cause an exception (" + str(u) + ")")
 
     if encoding:
@@ -49,11 +49,11 @@ class EncodingTestCase(unittest.TestCase):
 
 
 
-bom8='\xEF\xBB\xBF'
-bom16BE='\xFE\xFF'
-bom16LE='\xFF\xFE'
-bom32BE='\x00\x00\xFE\xFF'
-bom32LE='\xFF\xFE\x00\x00'
+bom8=b'\xEF\xBB\xBF'
+bom16BE=b'\xFE\xFF'
+bom16LE=b'\xFF\xFE'
+bom32BE=b'\x00\x00\xFE\xFF'
+bom32LE=b'\xFF\xFE\x00\x00'
 
 # Some fairly typical Unicode text. It should survive XML roundtripping.
 docText='<x>\u201c"This\uFEFF" is\na\r\u00A3t\u20Acst\u201D</x>'
@@ -76,22 +76,22 @@ def genValidXmlTestCases():
   # Required
 
   yield('UTF-8', ['BOM', 'declaration'],
-    bom8 + makeDecl('UTF-8') + encoded('UTF-8'))
+    bom8 + makeDecl('UTF-8').encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-8', [],
     encoded('UTF-8'))
 
   yield('UTF-8', ['noenc'],
-    makeDecl() + encoded('UTF-8'))
+    makeDecl().encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-8', ['declaration'],
-    makeDecl('UTF-8') + encoded('UTF-8'))
+    makeDecl('UTF-8').encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-8', ['BOM'],
     bom8 + encoded('UTF-8'))
 
   yield('UTF-8', ['BOM', 'noenc'],
-    bom8 + makeDecl('UTF-8') + encoded('UTF-8'))
+    bom8 + makeDecl('UTF-8').encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-16', ['BOM', 'declaration', 'BE'],
     bom16BE + encoded('UTF-16BE', makeDecl('UTF-16') + docText))

@@ -18,7 +18,7 @@ class FailingCodec:
   def __init__(self, name):
     self.name = name
   def fail(self, txt, errors='strict'):
-    raise UnicodeError('No codec available for ' + self.name + ' in this installation of FeedValidator')
+    raise UnicodeDecodeError('No codec available for ' + self.name + ' in this installation of FeedValidator')
 
 # Don't die if the codec can't be found, but return
 #  a decoder that will fail on use
@@ -40,11 +40,11 @@ _decACE = getdecoder('ISO-8859-1') # An ASCII-compatible encoding
 
 # Given a character index into a string, calculate its 1-based row and column
 def _position(txt, idx):
-  row = txt.count('\n', 0, idx) + 1
-  ln = txt.rfind('\n', 0, idx) + 1
+  row = txt.count(b'\n', 0, idx) + 1
+  ln = txt.rfind(b'\n', 0, idx) + 1
   column = 0
   for c in txt[ln:idx]:
-    if c == '\t':
+    if c == b'\t':
       column = (column // 8 + 1) * 8
     else:
       column += 1
@@ -52,7 +52,7 @@ def _position(txt, idx):
   return (row, column)
 
 def _normaliseNewlines(txt):
-  return txt.replace('\r\n', '\n').replace('\r', '\n')
+  return txt.replace(r'\r\n', r'\n').replace(r'\r', r'\n')
 
 def _logEvent(loggedEvents, e, pos=None):
   if pos:
@@ -121,31 +121,31 @@ def _detect(doc_start, loggedEvents=[], fallback='UTF-8'):
 
   # With a BOM. We also check for a declaration, and make sure
   #  it doesn't contradict (for 4-byte encodings, it's required)
-  if sig == '\x00\x00\xFE\xFF':  # UTF-32 BE
+  if sig == b'\x00\x00\xFE\xFF':  # UTF-32 BE
     eo = _decodeDeclaration(doc_start[4:], _decUTF32BE, ['UTF-32', 'ISO-10646-UCS-4', 'CSUCS4', 'UCS-4'], loggedEvents)
-  elif sig == '\xFF\xFE\x00\x00':  # UTF-32 LE
+  elif sig == b'\xFF\xFE\x00\x00':  # UTF-32 LE
     eo = _decodeDeclaration(doc_start[4:], _decUTF32LE, ['UTF-32', 'ISO-10646-UCS-4', 'CSUCS4', 'UCS-4'], loggedEvents)
-  elif sig == '\x00\x00\xFF\xFE'  or sig == '\xFE\xFF\x00\x00':
+  elif sig == b'\x00\x00\xFF\xFE'  or sig == b'\xFE\xFF\x00\x00':
     raise UnicodeError('Unable to process UCS-4 with unusual octet ordering')
-  elif sig[:2] == '\xFE\xFF':  # UTF-16 BE
+  elif sig[:2] == b'\xFE\xFF':  # UTF-16 BE
     eo = _decodePostBOMDeclaration(doc_start[2:], _decUTF16BE, ['UTF-16', 'ISO-10646-UCS-2', 'CSUNICODE', 'UCS-2'], loggedEvents, fallback='UTF-16')
-  elif sig[:2] == '\xFF\xFE':  # UTF-16 LE
+  elif sig[:2] == b'\xFF\xFE':  # UTF-16 LE
     eo = _decodePostBOMDeclaration(doc_start[2:], _decUTF16LE, ['UTF-16', 'ISO-10646-UCS-2', 'CSUNICODE', 'UCS-2'], loggedEvents, fallback='UTF-16')
-  elif sig[:3] == '\xEF\xBB\xBF':
+  elif sig[:3] == b'\xEF\xBB\xBF':
     eo = _decodePostBOMDeclaration(doc_start[3:], _decACE, ['UTF-8'], loggedEvents, fallback='UTF-8')
 
   # Without a BOM; we must read the declaration
-  elif sig == '\x00\x00\x00\x3C':
+  elif sig == b'\x00\x00\x00\x3C':
     eo = _decodeDeclaration(doc_start, _decUTF32BE, ['UTF-32BE', 'UTF-32', 'ISO-10646-UCS-4', 'CSUCS4', 'UCS-4'], loggedEvents)
-  elif sig == '\x3C\x00\x00\x00':
+  elif sig == b'\x3C\x00\x00\x00':
     eo = _decodeDeclaration(doc_start, _decUTF32LE, ['UTF-32LE', 'UTF-32', 'ISO-10646-UCS-4', 'CSUCS4', 'UCS-4'], loggedEvents)
-  elif sig == '\x00\x3C\x00\x3F':
+  elif sig == b'\x00\x3C\x00\x3F':
     eo = _decodeDeclaration(doc_start, _decUTF16BE, ['UTF-16BE', 'UTF-16', 'ISO-10646-UCS-2', 'CSUNICODE', 'UCS-2'], loggedEvents)
-  elif sig == '\x3C\x00\x3F\x00':
+  elif sig == b'\x3C\x00\x3F\x00':
     eo = _decodeDeclaration(doc_start, _decUTF16LE, ['UTF-16LE', 'UTF-16', 'ISO-10646-UCS-2', 'CSUNICODE', 'UCS-2'], loggedEvents)
-  elif sig == '\x3C\x3F\x78\x6D':
+  elif sig == b'\x3C\x3F\x78\x6D':
     eo = _encodingFromDecl(_normaliseNewlines(_decACE(doc_start)[0])) or ('UTF-8', None)
-  elif sig == '\x4C\x6F\xA7\x94':
+  elif sig == b'\x4C\x6F\xA7\x94':
     eo = _decodeDeclaration(doc_start, _decEBCDIC, ['IBM037', 'CP037', 'IBM038', 'EBCDIC-INT'], loggedEvents)
 
   # There's no BOM, and no declaration. It's UTF-8, or mislabelled.
@@ -162,7 +162,7 @@ def detect(doc_start, loggedEvents=[], fallback='UTF-8'):
   else:
     return None
 
-_encRe = re.compile(r'<\?xml\s+version\s*=\s*(?:"[-a-zA-Z0-9_.:]+"|\'[-a-zA-Z0-9_.:]+\')\s+(encoding\s*=\s*(?:"([-A-Za-z0-9._]+)"|\'([-A-Za-z0-9._]+)\'))')
+_encRe = re.compile(rb'<\?xml\s+version\s*=\s*(?:"[-a-zA-Z0-9_.:]+"|\'[-a-zA-Z0-9_.:]+\')\s+(encoding\s*=\s*(?:"([-A-Za-z0-9._]+)"|\'([-A-Za-z0-9._]+)\'))')
 
 def _encodingFromDecl(x):
   m = _encRe.match(x)
@@ -182,7 +182,7 @@ def removeDeclaration(x):
   if m:
     s = m.start(1)
     e = m.end(1)
-    res = x[:s] + ' ' * (e - s) + x[e:]
+    res = x[:s] + b' ' * (e - s) + x[e:]
   else:
     res = x
   return res

@@ -54,7 +54,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
 
   # By now, aString should be Unicode
   source = InputSource()
-  source.setByteStream(StringIO(xmlEncoding.asUTF8(aString)))
+  source.setByteStream(StringIO(aString))
 
   validator = SAXDispatcher(base, selfURIs or [base], encoding)
   validator.setFirstOccurrenceOnly(firstOccurrenceOnly)
@@ -102,7 +102,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
     msg=[]
     libxml2.registerErrorHandler(lambda msg,str: msg.append(str), msg)
 
-    input = libxml2.inputBuffer(StringIO(xmlEncoding.asUTF8(aString)))
+    input = libxml2.inputBuffer(StringIO(aString))
     reader = input.newTextReader(prefix)
     reader.SetParserProp(libxml2.PARSER_VALIDATE, 1)
     ret = reader.Read()
@@ -117,7 +117,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
     parser.parse(source)
   except SAXException:
     pass
-  except UnicodeError:
+  except UnicodeDecodeError:
     import sys
     exctype, value = sys.exc_info()[:2]
     validator.log(logging.UnicodeError({"exception":value}))
@@ -137,7 +137,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
           self.dispatcher.log(InvalidRDF({"message": message}))
 
       source = InputSource()
-      source.setByteStream(StringIO(xmlEncoding.asUTF8(aString)))
+      source.setByteStream(StringIO(aString))
 
       parser.reset()
       parser.setContentHandler(Handler(parser.getContentHandler()))
