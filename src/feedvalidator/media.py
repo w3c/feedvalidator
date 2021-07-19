@@ -55,7 +55,8 @@ class media_copyright(nonhtml,rfc2396_full):
     self.name = "media_copyright"
     self.value = ""
 
-class media_credit(text,rfc2396_full):
+class media_credit(text):
+  rfc2396_re = rfc2396_full.rfc2396_re
   EBU = [
     "actor", "adaptor", "anchor person", "animal trainer", "animator",
     "announcer", "armourer", "art director", "artist/performer",
@@ -158,7 +159,7 @@ class media_rating(rfc2396_full):
       self.name = 'scheme'
       rfc2396_full.validate(self)
 
-class media_restriction(text,rfc2396_full,iso3166):
+class media_restriction(rfc2396_full,iso3166):
   def getExpectedAttrNames(self):
     return [(None, 'relationship'),(None,'type')]
   def validate(self):
@@ -182,7 +183,9 @@ class media_restriction(text,rfc2396_full,iso3166):
     else:
       self.log(InvalidMediaRestrictionType({"parent":self.parent.name, "element":self.name, "attr":"type", "value":type}))
 
-class media_player(validatorBase,positiveInteger,rfc2396_full):
+class media_player(validatorBase):
+  max = 0
+  rfc2396_re = rfc2396_full.rfc2396_re
   def getExpectedAttrNames(self):
     return [(None,'height'),(None,'url'),(None, 'width')]
   def validate(self):
@@ -243,7 +246,7 @@ class media_title(nonhtml):
     else:
       nonhtml.validate(self, ContainsUndeclaredHTML)
 
-class media_thumbnail(validatorBase,positiveInteger,rfc2396_full):
+class media_thumbnail(positiveInteger,rfc2396_full):
   npt_re = re.compile("^(now)|(\d+(\.\d+)?)|(\d+:\d\d:\d\d(\.\d+)?)$")
   def getExpectedAttrNames(self):
     return [(None,'height'),(None,'time'),(None,'url'),(None, 'width')]
@@ -270,8 +273,9 @@ class media_thumbnail(validatorBase,positiveInteger,rfc2396_full):
     if self.value: positiveInteger.validate(self)
 
 from .extension import extension_everywhere
-class media_content(validatorBase, media_elements, extension_everywhere,
-    positiveInteger, rfc2396_full, truefalse, nonNegativeInteger):
+class media_content(validatorBase, media_elements, extension_everywhere):
+  rfc2396_re = rfc2396_full.rfc2396_re
+  max = 0
   def getExpectedAttrNames(self):
     return [
         (None,'bitrate'),

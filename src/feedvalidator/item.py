@@ -250,7 +250,7 @@ class enclosure(validatorBase):
 
     return validatorBase.prevalidate(self)
 
-class guid(rfc2396_full, noduplicates):
+class guid(rfc2396_full):
   def getExpectedAttrNames(self):
     return [(None, 'isPermaLink')]
 

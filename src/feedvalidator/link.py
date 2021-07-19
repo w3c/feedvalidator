@@ -8,7 +8,7 @@ from .validators import *
 #
 # Atom link element
 #
-class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339,nonblank):
+class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339):
   validRelations = [
     # http://www.iana.org/assignments/link-relations.html
     'alternate',    # RFC4287

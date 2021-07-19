@@ -11,7 +11,8 @@ from .extension import *
 #
 # channel element.
 #
-class channel(validatorBase, rfc2396, extension_channel, itunes_channel):
+class channel(validatorBase, extension_channel, itunes_channel):
+  rfc2396_re = rfc2396.rfc2396_re
   def getExpectedAttrNames(self):
     return [('urn:atom-extension:indexing', 'index')]
   def prevalidate(self):

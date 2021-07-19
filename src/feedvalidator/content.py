@@ -12,7 +12,7 @@ def _isXhtmlDiv(ns, elem):
 #
 # item element.
 #
-class textConstruct(validatorBase,rfc2396,nonhtml):
+class textConstruct(rfc2396,nonhtml):
   from .validators import mime_re
   import re
 

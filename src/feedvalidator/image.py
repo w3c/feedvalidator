@@ -73,7 +73,7 @@ class url(rfc2396_full):
     if re.match("^\w+$", ext) and ext not in ['jpg','jpeg','gif','png']:
       self.log(ImageUrlFormat({"parent":self.parent.name, "element":self.name}))
 
-class title(nonhtml, noduplicates):
+class title(nonhtml):
   def validate(self):
     if not self.value.strip():
       self.log(NotBlank({"parent":self.parent.name, "element":self.name}))
@@ -85,7 +85,7 @@ class title(nonhtml, noduplicates):
       self.parent.parent.title and self.parent.parent.title != self.value:
       self.log(ImageTitleDoesntMatch({"parent":self.parent.name, "element":self.name}))
 
-class width(text, noduplicates):
+class width(text):
   def validate(self):
     try:
       w = int(self.value)
@@ -96,7 +96,7 @@ class width(text, noduplicates):
     except ValueError:
       self.log(InvalidWidth({"parent":self.parent.name, "element":self.name, "value":self.value}))
 
-class height(text, noduplicates):
+class height(text):
   def validate(self):
     try:
       h = int(self.value)

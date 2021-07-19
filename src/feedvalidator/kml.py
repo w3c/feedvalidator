@@ -217,7 +217,7 @@ class LookAtType(Feature):
 #
 # KML element.
 #
-class kml(validatorBase, Container, Feature):
+class kml(Container, Feature):
   from .logging import TYPE_KML20, TYPE_KML21, TYPE_KML22
 
   def do_NetworkLink(self):
@@ -292,7 +292,7 @@ class Update(validatorBase):
   def do_Delete(self):
     return noduplicates()
 
-class NetworkLink(validatorBase, FeatureType, Feature):
+class NetworkLink(FeatureType, Feature):
   def validate(self):
     if not "Link" in self.children and not "Url" in self.children:
       self.log(MissingElement({"parent":self.name, "element":"Link"}))
@@ -315,7 +315,7 @@ class NetworkLink(validatorBase, FeatureType, Feature):
   def do_Url(self):
     return Url(),noduplicates()
 
-class Document(validatorBase, FeatureType, Container, Feature):
+class Document(FeatureType, Container, Feature):
 
   def getExpectedAttrNames(self):
     return [(None, 'id')]
@@ -359,7 +359,7 @@ class SchemaField(validatorBase):
     self.validate_required_attribute((None,'name'), text)
     self.validate_required_attribute((None,'type'), SchemaFieldType)
 
-class Placemark(validatorBase, FeatureType, Geometry):
+class Placemark(FeatureType, Geometry):
   def prevalidate(self):
     if (None,"id") not in self.attrs:
       self.log(MissingId({"parent":self.name, "element":"id"}))
@@ -378,7 +378,7 @@ class MultiGeometry(Geometry):
   def getExpectedAttrNames(self):
     return [(None, 'id')]
 
-class ScreenOverlay(validatorBase, FeatureType, OverlayType):
+class ScreenOverlay(FeatureType, OverlayType):
 
   def getExpectedAttrNames(self):
     return [(None, 'id')]
@@ -398,7 +398,7 @@ class ScreenOverlay(validatorBase, FeatureType, OverlayType):
   def do_size(self):
     return overlayxy(), noduplicates()
 
-class GroundOverlay(validatorBase, FeatureType, OverlayType):
+class GroundOverlay(FeatureType, OverlayType):
   def validate(self):
     if not "LatLonBox" in self.children:
       self.log(MissingElement({"parent":self.name, "element":"LatLonBox"}))
@@ -473,7 +473,7 @@ class LatLonBox(validatorBase):
   def do_rotation(self):
     return longitude(),noduplicates()
 
-class LatLonAltBox(validatorBase, LatLonBox):
+class LatLonAltBox(LatLonBox):
 
   def do_minAltitude(self):
     return Float(),noduplicates()
@@ -510,7 +510,7 @@ class Snippet(text):
   def getExpectedAttrNames(self):
     return [(None, 'maxLines')]
 
-class Folder(validatorBase, FeatureType, Container, Feature):
+class Folder(FeatureType, Container, Feature):
   def getExpectedAttrNames(self):
     return [(None, 'id')]
 
@@ -523,7 +523,7 @@ class Folder(validatorBase, FeatureType, Container, Feature):
   def do_ScreenOverlay(self):
     return ScreenOverlay()
 
-class LookAt(validatorBase, LookAtType):
+class LookAt(LookAtType):
 
   def getExpectedAttrNames(self):
     return [(None, 'id')]
@@ -570,7 +570,7 @@ class Style(validatorBase):
   def do_labelColor(self):
     return labelColor(),noduplicates()
 
-class IconStyle(validatorBase, ColorStyleType):
+class IconStyle(ColorStyleType):
   def prevalidate(self):
     self.validate_optional_attribute((None,'id'), unique('id',self.parent))
 
@@ -675,7 +675,7 @@ class ItemIcon(validatorBase):
   def do_state(self):
     return itemIconState(),noduplicates()
 
-class LabelStyle(validatorBase, ColorStyleType):
+class LabelStyle(ColorStyleType):
   def prevalidate(self):
     self.validate_optional_attribute((None,'id'), unique('id',self.parent))
 
@@ -688,7 +688,7 @@ class LabelStyle(validatorBase, ColorStyleType):
   def do_scale(self):
     return Float(),noduplicates()
 
-class LineStyle(validatorBase, ColorStyleType):
+class LineStyle(ColorStyleType):
   def prevalidate(self):
     self.validate_optional_attribute((None,'id'), unique('id',self.parent))
 
@@ -698,7 +698,7 @@ class LineStyle(validatorBase, ColorStyleType):
   def do_width(self):
     return Float(),noduplicates()
 
-class PolyStyle(validatorBase, ColorStyleType):
+class PolyStyle(ColorStyleType):
   def prevalidate(self):
     self.validate_optional_attribute((None,'id'), unique('id',self.parent))
 
@@ -711,7 +711,7 @@ class PolyStyle(validatorBase, ColorStyleType):
   def do_outline(self):
     return zeroone(), noduplicates()
 
-class Link(validatorBase, LinkType):
+class Link(LinkType):
 
   def getExpectedAttrNames(self):
     return [(None, 'id')]
@@ -729,7 +729,7 @@ class Pair(validatorBase):
   def do_styleUrl(self):
     return text(),noduplicates()
 
-class Point(validatorBase, GeometryElements):
+class Point(GeometryElements):
   def validate(self):
     if not "coordinates" in self.children:
       self.log(MissingElement({"parent":self.name, "element":"coordinates"}))
@@ -819,7 +819,7 @@ class Orientation(validatorBase):
   def do_roll(self):
     return angle360(), noduplicates()
 
-class Polygon(validatorBase, GeometryElements):
+class Polygon(GeometryElements):
   def validate(self):
     if not "outerBoundaryIs" in self.children:
       self.log(MissingElement({"parent":self.name, "element":"outerBoundaryIs"}))
@@ -841,7 +841,7 @@ class boundary(validatorBase):
   def do_LinearRing(self):
     return LinearRing()
 
-class LineString(validatorBase, GeometryElements):
+class LineString(GeometryElements):
   def validate(self):
     if not "coordinates" in self.children:
       self.log(MissingElement({"parent":self.name, "element":"coordinates"}))
@@ -852,7 +852,7 @@ class LineString(validatorBase, GeometryElements):
   def do_coordinates(self):
     return coordinates(), noduplicates()
 
-class LinearRing(validatorBase, GeometryElements):
+class LinearRing(GeometryElements):
   def validate(self):
     if not "coordinates" in self.children:
       self.log(MissingElement({"parent":self.name, "element":"coordinates"}))
@@ -952,7 +952,7 @@ class antialias(validatorBase):
   def validate(self):
     return zeroone(),noduplicates()
 
-class View(validatorBase, LookAtType):
+class View(LookAtType):
   def prevalidate(self):
     self.log(Deprecated({"element":self.name, "replacement":"LookAt"}))
 
@@ -989,7 +989,7 @@ class geomScale(text):
   def validate(self):
       return Float()
 
-class GeometryCollection(validatorBase, Geometry):
+class GeometryCollection(Geometry):
   def prevalidate(self):
     if not self.getFeedType() == TYPE_KML20:
       self.log(Deprecated({"element":self.name, "replacement":"MultiGeometry"}))
@@ -997,7 +997,7 @@ class GeometryCollection(validatorBase, Geometry):
   def getExpectedAttrNames(self):
     return [(None, 'id')]
 
-class Url(validatorBase, LinkType):
+class Url(LinkType):
   def prevalidate(self):
     if not self.getFeedType() == TYPE_KML20:
       self.log(Deprecated({"element":self.name, "replacement":"Link"}))
