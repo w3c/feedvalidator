@@ -23,7 +23,7 @@ the article, and &lt;guid&gt; is the permalink to the weblog entry.</p>
 </div>
 <div id='solution'>
 <p>Add a different, unique, and unchanging
-<a href="http://feedvalidator.org/docs/rss2.html#ltguidgtSubelementOfLtitemgt">guid</a> to each item.  See <a href="http://scripting.com/rss.xml">scripting.com</a> for an example.</p>
+<a href="https://www.rssboard.org/rss-specification#ltguidgtSubelementOfLtitemgt">guid</a> to each item.  See <a href="http://scripting.com/rss.xml">scripting.com</a> for an example.</p>
 </div>
 </div>
 </fvdoc>
