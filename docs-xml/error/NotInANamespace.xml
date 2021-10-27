@@ -4,7 +4,7 @@
 <p>Missing namespace for <code>foo</code></p>
 </div>
 <div id='explanation'>
-<p>The spec <a href="http://www.feedvalidator.org/docs/rss2.html#extendingRss">states</a> that "[an] RSS feed may contain elements not described on this page, only if those elements are defined in a namespace.".</p>
+<p>The spec <a href="https://www.rssboard.org/rss-specification#extendingRss">states</a> that "[an] RSS feed may contain elements not described on this page, only if those elements are defined in a namespace.".</p>
 </div>
 <div id='solution'>
 <p>As this element may not be used in RSS 2.0 feeds, you will need to find
