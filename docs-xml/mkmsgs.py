@@ -25,7 +25,7 @@ template = '''
 def missing():
   result = []
 
-  for key, value in messages.items():
+  for key, value in list(messages.items()):
     if issubclass(key,Error):
       dir = 'error'
     elif issubclass(key,Warning):
@@ -58,4 +58,4 @@ if __name__ == '__main__':
     msg = re.sub("%\(\w+\)\w?", "<code>foo</code>", msg)
     if not path.exists(xml):
       open(xml,'w').write(template.lstrip() % msg)
-      print xml
+      print(xml)

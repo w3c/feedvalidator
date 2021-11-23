@@ -17,7 +17,7 @@ class textConstruct(validatorBase,rfc2396,nonhtml):
   import re
 
   def getExpectedAttrNames(self):
-      return [(None, u'type'),(None, u'src')]
+      return [(None, 'type'),(None, 'src')]
 
   def normalizeWhitespace(self):
       pass
@@ -95,7 +95,7 @@ class textConstruct(validatorBase,rfc2396,nonhtml):
 
   def characters(self, string):
     for c in string:
-      if 0x80 <= ord(c) <= 0x9F or c == u'\ufffd':
+      if 0x80 <= ord(c) <= 0x9F or c == '\ufffd':
         from .validators import BadCharacters
         self.log(BadCharacters({"parent":self.parent.name, "element":self.name}))
     if (self.type=='xhtml') and string.strip() and not self.value.strip():

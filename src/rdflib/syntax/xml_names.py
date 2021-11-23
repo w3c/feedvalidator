@@ -35,7 +35,7 @@ from unicodedata import category, decomposition
 
 NAME_START_CATEGORIES = ["Ll", "Lu", "Lo", "Lt", "Nl"]
 NAME_CATEGORIES = NAME_START_CATEGORIES + ["Mc", "Me", "Mn", "Lm", "Nd"]
-ALLOWED_NAME_CHARS = [u"\u00B7", u"\u0387", u"-", u".", u"_"]
+ALLOWED_NAME_CHARS = ["\u00B7", "\u0387", "-", ".", "_"]
 
 # http://www.w3.org/TR/REC-xml-names/#NT-NCName
 #  [4] NCName ::= (Letter | '_') (NCNameChar)* /* An XML Name, minus
@@ -46,7 +46,7 @@ ALLOWED_NAME_CHARS = [u"\u00B7", u"\u0387", u"-", u".", u"_"]
 def is_ncname(name):
     first = name[0]
     if first=="_" or category(first) in NAME_START_CATEGORIES:
-        for i in xrange(1, len(name)):
+        for i in range(1, len(name)):
             c = name[i]
             if not category(c) in NAME_CATEGORIES:
                 if c in ALLOWED_NAME_CHARS:
@@ -63,9 +63,9 @@ def is_ncname(name):
 def split_uri(predicate):
     predicate = predicate
     length = len(predicate)
-    for i in xrange(0, length):
+    for i in range(0, length):
         if not category(predicate[-i-1]) in NAME_CATEGORIES:
-            for j in xrange(-1-i, length):
+            for j in range(-1-i, length):
                 if category(predicate[j]) in NAME_START_CATEGORIES:
                     ns = predicate[:j]
                     if not ns:

@@ -31,14 +31,14 @@ class media_elements:
 
 class media_category(nonhtml,rfc2396_full):
   def getExpectedAttrNames(self):
-      return [(None,u'label'),(None, u'scheme')]
+      return [(None,'label'),(None, 'scheme')]
   def prevalidate(self):
     self.name = "label"
-    self.value = self.attrs.get((None,u'label'))
+    self.value = self.attrs.get((None,'label'))
     if self.value: nonhtml.validate(self)
 
     self.name = "scheme"
-    self.value = self.attrs.get((None,u'scheme'))
+    self.value = self.attrs.get((None,'scheme'))
     if self.value: rfc2396_full.validate(self)
 
     self.name = "media_category"
@@ -46,10 +46,10 @@ class media_category(nonhtml,rfc2396_full):
 
 class media_copyright(nonhtml,rfc2396_full):
   def getExpectedAttrNames(self):
-      return [(None,u'url')]
+      return [(None,'url')]
   def prevalidate(self):
     self.name = "url"
-    self.value = self.attrs.get((None,u'url'))
+    self.value = self.attrs.get((None,'url'))
     if self.value: rfc2396_full.validate(self)
 
     self.name = "media_copyright"
@@ -96,7 +96,7 @@ class media_credit(text,rfc2396_full):
   ]
 
   def getExpectedAttrNames(self):
-    return [(None, u'role'),(None,u'scheme')]
+    return [(None, 'role'),(None,'scheme')]
   def prevalidate(self):
     scheme = self.attrs.get((None, 'scheme')) or 'urn:ebu'
     role = self.attrs.get((None, 'role'))
@@ -116,7 +116,7 @@ class media_credit(text,rfc2396_full):
 
 class media_hash(text):
   def getExpectedAttrNames(self):
-    return [(None,u'algo')]
+    return [(None,'algo')]
   def prevalidate(self):
     self.algo = self.attrs.get((None, 'algo'))
     if self.algo and self.algo not in ['md5', 'sha-1']:
@@ -135,7 +135,7 @@ class media_hash(text):
 
 class media_rating(rfc2396_full):
   def getExpectedAttrNames(self):
-    return [(None, u'scheme')]
+    return [(None, 'scheme')]
   def validate(self):
     scheme = self.attrs.get((None, 'scheme')) or 'urn:simple'
     if scheme == 'urn:simple':
@@ -160,7 +160,7 @@ class media_rating(rfc2396_full):
 
 class media_restriction(text,rfc2396_full,iso3166):
   def getExpectedAttrNames(self):
-    return [(None, u'relationship'),(None,u'type')]
+    return [(None, 'relationship'),(None,'type')]
   def validate(self):
     relationship = self.attrs.get((None, 'relationship'))
     if not relationship:
@@ -184,7 +184,7 @@ class media_restriction(text,rfc2396_full,iso3166):
 
 class media_player(validatorBase,positiveInteger,rfc2396_full):
   def getExpectedAttrNames(self):
-    return [(None,u'height'),(None,u'url'),(None, u'width')]
+    return [(None,'height'),(None,'url'),(None, 'width')]
   def validate(self):
     self.value = self.attrs.get((None, 'url'))
     if self.value:
@@ -203,7 +203,7 @@ class media_player(validatorBase,positiveInteger,rfc2396_full):
 
 class media_text(nonhtml):
   def getExpectedAttrNames(self):
-    return [(None,u'end'),(None,u'lang'),(None,u'start'),(None, u'type')]
+    return [(None,'end'),(None,'lang'),(None,'start'),(None, 'type')]
   def prevalidate(self):
     self.type = self.attrs.get((None, 'type'))
     if self.type and self.type not in ['plain', 'html']:
@@ -232,7 +232,7 @@ class media_text(nonhtml):
 
 class media_title(nonhtml):
   def getExpectedAttrNames(self):
-    return [(None, u'type')]
+    return [(None, 'type')]
   def prevalidate(self):
     self.type = self.attrs.get((None, 'type'))
     if self.type and self.type not in ['plain', 'html']:
@@ -246,7 +246,7 @@ class media_title(nonhtml):
 class media_thumbnail(validatorBase,positiveInteger,rfc2396_full):
   npt_re = re.compile("^(now)|(\d+(\.\d+)?)|(\d+:\d\d:\d\d(\.\d+)?)$")
   def getExpectedAttrNames(self):
-    return [(None,u'height'),(None,u'time'),(None,u'url'),(None, u'width')]
+    return [(None,'height'),(None,'time'),(None,'url'),(None, 'width')]
   def validate(self):
     time = self.attrs.get((None, 'time'))
     if time and not media_thumbnail.npt_re.match(time):
@@ -274,23 +274,23 @@ class media_content(validatorBase, media_elements, extension_everywhere,
     positiveInteger, rfc2396_full, truefalse, nonNegativeInteger):
   def getExpectedAttrNames(self):
     return [
-        (None,u'bitrate'),
-        (None,u'channels'),
-        (None,u'duration'),
-        (None,u'expression'),
-        (None,u'fileSize'),
-        (None,u'framerate'),
-        (None,u'height'),
-        (None,u'isDefault'),
-        (None,u'lang'),
-        (None,u'medium'),
-        (None,u'samplingrate'),
-        (None,u'type'),
-        (None,u'url'),
-        (None,u'width')
+        (None,'bitrate'),
+        (None,'channels'),
+        (None,'duration'),
+        (None,'expression'),
+        (None,'fileSize'),
+        (None,'framerate'),
+        (None,'height'),
+        (None,'isDefault'),
+        (None,'lang'),
+        (None,'medium'),
+        (None,'samplingrate'),
+        (None,'type'),
+        (None,'url'),
+        (None,'width')
       ]
   def validate(self):
-    self.value = self.attrs.get((None,u'bitrate'))
+    self.value = self.attrs.get((None,'bitrate'))
     if self.value and not re.match('\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'bitrate', "value":self.value}))
@@ -299,12 +299,12 @@ class media_content(validatorBase, media_elements, extension_everywhere,
     self.name = "channels"
     if self.value: nonNegativeInteger.validate(self)
 
-    self.value = self.attrs.get((None,u'duration'))
+    self.value = self.attrs.get((None,'duration'))
     if self.value and not re.match('\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'duration', "value":self.value}))
 
-    self.value = self.attrs.get((None,u'expression'))
+    self.value = self.attrs.get((None,'expression'))
     if self.value and self.value not in ['sample', 'full', 'nonstop']:
       self.log(InvalidMediaExpression({"parent":self.parent.name, "element":self.name, "value": self.value}))
 
@@ -312,7 +312,7 @@ class media_content(validatorBase, media_elements, extension_everywhere,
     self.name = "fileSize"
     if self.value: positiveInteger.validate(self)
 
-    self.value = self.attrs.get((None,u'framerate'))
+    self.value = self.attrs.get((None,'framerate'))
     if self.value and not re.match('\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'framerate', "value":self.value}))
@@ -327,21 +327,21 @@ class media_content(validatorBase, media_elements, extension_everywhere,
     self.value = self.attrs.get((None, 'lang'))
     if self.value: iso639_validate(self.log,self.value,'lang',self.parent)
 
-    self.value = self.attrs.get((None,u'medium'))
+    self.value = self.attrs.get((None,'medium'))
     if self.value and self.value not in ['image', 'audio', 'video', 'document', 'executable']:
       self.log(InvalidMediaMedium({"parent":self.parent.name, "element":self.name, "value": self.value}))
 
-    self.value = self.attrs.get((None,u'samplingrate'))
+    self.value = self.attrs.get((None,'samplingrate'))
     if self.value and not re.match('\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'samplingrate', "value":self.value}))
 
-    self.value = self.attrs.get((None,u'type'))
+    self.value = self.attrs.get((None,'type'))
     if self.value and not mime_re.match(self.value):
       self.log(InvalidMIMEAttribute({"parent":self.parent.name, "element":self.name, "attr":'type'}))
 
     self.name = "url"
-    self.value = self.attrs.get((None,u'url'))
+    self.value = self.attrs.get((None,'url'))
     if self.value: rfc2396_full.validate(self)
 
     self.value = self.attrs.get((None, 'width'))

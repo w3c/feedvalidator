@@ -15,8 +15,8 @@ class URIRef(Identifier):
 
     def __init__(self, value):
         if normalize and value:
-            if not isinstance(value, unicode):
-                value = unicode(value)
+            if not isinstance(value, str):
+                value = str(value)
             if value != normalize("NFC", value):
                 raise Error("value must be in NFC normalized form.")
 

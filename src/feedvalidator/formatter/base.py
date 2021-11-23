@@ -5,7 +5,7 @@ __copyright__ = "Copyright (c) 2002 Sam Ruby and Mark Pilgrim"
 """Base class for output classes"""
 
 from feedvalidator.logging import Info, Warning, Error
-from UserList import UserList
+from collections import UserList
 import os
 
 LANGUAGE = os.environ.get('LANGUAGE', 'en_US:en').split(':')[-1]

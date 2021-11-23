@@ -53,18 +53,18 @@ import sys
 import os
 import signal
 import struct
-import cStringIO as StringIO
+import io as StringIO
 import select
 import socket
 import errno
 import traceback
 
 try:
-    import thread
+    import _thread
     import threading
     thread_available = True
 except ImportError:
-    import dummy_thread as thread
+    import _dummy_thread as thread
     import dummy_threading as threading
     thread_available = False
 
@@ -240,7 +240,7 @@ class InputStream(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         r = self.readline()
         if not r:
             raise StopIteration
@@ -436,13 +436,13 @@ def encode_pair(name, value):
     if nameLength < 128:
         s = chr(nameLength)
     else:
-        s = struct.pack('!L', nameLength | 0x80000000L)
+        s = struct.pack('!L', nameLength | 0x80000000)
 
     valueLength = len(value)
     if valueLength < 128:
         s += chr(valueLength)
     else:
-        s += struct.pack('!L', valueLength | 0x80000000L)
+        s += struct.pack('!L', valueLength | 0x80000000)
 
     return s + name + value
 
@@ -594,7 +594,7 @@ class Request(object):
         self._flush()
         self._end(appStatus, protocolStatus)
 
-    def _end(self, appStatus=0L, protocolStatus=FCGI_REQUEST_COMPLETE):
+    def _end(self, appStatus=0, protocolStatus=FCGI_REQUEST_COMPLETE):
         self._conn.end_request(self, appStatus, protocolStatus)
 
     def _flush(self):
@@ -617,7 +617,7 @@ class CGIRequest(Request):
         self.stderr = sys.stderr
         self.data = StringIO.StringIO()
 
-    def _end(self, appStatus=0L, protocolStatus=FCGI_REQUEST_COMPLETE):
+    def _end(self, appStatus=0, protocolStatus=FCGI_REQUEST_COMPLETE):
         sys.exit(appStatus)
 
     def _flush(self):
@@ -716,7 +716,7 @@ class Connection(object):
         """
         rec.write(self._sock)
 
-    def end_request(self, req, appStatus=0L,
+    def end_request(self, req, appStatus=0,
                     protocolStatus=FCGI_REQUEST_COMPLETE, remove=True):
         """
         End a Request.
@@ -765,7 +765,7 @@ class Connection(object):
 
         if not self._multiplexed and self._requests:
             # Can't multiplex requests.
-            self.end_request(req, 0L, FCGI_CANT_MPX_CONN, remove=False)
+            self.end_request(req, 0, FCGI_CANT_MPX_CONN, remove=False)
         else:
             self._requests[inrec.requestId] = req
 
@@ -856,7 +856,7 @@ class MultiplexedConnection(Connection):
         finally:
             self._lock.release()
 
-    def end_request(self, req, appStatus=0L,
+    def end_request(self, req, appStatus=0,
                     protocolStatus=FCGI_REQUEST_COMPLETE, remove=True):
         self._lock.acquire()
         try:
@@ -882,7 +882,7 @@ class MultiplexedConnection(Connection):
             self._lock.release()
 
     def _start_request(self, req):
-        thread.start_new_thread(req.run, ())
+        _thread.start_new_thread(req.run, ())
 
     def _do_params(self, inrec):
         self._lock.acquire()
@@ -1010,7 +1010,7 @@ class Server(object):
                 sys.exit(0)
         else:
             # Run as a server
-            if type(self._bindAddress) in [ str, unicode]:
+            if type(self._bindAddress) in [ str, str]:
                 # Unix socket
                 sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 try:
@@ -1058,8 +1058,7 @@ class Server(object):
         """
         web_server_addrs = os.environ.get('FCGI_WEB_SERVER_ADDRS')
         if web_server_addrs is not None:
-            web_server_addrs = map(lambda x: x.strip(),
-                                   web_server_addrs.split(','))
+            web_server_addrs = [x.strip() for x in web_server_addrs.split(',')]
 
         sock = self._setupSocket()
 
@@ -1093,7 +1092,7 @@ class Server(object):
                 # Instantiate a new Connection and begin processing FastCGI
                 # messages (either in a new thread or this thread).
                 conn = self._connectionClass(clientSock, addr, self)
-                thread.start_new_thread(conn.run, ())
+                _thread.start_new_thread(conn.run, ())
 
             self._mainloopPeriodic()
 
@@ -1126,7 +1125,7 @@ class Server(object):
         is passed at initialization time, this must be implemented by
         a subclass.
         """
-        raise NotImplementedError, self.__class__.__name__ + '.handler'
+        raise NotImplementedError(self.__class__.__name__ + '.handler')
 
     def error(self, req):
         """
@@ -1162,7 +1161,7 @@ class WSGIServer(Server):
         self.multithreaded = multithreaded
 
         # Used to force single-threadedness
-        self._app_lock = thread.allocate_lock()
+        self._app_lock = _thread.allocate_lock()
 
     def handler(self, req):
         """Special handler for WSGI."""
@@ -1203,7 +1202,7 @@ class WSGIServer(Server):
         result = None
 
         def write(data):
-            assert type(data) in  [str, unicode], 'write() argument must be string'
+            assert type(data) in  [str, str], 'write() argument must be string'
             assert headers_set, 'write() before start_response()'
 
             if not headers_sent:
@@ -1234,21 +1233,21 @@ class WSGIServer(Server):
                 try:
                     if headers_sent:
                         # Re-raise if too late
-                        raise exc_info[0], exc_info[1], exc_info[2]
+                        raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
                 finally:
                     exc_info = None # avoid dangling circular ref
             else:
                 assert not headers_set, 'Headers already set!'
 
-            assert type(status) in [str, unicode], 'Status must be a string'
+            assert type(status) in [str, str], 'Status must be a string'
             assert len(status) >= 4, 'Status must be at least 4 characters'
             assert int(status[:3]), 'Status must begin with 3-digit code'
             assert status[3] == ' ', 'Status must have a space after code'
             assert type(response_headers) is list, 'Headers must be a list'
             if __debug__:
                 for name,val in response_headers:
-                    assert type(name) in [str, unicode], 'Header names must be strings'
-                    assert type(val) in [str, unicode], 'Header values must be strings'
+                    assert type(name) in [str, str], 'Header names must be strings'
+                    assert type(val) in [str, str], 'Header values must be strings'
 
             headers_set[:] = [status, response_headers]
             return write
@@ -1300,7 +1299,7 @@ if __name__ == '__main__':
               '<body>\n' \
               '<p>Hello World!</p>\n' \
               '<table border="1">'
-        names = environ.keys()
+        names = list(environ.keys())
         names.sort()
         for name in names:
             yield '<tr><td>%s</td><td>%s</td></tr>\n' % (

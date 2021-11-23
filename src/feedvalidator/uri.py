@@ -7,8 +7,8 @@ __author__ = "Joseph Walton <http://www.kafsemo.org/>"
 __version__ = "$Revision$"
 __copyright__ = "Copyright (c) 2004, 2007 Joseph Walton"
 
-from urlparse import urljoin
-from urllib import quote, quote_plus, unquote, unquote_plus
+from urllib.parse import urljoin
+from urllib.parse import quote, quote_plus, unquote, unquote_plus
 
 from unicodedata import normalize
 from codecs import lookup
@@ -121,7 +121,7 @@ def _normAuth(auth,port):
     return _normPort(h,port)
 
 def _normPath(p):
-  l = p.split(u'/')
+  l = p.split('/')
   i = 0
   if l and l[0]:
     i = len(l)
@@ -144,7 +144,7 @@ def _normPath(p):
       i += 1
   if l == ['']:
     l = ['', '']
-  return u'/'.join([_qnu(c, PCHAR) for c in l])
+  return '/'.join([_qnu(c, PCHAR) for c in l])
 
 # From RFC 2396bis, with added end-of-string marker
 uriRe = re.compile('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$')
@@ -197,7 +197,7 @@ def _canonical(s):
   query = _qnu(m.group(7), PCHAR + "/?")
   fragment = _qnu(m.group(9), PCHAR + "/?")
 
-  s = u''
+  s = ''
   if scheme != None:
     s += scheme + ':'
 

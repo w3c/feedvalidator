@@ -267,7 +267,7 @@ _encUTF8 = codecs.getencoder('UTF-8')
 def asUTF8(x):
   """Accept a Unicode string and return a UTF-8 encoded string, with
   its encoding declaration removed, suitable for parsing."""
-  x = removeDeclaration(unicode(x))
+  x = removeDeclaration(str(x))
   return _encUTF8(x)[0]
 
 
@@ -282,6 +282,6 @@ if __name__ == '__main__':
       log = []
       eo = detect(l, log)
       if eo:
-        print x,eo
+        print(x,eo)
       else:
-        print repr(log)
+        print(repr(log))

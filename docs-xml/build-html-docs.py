@@ -9,7 +9,7 @@
 from sys import argv, stderr, exit
 
 if len(argv) < 3:
-  print >>stderr,"Usage:",argv[0]," <template.html> <target-doc-directory> [source XML document ... ]"
+  print("Usage:",argv[0]," <template.html> <target-doc-directory> [source XML document ... ]", file=stderr)
   exit(5)
 
 template = argv[1]
@@ -98,4 +98,4 @@ for f in argv[3:]:
   if ext == '.xml':
     writeDoc(sp, os.path.join(targetDir, category, name + '.html'))
   else:
-    print >>stderr,"Ignoring",f
+    print("Ignoring",f, file=stderr)

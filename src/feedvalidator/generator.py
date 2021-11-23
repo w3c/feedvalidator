@@ -10,7 +10,7 @@ from .validators import *
 #
 class generator(nonhtml,rfc2396):
   def getExpectedAttrNames(self):
-    return [(None, u'uri'), (None, u'version')]
+    return [(None, 'uri'), (None, 'version')]
 
   def prevalidate(self):
     if (None, "url") in self.attrs:

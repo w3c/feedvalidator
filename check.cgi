@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from config import *
 
-import cgi, sys, os, urlparse, sys, re, urllib
+import cgi, sys, os, urllib.parse, sys, re, urllib.request, urllib.parse, urllib.error
 import cgitb
 cgitb.enable()
 
@@ -52,11 +52,11 @@ def sanitizeURL(url):
     return url
 
 def escapeURL(url):
-    parts = list(urlparse.urlparse(url))
+    parts = list(urllib.parse.urlparse(url))
     safe = ['/', '/:@', '/', '/', '/?&=;', '/']
     for i in range(0,len(parts)):
-      parts[i] = urllib.quote(urllib.unquote(parts[i]),safe[i])
-    url = cgi.escape(urlparse.urlunparse(parts))
+      parts[i] = urllib.parse.quote(urllib.parse.unquote(parts[i]),safe[i])
+    url = cgi.escape(urllib.parse.urlunparse(parts))
     try:
       return url.decode('idna')
     except:
@@ -227,7 +227,7 @@ def checker_app(environ, start_response):
 
         except:
             import traceback
-            tb = ''.join(apply(traceback.format_exception, sys.exc_info()))
+            tb = ''.join(traceback.format_exception(*sys.exc_info()))
 
             from feedvalidator.formatter.text_xml import xmlEncode
             start_response('500 Internal Error', [('Content-type', 'text/xml; charset=' + ENCODING)])
@@ -248,7 +248,7 @@ def checker_app(environ, start_response):
                 rawdata = params['rawdata']
                 feedType = params['feedType']
                 goon = 1
-            except ValidationFailure, vfv:
+            except ValidationFailure as vfv:
                 yield applyTemplate('header_ucn.tmpl', {'url':escapeURL(url)})
                 output = UCNFormatter([vfv.event], None)
                 for item in yieldEventList(output, 1):
@@ -266,7 +266,7 @@ def checker_app(environ, start_response):
                 feedType = validationData['feedType']
                 rawdata = validationData['rawdata']
                 
-                htmlUrl = escapeURL(urllib.quote(url))
+                htmlUrl = escapeURL(urllib.parse.quote(url))
                 try:
                   htmlUrl = htmlUrl.encode('idna')
                 except:
@@ -334,7 +334,7 @@ def checker_app(environ, start_response):
                     events = params['loggedEvents']
                     feedType = params['feedType']
                     goon = 1
-                except ValidationFailure, vfv:
+                except ValidationFailure as vfv:
                     yield applyTemplate('header.tmpl', {'title':'Feed Validator Results: %s' % escapeURL(url)})
                     yield applyTemplate('manual.tmpl', {'rawdata':escapeURL(url)})
                     output = Formatter([vfv.event], None)
@@ -353,7 +353,7 @@ def checker_app(environ, start_response):
                     rawdata = params['rawdata']
                     feedType = params['feedType']
                     goon = 1
-                except ValidationFailure, vfv:
+                except ValidationFailure as vfv:
                     yield applyTemplate('header.tmpl', {'title':'Feed Validator Results: %s' % escapeURL(url)})
                     yield applyTemplate('index.tmpl', {'value':escapeURL(url)})
                     output = Formatter([vfv.event], None)
@@ -373,7 +373,7 @@ def checker_app(environ, start_response):
                 feedType = validationData['feedType']
                 rawdata = validationData['rawdata']
 
-                htmlUrl = escapeURL(urllib.quote(url))
+                htmlUrl = escapeURL(urllib.parse.quote(url))
                 try:
                   htmlUrl = htmlUrl.encode('idna')
                 except:
@@ -443,12 +443,12 @@ def checker_app(environ, start_response):
 if __name__ == "__main__":
     if len(sys.argv)==1 or not sys.argv[1].isdigit():
         def start_response(status, headers):
-            print 'Status: %s\r\n' % status,
+            print('Status: %s\r\n' % status, end=' ')
             for header,value in headers:
-                print '%s: %s\r\n' % (header, value),
-            print
+                print('%s: %s\r\n' % (header, value), end=' ')
+            print()
         for output in checker_app(os.environ, start_response):
-            print output.decode('utf-8')
+            print(output.decode('utf-8'))
     else:
         # export HTTP_HOST=http://feedvalidator.org/
         # export SCRIPT_NAME=check.cgi

@@ -13,7 +13,7 @@ from .extension import extension_entry
 #
 class entry(validatorBase, extension_entry, itunes_item):
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType')]
 
   def prevalidate(self):
     self.links=[]

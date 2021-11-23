@@ -159,7 +159,7 @@ class rss10Item(item, extension_rss10_item):
       self.log(MissingElement({"parent":self.name, "element":"title"}))
 
   def getExpectedAttrNames(self):
-      return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'about')]
+      return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about')]
 
   def do_rdfs_label(self):
       return text()
@@ -185,7 +185,7 @@ class items(validatorBase):
   from .root import rss11_namespace as rss11_ns
 
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType')]
 
   def do_item(self):
     if self.rss11_ns not in self.dispatcher.defaultNamespaces:
@@ -203,16 +203,16 @@ class rdfSeq(validatorBase):
 
 class rdfLi(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None,u'resource'),
-            (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'resource')]
+    return [(None,'resource'),
+            ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource')]
 
 class category(nonhtml):
   def getExpectedAttrNames(self):
-    return [(None, u'domain')]
+    return [(None, 'domain')]
 
 class source(nonhtml):
   def getExpectedAttrNames(self):
-    return [(None, u'url')]
+    return [(None, 'url')]
   def prevalidate(self):
     self.validate_required_attribute((None,'url'), rfc2396_full)
     return text.prevalidate(self)
@@ -220,7 +220,7 @@ class source(nonhtml):
 class enclosure(validatorBase):
   from .validators import mime_re
   def getExpectedAttrNames(self):
-    return [(None, u'url'), (None, u'length'), (None, u'type')]
+    return [(None, 'url'), (None, 'length'), (None, 'type')]
   def prevalidate(self):
     try:
       if int(self.attrs.getValue((None, 'length'))) < 0:
@@ -244,7 +244,7 @@ class enclosure(validatorBase):
       self.log(MissingAttribute({"parent":self.parent.name, "element":self.name, "attr":'type'}))
 
     self.validate_required_attribute((None,'url'), httpURL)
-    if (None,u"url") in self.attrs:
+    if (None,"url") in self.attrs:
       if hasattr(self.parent,'setEnclosure'):
         self.parent.setEnclosure(self.attrs.getValue((None, 'url')))
 
@@ -252,7 +252,7 @@ class enclosure(validatorBase):
 
 class guid(rfc2396_full, noduplicates):
   def getExpectedAttrNames(self):
-    return [(None, u'isPermaLink')]
+    return [(None, 'isPermaLink')]
 
   def validate(self):
     isPermalink = 1

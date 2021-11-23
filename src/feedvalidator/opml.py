@@ -30,7 +30,7 @@ class opml(validatorBase, extension_everywhere):
       self.log(MissingElement({"parent":self.name, "element":"body"}))
 
   def getExpectedAttrNames(self):
-    return [(None, u'version')]
+    return [(None, 'version')]
 
   def do_head(self):
     return opmlHead()
@@ -95,19 +95,19 @@ class opmlOutline(validatorBase, extension_everywhere):
 
   def getExpectedAttrNames(self):
     return [
-      (None, u'category'),
-      (None, u'created'),
-      (None, u'description'),
-      (None, u'htmlUrl'),
-      (None, u'isBreakpoint'),
-      (None, u'isComment'),
-      (None, u'language'),
-      (None, u'text'),
-      (None, u'title'),
-      (None, u'type'),
-      (None, u'url'),
-      (None, u'version'),
-      (None, u'xmlUrl'),
+      (None, 'category'),
+      (None, 'created'),
+      (None, 'description'),
+      (None, 'htmlUrl'),
+      (None, 'isBreakpoint'),
+      (None, 'isComment'),
+      (None, 'language'),
+      (None, 'text'),
+      (None, 'title'),
+      (None, 'type'),
+      (None, 'url'),
+      (None, 'version'),
+      (None, 'xmlUrl'),
     ]
 
   def validate(self):
@@ -141,8 +141,8 @@ class opmlOutline(validatorBase, extension_everywhere):
       if self.attrs[(None,'version')] not in opmlOutline.versionList:
         self.log(InvalidOutlineVersion({"parent":self.parent.name, "element":self.name, "value":self.attrs[(None,'version')]}))
 
-    if len(self.attrs)>1 and not (None,u'type') in self.attrs.getNames():
-      for name in u'description htmlUrl language title version xmlUrl'.split():
+    if len(self.attrs)>1 and not (None,'type') in self.attrs.getNames():
+      for name in 'description htmlUrl language title version xmlUrl'.split():
         if (None, name) in self.attrs.getNames():
           self.log(MissingOutlineType({"parent":self.parent.name, "element":self.name}))
           break

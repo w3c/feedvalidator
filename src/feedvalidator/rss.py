@@ -19,7 +19,7 @@ class rss(validatorBase):
     return access_restriction(), noduplicates()
 
   def getExpectedAttrNames(self):
-    return [(None, u'version')]
+    return [(None, 'version')]
 
   def prevalidate(self):
     self.setFeedType(TYPE_RSS2) # could be anything in the 0.9x family, don't really care

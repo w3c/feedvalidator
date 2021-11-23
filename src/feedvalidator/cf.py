@@ -5,11 +5,11 @@ from .validators import eater, text
 
 class sort(validatorBase):
   def getExpectedAttrNames(self):
-      return [(None,u'data-type'),(None,u'default'),(None,u'element'),(None, u'label'),(None,u'ns')]
+      return [(None,'data-type'),(None,'default'),(None,'element'),(None, 'label'),(None,'ns')]
 
 class group(validatorBase):
   def getExpectedAttrNames(self):
-      return [(None,u'element'),(None, u'label'),(None,u'ns')]
+      return [(None,'element'),(None, 'label'),(None,'ns')]
 
 class listinfo(validatorBase):
   def do_cf_sort(self):

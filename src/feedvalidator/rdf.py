@@ -132,8 +132,8 @@ class rdfExtension(validatorBase):
 
   def getExpectedAttrNames(self):
     # no rss11 attributes
-    if self.literal or not self.attrs: return self.attrs.keys()
-    return [(ns,n) for ns,n in self.attrs.keys() if ns!=rss11_ns]
+    if self.literal or not self.attrs: return list(self.attrs.keys())
+    return [(ns,n) for ns,n in list(self.attrs.keys()) if ns!=rss11_ns]
 
   def validate(self):
     # rdflib 2.0.5 does not catch mixed content errors
@@ -147,7 +147,7 @@ class rdfExtension(validatorBase):
       self.log(MissingNamespace({"parent":self.name, "element":name}))
 
     # ensure all attribute namespaces are properly defined
-    for (namespace,attr) in attrs.keys():
+    for (namespace,attr) in list(attrs.keys()):
       if ':' in attr and not namespace:
         from .logging import MissingNamespace
         self.log(MissingNamespace({"parent":self.name, "element":attr}))

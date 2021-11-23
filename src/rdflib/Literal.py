@@ -15,13 +15,13 @@ class Literal(Identifier):
     """
 
     def __new__(cls, value, lang='', datatype=''):
-        value = unicode(value)
+        value = str(value)
         return Identifier.__new__(cls, value)
 
     def __init__(self, value, lang='', datatype=''):
         if normalize and value:
-            if not isinstance(value, unicode):
-                value = unicode(value)
+            if not isinstance(value, str):
+                value = str(value)
             if value != normalize("NFC", value):
                 raise Error("value must be in NFC normalized form.")
 
@@ -65,5 +65,5 @@ class Literal(Identifier):
         elif isinstance(other, Identifier):
             return 0
         else:
-            return unicode(self)==other
+            return str(self)==other
 

@@ -7,7 +7,7 @@ from rdflib.Literal import Literal
 # Create a (hopefully) unique prefix so that BNode values do not
 # collide with ones created with a different instance of this module.
 prefix = ""
-for i in xrange(0,8):
+for i in range(0,8):
     prefix += choice(ascii_letters)
 
 node_id = 0

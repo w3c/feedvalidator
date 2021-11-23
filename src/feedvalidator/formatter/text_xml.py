@@ -31,7 +31,7 @@ class Formatter(BaseFormatter):
     params['level'] = level
 
     # organize fixed elements into a known order
-    order = params.keys()
+    order = list(params.keys())
     order.sort()
     for key in ['msgcount', 'text', 'column', 'line', 'type', 'level']:
       if key in order:

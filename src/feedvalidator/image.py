@@ -11,9 +11,9 @@ from .extension import extension_everywhere
 #
 class image(validatorBase, extension_everywhere):
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'resource'),
-            (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'about'),
-            (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource'),
+            ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about'),
+            ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType')]
   def validate(self):
     if self.value.strip():
       self.log(UnexpectedText({"parent":self.parent.name, "element":"image"}))

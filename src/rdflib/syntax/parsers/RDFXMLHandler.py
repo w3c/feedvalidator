@@ -31,10 +31,10 @@
 
 """
 """
-from urlparse import urljoin, urldefrag
+from urllib.parse import urljoin, urldefrag
 
 from xml.sax.saxutils import handler, quoteattr, escape
-from urllib import quote
+from urllib.parse import quote
 
 from rdflib.URIRef import URIRef
 from rdflib.BNode import BNode
@@ -194,7 +194,8 @@ class RDFXMLHandler(handler.ContentHandler):
     def processingInstruction(self, target, data):
         pass
 
-    def add_reified(self, sid, (s, p, o)):
+    def add_reified(self, sid, xxx_todo_changeme):
+        (s, p, o) = xxx_todo_changeme
         self.store.add((sid, TYPE, STATEMENT))
         self.store.add((sid, SUBJECT, s))
         self.store.add((sid, PREDICATE, p))
@@ -237,7 +238,7 @@ class RDFXMLHandler(handler.ContentHandler):
         else:
             name = "".join(name)
         atts = {}
-        for (n, v) in attrs.items(): #attrs._attrs.iteritems(): #
+        for (n, v) in list(attrs.items()): #attrs._attrs.iteritems(): #
             if n[0] is None:
                 att = n[1]
             else:
@@ -253,7 +254,7 @@ class RDFXMLHandler(handler.ContentHandler):
 
     def document_element_start(self, name, qname, attrs):
         if name[0] and "".join(name) == RDF:
-            next = self.next
+            next = self.__next__
             next.start = self.node_element_start
             next.end = self.node_element_end
         else:
@@ -267,7 +268,7 @@ class RDFXMLHandler(handler.ContentHandler):
         name, atts = self.convert(name, qname, attrs)
         current = self.current
         absolutize = self.absolutize
-        next = self.next
+        next = self.__next__
         next.start = self.property_element_start
         next.end = self.property_element_end
 
@@ -343,7 +344,7 @@ class RDFXMLHandler(handler.ContentHandler):
         name, atts = self.convert(name, qname, attrs)
         current = self.current
         absolutize = self.absolutize
-        next = self.next
+        next = self.__next__
         object = None
         current.list = None
 
@@ -508,7 +509,7 @@ class RDFXMLHandler(handler.ContentHandler):
         else:
             current.object = "<%s" % name[1]
 
-        for (name, value) in attrs.items():
+        for (name, value) in list(attrs.items()):
             if name[0]:
                 if not name[0] in current.declared:
                     current.declared[name[0]] = self._current_context[name[0]]
@@ -525,11 +526,11 @@ class RDFXMLHandler(handler.ContentHandler):
         if name[0]:
             prefix = self._current_context[name[0]]
             if prefix:
-                end = u"</%s:%s>" % (prefix, name[1])
+                end = "</%s:%s>" % (prefix, name[1])
             else:
-                end = u"</%s>" % name[1]
+                end = "</%s>" % name[1]
         else:
-            end = u"</%s>" % name[1]
+            end = "</%s>" % name[1]
         self.parent.object += self.current.object + end
 
 

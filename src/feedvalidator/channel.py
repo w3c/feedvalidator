@@ -13,9 +13,9 @@ from .extension import *
 #
 class channel(validatorBase, rfc2396, extension_channel, itunes_channel):
   def getExpectedAttrNames(self):
-    return [(u'urn:atom-extension:indexing', u'index')]
+    return [('urn:atom-extension:indexing', 'index')]
   def prevalidate(self):
-    self.validate_optional_attribute((u'urn:atom-extension:indexing', u'index'), yesno)
+    self.validate_optional_attribute(('urn:atom-extension:indexing', 'index'), yesno)
 
   def __init__(self):
     self.link=None
@@ -263,8 +263,8 @@ class rss20Channel(channel):
 
 class rss10Channel(channel):
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'about'),
-      (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'about')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about'),
+      ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about')]
 
   def prevalidate(self):
     if (rdfNS,"about") in self.attrs:
@@ -306,12 +306,12 @@ class blink(text):
 
 class category(nonhtml):
   def getExpectedAttrNames(self):
-    return [(None, u'domain')]
+    return [(None, 'domain')]
 
 class cloud(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None, u'domain'), (None, u'path'), (None, u'registerProcedure'),
-      (None, u'protocol'), (None, u'port')]
+    return [(None, 'domain'), (None, 'path'), (None, 'registerProcedure'),
+      (None, 'protocol'), (None, 'port')]
   def prevalidate(self):
     if (None, 'domain') not in self.attrs.getNames():
       self.log(MissingAttribute({"parent":self.parent.name, "element":self.name, "attr":"domain"}))
