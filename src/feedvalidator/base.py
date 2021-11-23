@@ -121,7 +121,7 @@ class SAXDispatcher(ContentHandler):
     self.loggedEvents = []
     self.feedType = 0
     try:
-       self.xmlBase = base.encode('idna')
+       self.xmlBase = base.encode('idna').decode('utf-8')
     except:
        self.xmlBase = base
     self.selfURIs = selfURIs

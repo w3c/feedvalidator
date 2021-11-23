@@ -84,7 +84,7 @@ def yieldEventList(output, unicorn=0):
 
   yield output.header()
   for o in output.getErrors():
-    yield o.encode('utf-8')
+    yield o
   if errors and warnings:
     yield output.footer()
     if len(warnings) == 1:
@@ -99,7 +99,7 @@ def yieldEventList(output, unicorn=0):
         yield applyTemplate('andwarn2.tmpl')
     yield output.header()
   for o in output.getWarnings():
-    yield o.encode('utf-8')
+    yield o
   yield output.footer()
 
 from feedvalidator.formatter.text_html import Formatter
@@ -151,7 +151,7 @@ def checker_app(environ, start_response):
         fs = cgi.FieldStorage(fp=environ.get('wsgi.input',None), environ=environ)
         url = fs.getvalue("url") or ''
         try:
-          if url: url = url.decode('utf-8').encode('idna')
+          if url: url = url.encode('idna').decode('utf-8')
         except:
           pass
         manual = fs.getvalue("manual") or 0
@@ -268,7 +268,7 @@ def checker_app(environ, start_response):
                 
                 htmlUrl = escapeURL(urllib.parse.quote(url))
                 try:
-                  htmlUrl = htmlUrl.encode('idna')
+                  htmlUrl = htmlUrl.encode('idna').decode('utf-8')
                 except:
                   pass
                 docType = 'feed'
@@ -375,7 +375,7 @@ def checker_app(environ, start_response):
 
                 htmlUrl = escapeURL(urllib.parse.quote(url))
                 try:
-                  htmlUrl = htmlUrl.encode('idna')
+                  htmlUrl = htmlUrl.encode('idna').decode("utf-8")
                 except:
                   pass
                 docType = 'feed'

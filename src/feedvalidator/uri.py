@@ -15,8 +15,6 @@ from codecs import lookup
 
 import re
 
-(enc, dec) = lookup('UTF-8')[:2]
-
 SUBDELIMS='!$&\'()*+,;='
 PCHAR='-._~' + SUBDELIMS + ':@'
 GENDELIMS=':/?#[]@'
@@ -39,7 +37,7 @@ class BadUri(Exception):
   pass
 
 def _n(s):
-  return enc(normalize('NFC', dec(s)[0]))[0]
+  return normalize('NFC', s).encode('utf-8')
 
 octetRe = re.compile('([^%]|%[a-fA-F0-9]{2})')
 
@@ -52,9 +50,9 @@ def asOctets(s):
 
     c = m.group(1)
     if (c[0] == '%'):
-      yield(c.upper(), chr(int(c[1:], 0x10)))
+      yield(c.upper(), int(c[1:], 0x10))
     else:
-      yield(c, c)
+      yield(c, ord(c))
 
     s = s[m.end(1):]
 
@@ -64,19 +62,20 @@ def _qnu(s,safe=''):
   # unquote{,_plus} leave high-bit octets unconverted in Unicode strings
   # This conversion will, correctly, cause UnicodeEncodeError if there are
   #  non-ASCII characters present in the string
-  s = str(s)
+  s = s
 
   res = ''
-  b = ''
+  b = []
   for (c,x) in asOctets(s):
-    if x in RESERVED and x in safe:
-      res += quote(_n(unquote(b)), safe)
-      b = ''
+    # convert x to char for comparison
+    if chr(x) in RESERVED and chr(x) in safe:
+      res += quote(_n(unquote(bytearray(b).decode('utf-8'))), safe)
+      b = []
       res += c
     else:
-      b += x
+      b.append(x)
 
-  res += quote(_n(unquote(b)), safe)
+  res += quote(_n(unquote(bytearray(b).decode('utf-8'))), safe)
 
   return res
 

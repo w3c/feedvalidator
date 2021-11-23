@@ -40,11 +40,11 @@ _decACE = getdecoder('ISO-8859-1') # An ASCII-compatible encoding
 
 # Given a character index into a string, calculate its 1-based row and column
 def _position(txt, idx):
-  row = txt.count(b'\n', 0, idx) + 1
-  ln = txt.rfind(b'\n', 0, idx) + 1
+  row = txt.count('\n', 0, idx) + 1
+  ln = txt.rfind('\n', 0, idx) + 1
   column = 0
   for c in txt[ln:idx]:
-    if c == b'\t':
+    if c == '\t':
       column = (column // 8 + 1) * 8
     else:
       column += 1
@@ -162,9 +162,10 @@ def detect(doc_start, loggedEvents=[], fallback='UTF-8'):
   else:
     return None
 
-_encRe = re.compile(rb'<\?xml\s+version\s*=\s*(?:"[-a-zA-Z0-9_.:]+"|\'[-a-zA-Z0-9_.:]+\')\s+(encoding\s*=\s*(?:"([-A-Za-z0-9._]+)"|\'([-A-Za-z0-9._]+)\'))')
+_encRe = re.compile(r'<\?xml\s+version\s*=\s*(?:"[-a-zA-Z0-9_.:]+"|\'[-a-zA-Z0-9_.:]+\')\s+(encoding\s*=\s*(?:"([-A-Za-z0-9._]+)"|\'([-A-Za-z0-9._]+)\'))')
 
 def _encodingFromDecl(x):
+  x = x
   m = _encRe.match(x)
   if m:
     if m.group(2):
@@ -182,7 +183,7 @@ def removeDeclaration(x):
   if m:
     s = m.start(1)
     e = m.end(1)
-    res = x[:s] + b' ' * (e - s) + x[e:]
+    res = x[:s] + ' ' * (e - s) + x[e:]
   else:
     res = x
   return res
@@ -231,7 +232,6 @@ def decode(mediaType, charset, bs, loggedEvents, fallback=None):
         loggedEvents.append(logging.EncodingMismatch({"charset": "US-ASCII", "encoding": encoding}))
 
   enc = charset or encoding
-
   if enc is None:
     loggedEvents.append(logging.MissingEncoding({}))
     enc = fallback
@@ -248,7 +248,7 @@ def decode(mediaType, charset, bs, loggedEvents, fallback=None):
   dec = getdecoder(enc)
   try:
     return enc, dec(bs)[0]
-  except UnicodeError as ue:
+  except UnicodeDecodeError as ue:
     salvage = dec(bs, 'replace')[0]
     if 'start' in ue.__dict__:
       # XXX 'start' is in bytes, not characters. This is wrong for multibyte

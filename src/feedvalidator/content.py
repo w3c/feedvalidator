@@ -73,8 +73,10 @@ class textConstruct(rfc2396,nonhtml):
          self.type.startswith('text/')):
         import base64
         try:
-          self.value=base64.decodestring(self.value)
-          if self.type.endswith('/html'): self.type='html'
+          self.value=base64.decodebytes(self.value.encode('us-ascii'))
+          if self.type.endswith('/html'):
+            self.type='html'
+            self.value = self.value.decode('utf-8')
         except:
           self.log(NotBase64({"parent":self.parent.name, "element":self.name,"value":self.value}))
 

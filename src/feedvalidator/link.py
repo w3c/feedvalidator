@@ -69,7 +69,7 @@ class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339):
 
       if self.rel in self.validRelations:
         self.log(ValidAtomLinkRel({"parent":self.parent.name, "element":self.name, "attr":"rel", "value":self.rel}))
-      elif rfc2396_full.rfc2396_re.match(self.rel.encode('idna')):
+      elif rfc2396_full.rfc2396_re.match(self.rel.encode('idna').decode('utf-8')):
         self.log(ValidAtomLinkRel({"parent":self.parent.name, "element":self.name, "attr":"rel", "value":self.rel}))
       else:
         self.log(UnregisteredAtomLinkRel({"parent":self.parent.name, "element":self.name, "attr":"rel", "value":self.rel}))

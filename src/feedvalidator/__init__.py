@@ -258,7 +258,7 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
     if usock.headers.get('content-encoding', None) == 'gzip':
       import gzip, io
       try:
-        rawdata = gzip.GzipFile(fileobj=io.StringIO(rawdata)).read()
+        rawdata = gzip.GzipFile(fileobj=io.BytesIO(rawdata)).read()
       except:
         import sys
         exctype, value = sys.exc_info()[:2]

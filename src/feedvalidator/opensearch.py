@@ -127,7 +127,6 @@ class UrlEncoded(validatorBase):
     from urllib.parse import quote, unquote
     import re
     for value in self.value.split():
-      if type(value) == str: value = value.encode('utf-8')
       value = re.sub('%\w\w', lambda x: x.group(0).upper(), value)
       if value != quote(unquote(value)):
         self.log(NotURLEncoded({}))

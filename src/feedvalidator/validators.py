@@ -583,13 +583,13 @@ class rfc2396(text):
           break
       else:
         try:
-          if self.rfc2396_re.match(self.value.encode('idna')):
+          if self.rfc2396_re.match(self.value.encode('idna').decode('utf-8')):
             errorClass=UriNotIri
         except:
           pass
         self.log(errorClass(logparams))
     elif scheme in ['http','ftp']:
-      if not re.match('^\w+://[^/].*',self.value):
+      if not re.match(r'^\w+://[^/].*',self.value):
         logparams = {"parent":self.parent.name, "element":self.name, "value":self.value}
         logparams.update(extraParams)
         self.log(errorClass(logparams))
@@ -611,7 +611,7 @@ class rfc2396(text):
 class rfc3987(rfc2396):
   def validate(self, errorClass=InvalidIRI, successClass=ValidURI, extraParams={}):
     try:
-      if self.value: self.value = self.value.encode('idna')
+      if self.value: self.value = self.value.encode('idna').decode('utf-8')
     except:
       pass # apparently '.' produces label too long
     return rfc2396.validate(self, errorClass, successClass, extraParams)
@@ -632,7 +632,7 @@ class xmlbase(rfc3987):
         docbase=canonicalForm(self.dispatcher.xmlBase).split('#')[0]
         elembase=canonicalForm(self.xmlBase).split('#')[0]
         value=canonicalForm(urljoin(elembase,self.value)).split('#')[0]
-        if (value==elembase) and (elembase.encode('idna')!=docbase):
+        if (value==elembase) and (elembase!=docbase):
           self.log(SameDocumentReference({"parent":self.parent.name, "element":self.name, "value":self.value}))
 
 #
@@ -710,8 +710,6 @@ class absUrlMixin:
       if not self.absref_re.match(ref):
         for c in ref:
           if ord(c)<128 and not rfc2396.urichars_re.match(c):
-#            print "Invalid character:", ref
-#            self.log(InvalidUriChar({'value':repr(str(c))}))
             self.log(InvalidUriChar({'value':ref, 'char':repr(str(c))}))
             break
         else:
@@ -752,6 +750,11 @@ class nonhtml(text,safeHtmlMixin):#,absUrlMixin):
     self.start()
     self.children.append(True) # force warnings about "mixed" content
   def validate(self, message=ContainsHTML):
+    if not isinstance(self.value, str):
+      try:
+        self.value = self.value.decode("utf-8")
+      except:
+        return
     tags = [t for t in self.htmlEndTag_re.findall(self.value) if t.lower() in HTMLValidator.htmltags]
     if tags:
       self.log(message({"parent":self.parent.name, "element":self.name, "value":tags[0]}))
