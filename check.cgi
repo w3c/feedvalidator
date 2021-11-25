@@ -7,7 +7,6 @@ cgitb.enable()
 
 import codecs
 ENCODING='UTF-8'
-sys.stdout = codecs.getwriter(ENCODING)(sys.stdout)
 
 # Used for CGI parameters
 decUTF8 = codecs.getdecoder('utf-8')
