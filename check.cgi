@@ -55,7 +55,7 @@ def escapeURL(url):
     safe = ['/', '/:@', '/', '/', '/?&=;', '/']
     for i in range(0,len(parts)):
       parts[i] = urllib.parse.quote(urllib.parse.unquote(parts[i]),safe[i])
-    url = cgi.escape(urllib.parse.urlunparse(parts))
+    url = html.escape(urllib.parse.urlunparse(parts))
     try:
       return url.decode('idna')
     except:
@@ -386,7 +386,7 @@ def checker_app(environ, start_response):
 
                 yield applyTemplate('header.tmpl', {'title':'Feed Validator Results: %s' % escapeURL(url)})
                 if manual:
-                    yield applyTemplate('manual.tmpl', {'rawdata':cgi.escape(rawdata)})
+                    yield applyTemplate('manual.tmpl', {'rawdata':html.escape(rawdata)})
                 else:
                     yield applyTemplate('index.tmpl', {'value':escapeURL(url)})
 
