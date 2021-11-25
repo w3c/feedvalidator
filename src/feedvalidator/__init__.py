@@ -16,6 +16,7 @@ import ssl
 from . import logging
 from .logging import *
 from xml.sax import SAXException
+from xml.sax._exceptions import SAXParseException
 from xml.sax.xmlreader import InputSource
 # needed in python 3.7.1+
 from xml.sax.handler import feature_external_ges
@@ -126,11 +127,14 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
 
   if validator.getFeedType() == TYPE_RSS1:
     try:
-      from rdflib.syntax.parsers.RDFXMLHandler import RDFXMLHandler
+      from rdflib.plugins.parsers.rdfxml import RDFXMLHandler
 
       class Handler(RDFXMLHandler):
         ns_prefix_map = {}
         prefix_ns_map = {}
+        def bind(self, prefix, namespace, override=False):
+          self.ns_prefix_map[prefix] = namespace
+          self.prefix_ns_map[namespace] = prefix
         def add(self, triple): pass
         def __init__(self, dispatcher):
           RDFXMLHandler.__init__(self, self)
@@ -144,8 +148,11 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
       parser.reset()
       parser.setContentHandler(Handler(parser.getContentHandler()))
       parser.setErrorHandler(handler.ErrorHandler())
-      parser.parse(source)
-    except:
+      try:
+        parser.parse(source)
+      except SAXParseException as e:
+        self.dispatcher.log(SAXError({"message": e.message}))
+    except Exception as e:
       pass
 
   return validator
