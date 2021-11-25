@@ -11,7 +11,7 @@ else:
   timeoutsocket.setDefaultSocketTimeout(10)
   Timeout = timeoutsocket.Timeout
 
-import urllib.request, urllib.error, urllib.parse
+import urllib
 import ssl
 from . import logging
 from .logging import *

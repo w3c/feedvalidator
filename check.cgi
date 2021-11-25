@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from config import *
 
-import cgi, sys, os, urllib.parse, sys, re, urllib.request, urllib.parse, urllib.error
+import cgi, sys, os, urllib, sys, re, html
 import cgitb
 cgitb.enable()
 
