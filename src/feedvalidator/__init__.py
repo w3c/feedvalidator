@@ -17,6 +17,8 @@ from . import logging
 from .logging import *
 from xml.sax import SAXException
 from xml.sax.xmlreader import InputSource
+# needed in python 3.7.1+
+from xml.sax.handler import feature_external_ges
 import re
 from . import xmlEncoding
 from . import mediaTypes
@@ -84,6 +86,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
     parser = make_parser()
 
   parser.setFeature(handler.feature_namespaces, 1)
+  parser.setFeature(feature_external_ges, True)
   parser.setContentHandler(validator)
   parser.setErrorHandler(validator)
   parser.setEntityResolver(validator)
