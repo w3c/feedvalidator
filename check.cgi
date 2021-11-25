@@ -73,7 +73,7 @@ def buildCodeListing(events, rawdata, url):
         line = feedvalidator.formatter.text_html.escapeAndMark(line)
         if not line: line = '&nbsp;'
         linetype = linenum in linesWithErrors and "b" or "a"
-        codelines.append(applyTemplate('code_listing_line.tmpl', {"line":line, "linenum":linenum, "linetype":linetype}).decode('utf-8'))
+        codelines.append(applyTemplate('code_listing_line.tmpl', {"line":line, "linenum":linenum, "linetype":linetype}))
         linenum += 1
     codelisting = "".join(codelines)
     return applyTemplate('code_listing.tmpl', {"codelisting":codelisting, "url":escapeURL(url)})
@@ -156,12 +156,6 @@ def checker_app(environ, start_response):
         manual = fs.getvalue("manual") or 0
         rawdata = fs.getvalue("rawdata") or ''
         output_option = fs.getvalue("output") or ''
-
-        # XXX Should use 'charset'
-        try:
-            rawdata = decUTF8(rawdata)[0]
-        except UnicodeError:
-            rawdata = decW1252(rawdata)[0]
 
         rawdata = rawdata[:feedvalidator.MAXDATALENGTH].replace('\r\n', '\n').replace('\r', '\n')
     else:
@@ -442,12 +436,12 @@ def checker_app(environ, start_response):
 if __name__ == "__main__":
     if len(sys.argv)==1 or not sys.argv[1].isdigit():
         def start_response(status, headers):
-            print('Status: %s\r\n' % status, end=' ')
+            print('Status: %s' % status)
             for header,value in headers:
-                print('%s: %s\r\n' % (header, value), end=' ')
+                print('%s: %s' % (header, value))
             print()
         for output in checker_app(os.environ, start_response):
-            print(output.decode('utf-8'))
+            print(output)
     else:
         # export HTTP_HOST=http://feedvalidator.org/
         # export SCRIPT_NAME=check.cgi
