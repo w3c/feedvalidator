@@ -32,7 +32,7 @@ def applyTemplate(templateFile, params={}):
     fsock = open(os.path.join(WEBDIR, 'templates', templateFile))
     data = fsock.read() % params
     fsock.close()
-    return data.encode('utf-8')
+    return data
 
 def sanitizeURL(url):
     # Allow feed: URIs, as described by draft-obasanjo-feed-URI-scheme-02

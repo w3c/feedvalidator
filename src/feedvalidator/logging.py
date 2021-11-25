@@ -34,7 +34,7 @@ class Message(LoggedEvent): pass
 class Warning(Message): pass
 class Error(Message): pass
 
-class ValidationFailure(Error):
+class ValidationFailure(Error, Exception):
   def __init__(self, event):
     LoggedEvent.__init__(self, {})
     self.event = event
