@@ -11,7 +11,7 @@ from feedvalidator import compatibility
 from feedvalidator.formatter.application_test import Formatter
 
 class TestCase(unittest.TestCase):
-  def failIfNoMessage(self, theList):
+  def failIfNoMessage(self, theList=[]):
     filterFunc = compatibility.AA
     events = filterFunc(theList)
     output = Formatter(events)
@@ -48,7 +48,7 @@ class TestCase(unittest.TestCase):
         continue
       if issubclass(item.__class__, theClass):
         if not params:
-          raise self.failureException(msg or 'unexpected %s' % (theClass.__name__))
+          raise self.failureException(msg or 'unexpected %s' % (item.__class__.__name__))
         allmatch = 1
         for k, v in list(params.items()):
           if item.params[k] != v:
@@ -117,8 +117,11 @@ def buildTestCase(xmlfile, xmlBase, description, method, exc, params):
   will return a list of exceptions that include an instance of
   `exc` (an Exception class)
   """
-  func = lambda self, xmlfile=xmlfile, exc=exc, params=params: \
-       method(self, exc, params, feedvalidator.validateString(open(xmlfile).read(), fallback='US-ASCII', base=xmlBase)['loggedEvents'])
+  def func(self, xmlfile=xmlfile, exc=exc, params=params):
+    with open(xmlfile, 'rb') as stream:
+      xmldoc = stream.read()
+      loggedEvents = feedvalidator.validateString(xmldoc, fallback='US-ASCII', base=xmlBase)['loggedEvents']
+      method(self, exc, params, loggedEvents)
   func.__doc__ = description
   return func
 
