@@ -259,7 +259,7 @@ class HTMLValidator:
       for tag in etree.iter():
         # tag.tag is DOCUMENT_FRAGMENT for the "root" element
         # and is a function when hitting comments which we're happy to ignore
-        if tag.tag != "DOCUMENT_FRAGMENT" and not(isinstance(tag.tag, collections.Callable)):
+        if tag.tag != "DOCUMENT_FRAGMENT" and not(isinstance(tag.tag, collections.abc.Callable)):
           self.handle_tag(tag.tag.split('}')[-1], tag.attrib, tag.text)
     except ParseError as msg:
       element = self.element
