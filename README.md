@@ -1,16 +1,11 @@
-[![Build Status](https://travis-ci.com/w3c/feedvalidator.svg)](https://travis-ci.com/w3c/feedvalidator)
+![Build Status](https://github.com/w3c/feedvalidator/actions/workflows/test.yml/badge.svg)
 
 Some tests, and some functionality, will not be enabled unless a full set
 of 32-bit character encodings are available through Python.
 
-The feedvalidator relies on html5lib for parsing HTML.
+The feedvalidator relies on html5lib for parsing HTML and rdflib for parsing RDF.
 
-The package 'iconvcodec' provides the necessary codecs, if your underlying
-operating system supports them. Its web page is at
-<http://cjkpython.i18n.org/#iconvcodec>, and a range of packages are
-provided.
-
-Python 2.3.x is required, for its Unicode support.
+Python 3 is required.
 
 To run with Docker:
 ```bash
