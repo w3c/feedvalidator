@@ -80,8 +80,8 @@ class Formatter(BaseFormatter):
       codeFragment = self.rawdata.split('\n')[line-1]
       markerColumn = column
       if column > self.FRAGMENTLEN:
-        codeFragment = '... ' + codeFragment[column-(self.FRAGMENTLEN/2):]
-        markerColumn = 5 + (self.FRAGMENTLEN/2)
+        codeFragment = '... ' + codeFragment[column-int(self.FRAGMENTLEN/2):]
+        markerColumn = 5 + int(self.FRAGMENTLEN/2)
       if len(codeFragment) > self.FRAGMENTLEN:
         codeFragment = codeFragment[:(self.FRAGMENTLEN-4)] + ' ...'
     else:
