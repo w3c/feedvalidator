@@ -8,6 +8,7 @@ from feedvalidator.i18n.en import messages
 from feedvalidator.logging import Warning, Error
 import feedvalidator
 
+ignoreMissing = ["warning/RSS20Profile", "error/ValidationFailure"]
 
 template = '''
 <fvdoc>
@@ -58,7 +59,7 @@ def missing():
     rcname = rc.__name__.split('.')[-1].lower()
     if rcname in ['warning', 'error']:
       fn = path.join(basename, 'docs', rcname, n + '.html')
-      if not(isfile(path.join(basename, fn))):
+      if not(isfile(path.join(basename, fn))) and not rcname + "/" + n in ignoreMissing:
         result.append((rcname, n, "", fn, fn))
 
 
@@ -92,8 +93,10 @@ def buildTestSuite():
 
 if __name__ == '__main__':
   import re
-  for dir, id, msg, xml in missing():
+  for dir, id, msg, html, xml in missing():
     msg = re.sub("%\(\w+\)\w?", "<code>foo</code>", msg)
+    if not path.exists(html):
+      pass
     if not path.exists(xml):
       open(xml,'w').write(template.lstrip() % msg)
       print(xml)
