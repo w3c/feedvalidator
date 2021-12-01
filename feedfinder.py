@@ -36,18 +36,20 @@ How it works:
   8. As a last ditch effort, we search Syndic8 for feeds matching the URI
 """
 
-__version__ = "1.36"
-__date__ = "2006-04-24"
-__maintainer__ = "Aaron Swartz (me@aaronsw.com)"
+__version__ = "2.0"
+__date__ = "2021-12-01"
+__maintainer__ = "Dominique Hazael-Massieux (dom@w3.org)"
 __author__ = "Mark Pilgrim (http://diveintomark.org)"
-__copyright__ = "Copyright 2002-4, Mark Pilgrim; 2006 Aaron Swartz"
+__copyright__ = "Copyright 2002-4, Mark Pilgrim; 2006 Aaron Swartz, 2021 Dominique Hazael-Massieux"
 __license__ = "Python"
 __credits__ = """Abe Fettig for a patch to sort Syndic8 feeds by popularity
 Also Jason Diamond, Brian Lalor for bug reporting and patches"""
 
 _debug = 0
 
-import sgmllib, urllib.request, urllib.parse, urllib.error, urllib.parse, re, sys, urllib.robotparser
+from html5lib import HTMLParser
+from lxml import etree
+import html5lib, urllib.request, urllib.error, urllib.parse, re, sys, urllib.robotparser
 
 import threading
 class TimeoutError(Exception): pass
@@ -74,7 +76,7 @@ def timelimit(timeout):
             c.setDaemon(True) # don't hold up exiting
             c.start()
             c.join(timeout)
-            if c.isAlive():
+            if c.is_alive():
                 raise TimeoutError
             if c.error:
                 raise c.error[0](c.error[1])
@@ -103,12 +105,10 @@ class URLGatekeeper:
     """a class to track robots.txt rules across multiple servers"""
     def __init__(self):
         self.rpcache = {} # a dictionary of RobotFileParser objects, by domain
-        self.urlopener = urllib.request.FancyURLopener()
-        self.urlopener.version = "feedfinder/" + __version__ + " " + self.urlopener.version + " +http://www.aaronsw.com/2002/feedfinder/"
-        _debuglog(self.urlopener.version)
-        self.urlopener.addheaders = [('User-agent', self.urlopener.version)]
-        urllib.robotparser.URLopener.version = self.urlopener.version
-        urllib.robotparser.URLopener.addheaders = self.urlopener.addheaders
+        self.urlopener = urllib.request.build_opener()
+        self.version = "feedfinder/" + __version__ + " https://github.com/w3c/feedvalidator/blob/main/feedfinder.py"
+        _debuglog(self.version)
+        self.urlopener.addheaders = [('User-agent', self.version)]
 
     def _getrp(self, url):
         protocol, domain = urllib.parse.urlparse(url)[:2]
@@ -117,7 +117,9 @@ class URLGatekeeper:
         baseurl = '%s://%s' % (protocol, domain)
         robotsurl = urllib.parse.urljoin(baseurl, 'robots.txt')
         _debuglog('fetching %s' % robotsurl)
-        rp = urllib.robotparser.RobotFileParser(robotsurl)
+        rp = urllib.robotparser.RobotFileParser()
+        with self.urlopener.open(robotsurl) as response:
+            rp.parse(response.read().decode("utf-8").splitlines())
         try:
             rp.read()
         except:
@@ -127,7 +129,7 @@ class URLGatekeeper:
 
     def can_fetch(self, url):
         rp = self._getrp(url)
-        allow = rp.can_fetch(self.urlopener.version, url)
+        allow = rp.can_fetch(self.version, url)
         _debuglog("gatekeeper of %s says %s" % (url, allow))
         return allow
 
@@ -141,26 +143,25 @@ class URLGatekeeper:
 
 _gatekeeper = URLGatekeeper()
 
-class BaseParser(sgmllib.SGMLParser):
+class BaseParser(HTMLParser):
     def __init__(self, baseuri):
-        sgmllib.SGMLParser.__init__(self)
+        HTMLParser.__init__(self, namespaceHTMLElements=False)
         self.links = []
         self.baseuri = baseuri
 
-    def normalize_attrs(self, attrs):
-        def cleanattr(v):
-            v = sgmllib.charref.sub(lambda m: chr(int(m.groups()[0])), v)
-            v = v.strip()
-            v = v.replace('&lt;', '<').replace('&gt;', '>').replace('&apos;', "'").replace('&quot;', '"').replace('&amp;', '&')
-            return v
-        attrs = [(k.lower(), cleanattr(v)) for k, v in attrs]
-        attrs = [(k, k in ('rel','type') and v.lower() or v) for k, v in attrs]
-        return attrs
+    def feed(self, data):
+        root = self.parse(data)
+        for child in root.iter('*'):
+            if isinstance(child.tag, str):
+                try:
+                    handler = getattr(self, "do_" + child.tag)
+                    handler(child)
+                except AttributeError:
+                    pass
 
-    def do_base(self, attrs):
-        attrsD = dict(self.normalize_attrs(attrs))
-        if 'href' not in attrsD: return
-        self.baseuri = attrsD['href']
+    def do_base(self, el):
+        if el.get('href'):
+            self.baseuri = el.get('href').strip()
 
     def error(self, *a, **kw): pass # we're not picky
 
@@ -170,20 +171,18 @@ class LinkParser(BaseParser):
                   'application/atom+xml',
                   'application/x.atom+xml',
                   'application/x-atom+xml')
-    def do_link(self, attrs):
-        attrsD = dict(self.normalize_attrs(attrs))
-        if 'rel' not in attrsD: return
-        rels = attrsD['rel'].split()
+    def do_link(self, el):
+        if not el.get('rel'): return
+        rels = el.get('rel').lower().split()
         if 'alternate' not in rels: return
-        if attrsD.get('type') not in self.FEED_TYPES: return
-        if 'href' not in attrsD: return
-        self.links.append(urllib.parse.urljoin(self.baseuri, attrsD['href']))
+        if el.get('type').lower().strip() not in self.FEED_TYPES: return
+        if not el.get('href'): return
+        self.links.append(urllib.parse.urljoin(self.baseuri, el.get('href').strip()))
 
 class ALinkParser(BaseParser):
-    def start_a(self, attrs):
-        attrsD = dict(self.normalize_attrs(attrs))
-        if 'href' not in attrsD: return
-        self.links.append(urllib.parse.urljoin(self.baseuri, attrsD['href']))
+    def do_a(self, el):
+        if not el.get('href'): return
+        self.links.append(urllib.parse.urljoin(self.baseuri, el.get('href').strip()))
 
 def makeFullURI(uri):
     if uri.startswith('feed://'):
@@ -218,18 +217,20 @@ def isXMLRelatedLink(link):
     return link.count('rss') + link.count('rdf') + link.count('xml') + link.count('atom') + link.count('feed')
 
 def couldBeFeedData(data):
-    try:
-        data = data.lower()
-    except TimeoutError: # server down, give up
-        return []
-    if data.count('<html'): return 0
-    return data.count('<rss') + data.count('<rdf') + data.count('<feed')
+    data = data.lower()
+    if isinstance(data, str):
+        data = data.encode("utf-8")
+    if data.count(b'<html'): return 0
+    return data.count(b'<rss') + data.count(b'<rdf') + data.count(b'<feed')
 
 def isFeed(uri):
     _debuglog('seeing if %s is a feed' % uri)
     protocol = urllib.parse.urlparse(uri)
     if protocol[0] not in ('http', 'https'): return 0
-    data = _gatekeeper.get(uri)
+    try:
+        data = _gatekeeper.get(uri)
+    except TimeoutError: # server down, give up
+        return false
     return couldBeFeedData(data)
 
 def sortFeeds(feed1Info, feed2Info):
