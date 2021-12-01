@@ -210,11 +210,11 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
       except urllib.error.URLError as x:
         if isinstance(x.reason, socket.timeout):
           raise ValidationFailure(logging.IOError({"message": 'Server timed out', "exception":x}))
-        if "WRONG_SIGNATURE_TYPE" in x.reason[1]:
+        if isinstance(x.reason, ssl.SSLError) and "WRONG_SIGNATURE_TYPE" in x.reason.reason:
           loggedEvents.append(HttpsProtocolWarning({'message': "Weak signature used by HTTPS server"}))
           usock = urllib.request.urlopen(request, context=ctx1)
-        elif "CERTIFICATE_VERIFY_FAILED" in x.reason[1]:
-          raise logging.HttpsProtocolError({'message': "HTTPs server has incorrect certificate configuration"})
+        elif isinstance(x.reason, ssl.SSLCertVerificationError) and "CERTIFICATE_VERIFY_FAILED" in x.reason.reason:
+          raise ValidationFailure(logging.HttpsProtocolError({'message': "HTTPs server has incorrect certificate configuration"}))
         else:
           raise x
       rawdata = usock.read(MAXDATALENGTH)
@@ -237,8 +237,8 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
 
     except BadStatusLine as status:
       raise ValidationFailure(logging.HttpError({'status': status.__class__}))
-    except logging.HttpsProtocolError as x:
-      raise ValidationFailure(x)
+    except ValidationFailure as x:
+      raise x
 
     except urllib.error.HTTPError as status:
       rawdata = status.read()
