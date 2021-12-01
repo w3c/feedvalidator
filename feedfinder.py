@@ -317,34 +317,40 @@ def feed(uri):
 ##### test harness ######
 
 def test():
-    uri = 'http://diveintomark.org/tests/client/autodiscovery/html4-001.html'
     failed = []
     count = 0
+    filename = 'html4-001.html'
     while 1:
-        data = _gatekeeper.get(uri)
-        if data.find('Atom autodiscovery test') == -1: break
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        count += 1
-        links = getLinks(data, uri)
-        if not links:
-            print('\n*** FAILED ***', uri, 'could not find link')
-            failed.append(uri)
-        elif len(links) > 1:
-            print('\n*** FAILED ***', uri, 'found too many links')
-            failed.append(uri)
-        else:
-            atomdata = urllib.request.urlopen(links[0]).read()
-            if atomdata.find('<link rel="alternate"') == -1:
-                print('\n*** FAILED ***', uri, 'retrieved something that is not a feed')
+        uri = 'http://diveintomark.org/tests/client/autodiscovery/' + filename
+        with open("feedfinder-tests/%s" % filename, 'rb') as f:
+            data = f.read()
+            if data.find(b'Atom autodiscovery test') == -1: break
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            count += 1
+            links = getLinks(data, uri)
+            if not links:
+                print('\n*** FAILED ***', uri, 'could not find link')
+                failed.append(uri)
+            elif len(links) > 1:
+                print('\n*** FAILED ***', uri, 'found too many links')
                 failed.append(uri)
             else:
-                backlink = atomdata.split('href="').pop().split('"')[0]
-                if backlink != uri:
-                    print('\n*** FAILED ***', uri, 'retrieved wrong feed')
-                    failed.append(uri)
-        if data.find('<link rel="next" href="') == -1: break
-        uri = urllib.parse.urljoin(uri, data.split('<link rel="next" href="').pop().split('"')[0])
+                feedfilename = links[0].split('/')[-1]
+                if links[0].startswith('http://www.ragingplatypus.com/'):
+                    feedfilename = "ragingplatypus/" + feedfilename
+                with open("feedfinder-tests/%s" % feedfilename, 'rb') as atomf:
+                    atomdata = atomf.read()
+                    if atomdata.find(b'<link rel="alternate"') == -1:
+                        print('\n*** FAILED ***', uri, 'retrieved something that is not a feed')
+                        failed.append(uri)
+                    else:
+                        backlink = atomdata.split(b'href="').pop().split(b'"')[0].decode('utf-8')
+                        if backlink != uri:
+                            print('\n*** FAILED ***', uri, 'retrieved wrong feed, backlink set to ', backlink)
+                            failed.append(uri)
+            if data.find(b'<link rel="next" href="') == -1: break
+            filename = data.split(b'<link rel="next" href="').pop().split(b'"')[0].split(b'/')[-1].decode('us-ascii')
     print()
     print(count, 'tests executed,', len(failed), 'failed')
 

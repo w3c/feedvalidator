@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<title>Atom autodiscovery test suite</title>
+<link rel="alternate" href="http://kusor.net/atom/auto-discovery/es_tests_client_autodiscovery.html" type="text/html" hreflang="es" title="Atom autodiscovery test suite (Spanish)">
+<link rel="next" href="html4-001.html" title="HTML4-001">
+</head>
+<body>
+<h1>Atom autodiscovery test suite</h1>
+<p>Each of these tests is a complete HTML or XHTML document.  Each document contains an <a href="http://diveintomark.org/archives/2003/12/19/atom-autodiscovery">Atom autodiscovery link</a> to exactly one Atom feed.  Once you think you've found the feed, retrieve it and verify that the feed contains a link to the document you started from.  If so, you have passed the test.</p>
+
+<p>If you can't find the autodiscovery link, you have failed the test.  If you think you've found more than one autodiscovery link, you have failed the test.  If you think you've found the autodiscovery link but can't retrieve the feed, you have failed the test.  If you retrieve the feed but it does not contain a link back to the document you started from, you have failed the test.</p>
+
+<p>From each document, you can follow the <code>&lt;link rel="next" ...></code> link to get to the next test.  I recommend doing this, rather than hardcoding the list of test URLs, since it is likely that I will add more tests in the future.</p>
+
+<p>XHTML 1.1 documents are always served with the <code>application/xhtml+xml</code> media type.  If you wish to view these tests, you will need a standards-compliant browser such as Mozilla Firefox, Opera, or Safari.</p>
+
+<p><a href="atomautodiscovery.py">atomautodiscovery.py</a> passes this test suite.</p>
+
+<p>This test suite is copyright &copy; 2003-7 by Mark Pilgrim.  It is free for commercial or non-commercial use for the purpose of testing interoperability of Atom autodiscovery clients, but it may not be republished or used to create derivative works.</p>
+<p>This test suite is also <a href="http://kusor.net/atom/auto-discovery/es_tests_client_autodiscovery.html">available in Spanish</a>.</p>
+
+<ol>
+<li><a href="html4-001.html">html4-001.html</a> - HTML 4, absolute URI</li>
+<li><a href="html4-002.html">html4-002.html</a> - HTML 4, relative URI</li>
+<li><a href="html4-003.html">html4-003.html</a> - HTML 4, relative URI relative to top of domain</li>
+<li><a href="html4-004.html">html4-004.html</a> - HTML 4, unquoted rel attribute</li>
+<li><a href="html4-005.html">html4-005.html</a> - HTML 4, id attribute distraction</li>
+<li><a href="html4-006.html">html4-006.html</a> - HTML 4, unquoted href attribute</li>
+<li><a href="html4-007.html">html4-007.html</a> - HTML 4, single-quoted rel attribute</li>
+<li><a href="html4-008.html">html4-008.html</a> - HTML 4, single-quoted type attribute</li>
+<li><a href="html4-009.html">html4-009.html</a> - HTML 4, single-quoted href attribute</li>
+<li><a href="html4-010.html">html4-010.html</a> - HTML 4, attributes separated by carriage returns</li>
+<li><a href="html4-011.html">html4-011.html</a> - HTML 4, uppercase rel value</li>
+<li><a href="html4-012.html">html4-012.html</a> - HTML 4, capitalized rel value</li>
+<li><a href="html4-013.html">html4-013.html</a> - HTML 4, mixed case rel value</li>
+<li><a href="html4-014.html">html4-014.html</a> - HTML 4, uppercase type value</li>
+<li><a href="html4-015.html">html4-015.html</a> - HTML 4, capitalized type value</li>
+<li><a href="html4-016.html">html4-016.html</a> - HTML 4, capitalized type value #2</li>
+<li><a href="html4-017.html">html4-017.html</a> - HTML 4, capitalized type value #3</li>
+<li><a href="html4-018.html">html4-018.html</a> - HTML 4, mixed case type value</li>
+<li><a href="html4-019.html">html4-019.html</a> - HTML 4, uppercase link element</li>
+<li><a href="html4-020.html">html4-020.html</a> - HTML 4, uppercase rel attribute</li>
+<li><a href="html4-021.html">html4-021.html</a> - HTML 4, uppercase type attribute</li>
+<li><a href="html4-022.html">html4-022.html</a> - HTML 4, uppercase href attribute</li>
+<li><a href="html4-023.html">html4-023.html</a> - HTML 4, uppercase head element</li>
+<li><a href="html4-024.html">html4-024.html</a> - HTML 4, all uppercase elements and attributes</li>
+<li><a href="html4-025.html">html4-025.html</a> - HTML 4, extra rel value before alternate</li>
+<li><a href="html4-026.html">html4-026.html</a> - HTML 4, extra rel value after alternate</li>
+<li><a href="html4-027.html">html4-027.html</a> - HTML 4, extra rel values before and after alternate</li>
+<li><a href="html4-028.html">html4-028.html</a> - HTML 4, extra rel values before and after alternate, uppercase alternate</li>
+<li><a href="html4-029.html">html4-029.html</a> - HTML 4, attributes in different order</li>
+<li><a href="html4-030.html">html4-030.html</a> - HTML 4, unknown rel value distraction</li>
+<li><a href="html4-031.html">html4-031.html</a> - HTML 4, unknown rel value distraction #2</li>
+<li><a href="html4-032.html">html4-032.html</a> - HTML 4, rev attribute distraction</li>
+<li><a href="html4-033.html">html4-033.html</a> - HTML 4, title attribute distraction</li>
+<li><a href="html4-034.html">html4-034.html</a> - HTML 4, type attribute distraction</li>
+<li><a href="html4-035.html">html4-035.html</a> - HTML 4, trailing space in rel value</li>
+<li><a href="html4-036.html">html4-036.html</a> - HTML 4, leading space in rel value</li>
+<li><a href="html4-037.html">html4-037.html</a> - HTML 4, leading and trailing spaces in rel value</li>
+<li><a href="html4-038.html">html4-038.html</a> - HTML 4, trailing space in type value</li>
+<li><a href="html4-039.html">html4-039.html</a> - HTML 4, leading space in type value</li>
+<li><a href="html4-040.html">html4-040.html</a> - HTML 4, leading and trailing spaces in type value</li>
+<li><a href="html4-041.html">html4-041.html</a> - HTML 4, trailing space in href value</li>
+<li><a href="html4-042.html">html4-042.html</a> - HTML 4, leading space in href value</li>
+<li><a href="html4-043.html">html4-043.html</a> - HTML 4, leading and trailing spaces in href value</li>
+<li><a href="html4-044.html">html4-044.html</a> - HTML 4, leading and trailing spaces in href value, relative URI</li>
+<li><a href="html4-045.html">html4-045.html</a> - HTML 4, relative URI relative to declared base URI</li>
+<li><a href="html4-046.html">html4-046.html</a> - HTML 4, relative URI relative to declared base URI #2</li>
+<li><a href="html4-047.html">html4-047.html</a> - HTML 4, relative URI relative to declared base URI on another server</li>
+<li><a href="html4-048.html">html4-048.html</a> - HTML 4, relative URI relative to declared base URI on another server #2</li>
+<li><a href="html4-049.html">html4-049.html</a> - HTML 4, relative URI relative to declared base URI on another server #3</li>
+<li><a href="html4-050.html">html4-050.html</a> - HTML 4, relative URI relative to declared base URI on another server, uppercase base element</li>
+<li><a href="html4-051.html">html4-051.html</a> - HTML 4, base URI distraction</li>
+<li><a href="html4-052.html">html4-052.html</a> - HTML 4, base URI declared after link should be ignored</li>
+<li><a href="html4-053.html">html4-053.html</a> - HTML 4, numeric entity for A in rel value</li>
+<li><a href="html4-054.html">html4-054.html</a> - HTML 4, numeric entity for a in rel value</li>
+<li><a href="html4-055.html">html4-055.html</a> - HTML 4, numeric entity for I in type value</li>
+<li><a href="html4-056.html">html4-056.html</a> - HTML 4, numeric entity for + in type value</li>
+<li><a href="html4-057.html">html4-057.html</a> - HTML 4, UTF-16 encoding</li>
+<li><a href="xhtml10-001.html">xhtml10-001.html</a> - XHTML 1.0, absolute URI</li>
+<li><a href="xhtml10-002.html">xhtml10-002.html</a> - XHTML 1.0, relative URI</li>
+<li><a href="xhtml10-003.html">xhtml10-003.html</a> - XHTML 1.0, relative URI relative to top of domain</li>
+<li><a href="xhtml10-007.html">xhtml10-007.html</a> - XHTML 1.0, single-quoted rel attribute</li>
+<li><a href="xhtml10-008.html">xhtml10-008.html</a> - XHTML 1.0, single-quoted type attribute</li>
+<li><a href="xhtml10-009.html">xhtml10-009.html</a> - XHTML 1.0, single-quoted href attribute</li>
+<li><a href="xhtml10-010.html">xhtml10-010.html</a> - XHTML 1.0, attributes separated by carriage returns</li>
+<li><a href="xhtml10-011.html">xhtml10-011.html</a> - XHTML 1.0, uppercase rel value</li>
+<li><a href="xhtml10-012.html">xhtml10-012.html</a> - XHTML 1.0, capitalized rel value</li>
+<li><a href="xhtml10-013.html">xhtml10-013.html</a> - XHTML 1.0, mixed case rel value</li>
+<li><a href="xhtml10-014.html">xhtml10-014.html</a> - XHTML 1.0, uppercase type value</li>
+<li><a href="xhtml10-015.html">xhtml10-015.html</a> - XHTML 1.0, capitalized type value</li>
+<li><a href="xhtml10-016.html">xhtml10-016.html</a> - XHTML 1.0, capitalized type value #2</li>
+<li><a href="xhtml10-017.html">xhtml10-017.html</a> - XHTML 1.0, capitalized type value #3</li>
+<li><a href="xhtml10-018.html">xhtml10-018.html</a> - XHTML 1.0, mixed case type value</li>
+<li><a href="xhtml10-025.html">xhtml10-025.html</a> - XHTML 1.0, extra rel value before alternate</li>
+<li><a href="xhtml10-026.html">xhtml10-026.html</a> - XHTML 1.0, extra rel value after alternate</li>
+<li><a href="xhtml10-027.html">xhtml10-027.html</a> - XHTML 1.0, extra rel values before and after alternate</li>
+<li><a href="xhtml10-028.html">xhtml10-028.html</a> - XHTML 1.0, extra rel values before and after alternate, uppercase alternate</li>
+<li><a href="xhtml10-029.html">xhtml10-029.html</a> - XHTML 1.0, attributes in different order</li>
+<li><a href="xhtml10-030.html">xhtml10-030.html</a> - XHTML 1.0, unknown rel value distraction</li>
+<li><a href="xhtml10-031.html">xhtml10-031.html</a> - XHTML 1.0, unknown rel value distraction #2</li>
+<li><a href="xhtml10-032.html">xhtml10-032.html</a> - XHTML 1.0, rev attribute distraction</li>
+<li><a href="xhtml10-033.html">xhtml10-033.html</a> - XHTML 1.0, title attribute distraction</li>
+<li><a href="xhtml10-034.html">xhtml10-034.html</a> - XHTML 1.0, type attribute distraction</li>
+<li><a href="xhtml10-035.html">xhtml10-035.html</a> - XHTML 1.0, trailing space in rel value</li>
+<li><a href="xhtml10-036.html">xhtml10-036.html</a> - XHTML 1.0, leading space in rel value</li>
+<li><a href="xhtml10-037.html">xhtml10-037.html</a> - XHTML 1.0, leading and trailing spaces in rel value</li>
+<li><a href="xhtml10-038.html">xhtml10-038.html</a> - XHTML 1.0, trailing space in type value</li>
+<li><a href="xhtml10-039.html">xhtml10-039.html</a> - XHTML 1.0, leading space in type value</li>
+<li><a href="xhtml10-040.html">xhtml10-040.html</a> - XHTML 1.0, leading and trailing spaces in type value</li>
+<li><a href="xhtml10-041.html">xhtml10-041.html</a> - XHTML 1.0, trailing space in href value</li>
+<li><a href="xhtml10-042.html">xhtml10-042.html</a> - XHTML 1.0, leading space in href value</li>
+<li><a href="xhtml10-043.html">xhtml10-043.html</a> - XHTML 1.0, leading and trailing spaces in href value</li>
+<li><a href="xhtml10-044.html">xhtml10-044.html</a> - XHTML 1.0, leading and trailing spaces in href value, relative URI</li>
+<li><a href="xhtml10-045.html">xhtml10-045.html</a> - XHTML 1.0, relative URI relative to declared base URI</li>
+<li><a href="xhtml10-046.html">xhtml10-046.html</a> - XHTML 1.0, relative URI relative to declared base URI #2</li>
+<li><a href="xhtml10-047.html">xhtml10-047.html</a> - XHTML 1.0, relative URI relative to declared base URI on another server</li>
+<li><a href="xhtml10-048.html">xhtml10-048.html</a> - XHTML 1.0, relative URI relative to declared base URI on another server #2</li>
+<li><a href="xhtml10-049.html">xhtml10-049.html</a> - XHTML 1.0, relative URI relative to declared base URI on another server #3</li>
+<li><a href="xhtml10-051.html">xhtml10-051.html</a> - XHTML 1.0, base URI distraction</li>
+<li><a href="xhtml10-052.html">xhtml10-052.html</a> - XHTML 1.0, base URI declared after link should be ignored</li>
+<li><a href="xhtml10-053.html">xhtml10-053.html</a> - XHTML 1.0, numeric entity for A in rel value</li>
+<li><a href="xhtml10-054.html">xhtml10-054.html</a> - XHTML 1.0, numeric entity for a in rel value</li>
+<li><a href="xhtml10-055.html">xhtml10-055.html</a> - XHTML 1.0, numeric entity for I in type value</li>
+<li><a href="xhtml10-056.html">xhtml10-056.html</a> - XHTML 1.0, numeric entity for + in type value</li>
+<li><a href="xhtml11-001.xhtml">xhtml11-001.xhtml</a> - XHTML 1.1, absolute URI</li>
+<li><a href="xhtml11-002.xhtml">xhtml11-002.xhtml</a> - XHTML 1.1, relative URI</li>
+<li><a href="xhtml11-003.xhtml">xhtml11-003.xhtml</a> - XHTML 1.1, relative URI relative to top of domain</li>
+<li><a href="xhtml11-007.xhtml">xhtml11-007.xhtml</a> - XHTML 1.1, single-quoted rel attribute</li>
+<li><a href="xhtml11-008.xhtml">xhtml11-008.xhtml</a> - XHTML 1.1, single-quoted type attribute</li>
+<li><a href="xhtml11-009.xhtml">xhtml11-009.xhtml</a> - XHTML 1.1, single-quoted href attribute</li>
+<li><a href="xhtml11-010.xhtml">xhtml11-010.xhtml</a> - XHTML 1.1, attributes separated by carriage returns</li>
+<li><a href="xhtml11-011.xhtml">xhtml11-011.xhtml</a> - XHTML 1.1, uppercase rel value</li>
+<li><a href="xhtml11-012.xhtml">xhtml11-012.xhtml</a> - XHTML 1.1, capitalized rel value</li>
+<li><a href="xhtml11-013.xhtml">xhtml11-013.xhtml</a> - XHTML 1.1, mixed case rel value</li>
+<li><a href="xhtml11-014.xhtml">xhtml11-014.xhtml</a> - XHTML 1.1, uppercase type value</li>
+<li><a href="xhtml11-015.xhtml">xhtml11-015.xhtml</a> - XHTML 1.1, capitalized type value</li>
+<li><a href="xhtml11-016.xhtml">xhtml11-016.xhtml</a> - XHTML 1.1, capitalized type value #2</li>
+<li><a href="xhtml11-017.xhtml">xhtml11-017.xhtml</a> - XHTML 1.1, capitalized type value #3</li>
+<li><a href="xhtml11-018.xhtml">xhtml11-018.xhtml</a> - XHTML 1.1, mixed case type value</li>
+<li><a href="xhtml11-025.xhtml">xhtml11-025.xhtml</a> - XHTML 1.1, extra rel value before alternate</li>
+<li><a href="xhtml11-026.xhtml">xhtml11-026.xhtml</a> - XHTML 1.1, extra rel value after alternate</li>
+<li><a href="xhtml11-027.xhtml">xhtml11-027.xhtml</a> - XHTML 1.1, extra rel values before and after alternate</li>
+<li><a href="xhtml11-028.xhtml">xhtml11-028.xhtml</a> - XHTML 1.1, extra rel values before and after alternate, uppercase alternate</li>
+<li><a href="xhtml11-029.xhtml">xhtml11-029.xhtml</a> - XHTML 1.1, attributes in different order</li>
+<li><a href="xhtml11-030.xhtml">xhtml11-030.xhtml</a> - XHTML 1.1, unknown rel value distraction</li>
+<li><a href="xhtml11-031.xhtml">xhtml11-031.xhtml</a> - XHTML 1.1, unknown rel value distraction #2</li>
+<li><a href="xhtml11-032.xhtml">xhtml11-032.xhtml</a> - XHTML 1.1, rev attribute distraction</li>
+<li><a href="xhtml11-033.xhtml">xhtml11-033.xhtml</a> - XHTML 1.1, title attribute distraction</li>
+<li><a href="xhtml11-034.xhtml">xhtml11-034.xhtml</a> - XHTML 1.1, type attribute distraction</li>
+<li><a href="xhtml11-035.xhtml">xhtml11-035.xhtml</a> - XHTML 1.1, trailing space in rel value</li>
+<li><a href="xhtml11-036.xhtml">xhtml11-036.xhtml</a> - XHTML 1.1, leading space in rel value</li>
+<li><a href="xhtml11-037.xhtml">xhtml11-037.xhtml</a> - XHTML 1.1, leading and trailing spaces in rel value</li>
+<li><a href="xhtml11-038.xhtml">xhtml11-038.xhtml</a> - XHTML 1.1, trailing space in type value</li>
+<li><a href="xhtml11-039.xhtml">xhtml11-039.xhtml</a> - XHTML 1.1, leading space in type value</li>
+<li><a href="xhtml11-040.xhtml">xhtml11-040.xhtml</a> - XHTML 1.1, leading and trailing spaces in type value</li>
+<li><a href="xhtml11-041.xhtml">xhtml11-041.xhtml</a> - XHTML 1.1, trailing space in href value</li>
+<li><a href="xhtml11-042.xhtml">xhtml11-042.xhtml</a> - XHTML 1.1, leading space in href value</li>
+<li><a href="xhtml11-043.xhtml">xhtml11-043.xhtml</a> - XHTML 1.1, leading and trailing spaces in href value</li>
+<li><a href="xhtml11-044.xhtml">xhtml11-044.xhtml</a> - XHTML 1.1, leading and trailing spaces in href value, relative URI</li>
+<li><a href="xhtml11-045.xhtml">xhtml11-045.xhtml</a> - XHTML 1.1, relative URI relative to declared base URI</li>
+<li><a href="xhtml11-046.xhtml">xhtml11-046.xhtml</a> - XHTML 1.1, relative URI relative to declared base URI #2</li>
+<li><a href="xhtml11-047.xhtml">xhtml11-047.xhtml</a> - XHTML 1.1, relative URI relative to declared base URI on another server</li>
+<li><a href="xhtml11-048.xhtml">xhtml11-048.xhtml</a> - XHTML 1.1, relative URI relative to declared base URI on another server #2</li>
+<li><a href="xhtml11-049.xhtml">xhtml11-049.xhtml</a> - XHTML 1.1, relative URI relative to declared base URI on another server #3</li>
+<li><a href="xhtml11-051.xhtml">xhtml11-051.xhtml</a> - XHTML 1.1, base URI distraction</li>
+<li><a href="xhtml11-052.xhtml">xhtml11-052.xhtml</a> - XHTML 1.1, base URI declared after link should be ignored</li>
+<li><a href="xhtml11-053.xhtml">xhtml11-053.xhtml</a> - XHTML 1.1, numeric entity for A in rel value</li>
+<li><a href="xhtml11-054.xhtml">xhtml11-054.xhtml</a> - XHTML 1.1, numeric entity for a in rel value</li>
+<li><a href="xhtml11-055.xhtml">xhtml11-055.xhtml</a> - XHTML 1.1, numeric entity for I in type value</li>
+<li><a href="xhtml11-056.xhtml">xhtml11-056.xhtml</a> - XHTML 1.1, numeric entity for + in type value</li>
+</ol>
+
+<p>Revision history:</p>
+
+<ul>
+<li>(2007-05-30) Added test HTML4-057 with UTF-16-encoded HTML.</li>
+<li>(2006-01-18) Updated sample feeds to Atom 1.0.  HTML and XHTML test files are unchanged.</li>
+</ul>
+
+</body>
+</html>
