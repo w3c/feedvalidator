@@ -446,6 +446,10 @@ if __name__ == "__main__":
         # export HTTP_HOST=http://feedvalidator.org/
         # export SCRIPT_NAME=check.cgi
         # export SCRIPT_FILENAME=/home/rubys/svn/feedvalidator/check.cgi
-        import fcgi
+        import http.server
+        server = http.server.HTTPServer
+        handler = http.server.CGIHTTPRequestHandler
+        handler.cgi_directories = ["/"]
         port=int(sys.argv[1])
-        fcgi.WSGIServer(checker_app, bindAddress=("127.0.0.1", port)).run()
+        httpd = server(("127.0.0.1", port), handler)
+        httpd.serve_forever()
