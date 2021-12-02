@@ -702,7 +702,7 @@ class extension_item(extension_channel_item):
   def do_conversationsNetwork_ratingTimestamp(self):
     return iso8601(), noduplicates()
 
-class heisen_uri(rfc3987, rfc2396_full):
+class heisen_uri(rfc3987):
   def validate(self):
     if self.getFeedType() == TYPE_ATOM:
       rfc3987.validate(self)
