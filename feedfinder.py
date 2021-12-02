@@ -33,7 +33,6 @@ How it works:
      ".atom"
   6. <A> links to feeds on external servers containing "rss", "rdf", "xml", or "atom"
   7. Try some guesses about common places for feeds (index.xml, atom.xml, etc.).
-  8. As a last ditch effort, we search Syndic8 for feeds matching the URI
 """
 
 __version__ = "2.0"
@@ -83,13 +82,6 @@ def timelimit(timeout):
             return c.result
         return internal2
     return internal
-
-# XML-RPC support allows feedfinder to query Syndic8 for possible matches.
-# Python 2.3 now comes with this module by default, otherwise you can download it
-try:
-    import xmlrpc.client # http://www.pythonware.com/products/xmlrpc/
-except ImportError:
-    xmlrpclib = None
 
 if not dict:
     def dict(aList):
@@ -236,20 +228,7 @@ def isFeed(uri):
 def sortFeeds(feed1Info, feed2Info):
     return cmp(feed2Info['headlines_rank'], feed1Info['headlines_rank'])
 
-def getFeedsFromSyndic8(uri):
-    feeds = []
-    try:
-        server = xmlrpc.client.Server('http://www.syndic8.com/xmlrpc.php')
-        feedids = server.syndic8.FindFeeds(uri)
-        infolist = server.syndic8.GetFeedInfo(feedids, ['headlines_rank','status','dataurl'])
-        infolist.sort(sortFeeds)
-        feeds = [f['dataurl'] for f in infolist if f['status']=='Syndicated']
-        _debuglog('found %s feeds through Syndic8' % len(feeds))
-    except:
-        pass
-    return feeds
-
-def feeds(uri, all=False, querySyndic8=False):
+def feeds(uri, all=False):
     fulluri = makeFullURI(uri)
     try:
         data = _gatekeeper.get(fulluri)
@@ -296,10 +275,6 @@ def feeds(uri, all=False, querySyndic8=False):
           'index.rss' # Slash
         ]
         feeds.extend(list(filter(isFeed, [urllib.parse.urljoin(fulluri, x) for x in suffixes])))
-    if (all or not feeds) and querySyndic8:
-        # still no luck, search Syndic8 for feeds (requires xmlrpclib)
-        _debuglog('still no luck, searching Syndic8')
-        feeds.extend(getFeedsFromSyndic8(uri))
     if hasattr(__builtins__, 'set') or 'set' in __builtins__:
         feeds = list(set(feeds))
     return feeds
