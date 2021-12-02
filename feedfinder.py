@@ -264,7 +264,7 @@ def feeds(uri, all=False):
         if all or not feeds:
             # look harder for feed links on another server
             feeds.extend(list(filter(isFeed, list(filter(isXMLRelatedLink, links)))))
-    if all or not feeds:
+    if all and not feeds:
         _debuglog('no A tags, guessing')
         suffixes = [ # filenames used by popular software:
           'atom.xml', # blogger, TypePad
