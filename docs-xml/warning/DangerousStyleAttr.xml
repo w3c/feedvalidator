@@ -8,7 +8,7 @@
 
 <p>The list of dangerous properties varies from browser to browser, and even
 from browser version to browser version.  As such the Feed Validator takes a
-white-list approach, and only accepts the following CSS properties:</p>
+allow-list approach, and only accepts the following CSS properties:</p>
 
 <blockquote>
 <code>azimuth</code>,
