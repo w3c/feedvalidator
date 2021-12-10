@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from config import *
 
 import cgi, cgitb, sys

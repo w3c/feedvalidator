@@ -11,16 +11,19 @@ else:
   timeoutsocket.setDefaultSocketTimeout(10)
   Timeout = timeoutsocket.Timeout
 
-import urllib2
+import urllib
 import ssl
 from . import logging
 from .logging import *
 from xml.sax import SAXException
+from xml.sax._exceptions import SAXParseException
 from xml.sax.xmlreader import InputSource
+# needed in python 3.7.1+
+from xml.sax.handler import feature_external_ges
 import re
 from . import xmlEncoding
 from . import mediaTypes
-from httplib import BadStatusLine
+from http.client import BadStatusLine
 
 MAXDATALENGTH = 5000000
 
@@ -42,8 +45,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
   """validate RSS from string, returns validator object"""
   from xml.sax import make_parser, handler
   from .base import SAXDispatcher
-  from exceptions import UnicodeError
-  from cStringIO import StringIO
+  from io import StringIO
 
   if re.match("^\s+<\?xml",aString) and re.search("<generator.*wordpress.*</generator>",aString):
     lt = aString.find('<'); gt = aString.find('>')
@@ -54,7 +56,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
 
   # By now, aString should be Unicode
   source = InputSource()
-  source.setByteStream(StringIO(xmlEncoding.asUTF8(aString)))
+  source.setByteStream(StringIO(aString))
 
   validator = SAXDispatcher(base, selfURIs or [base], encoding)
   validator.setFirstOccurrenceOnly(firstOccurrenceOnly)
@@ -85,6 +87,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
     parser = make_parser()
 
   parser.setFeature(handler.feature_namespaces, 1)
+  parser.setFeature(feature_external_ges, True)
   parser.setContentHandler(validator)
   parser.setErrorHandler(validator)
   parser.setEntityResolver(validator)
@@ -95,14 +98,14 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
 
   def xmlvalidate(log):
     import libxml2
-    from StringIO import StringIO
+    from io import StringIO
     from random import random
 
     prefix="...%s..." % str(random()).replace('0.','')
     msg=[]
     libxml2.registerErrorHandler(lambda msg,str: msg.append(str), msg)
 
-    input = libxml2.inputBuffer(StringIO(xmlEncoding.asUTF8(aString)))
+    input = libxml2.inputBuffer(StringIO(aString))
     reader = input.newTextReader(prefix)
     reader.SetParserProp(libxml2.PARSER_VALIDATE, 1)
     ret = reader.Read()
@@ -117,18 +120,21 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
     parser.parse(source)
   except SAXException:
     pass
-  except UnicodeError:
+  except UnicodeDecodeError:
     import sys
     exctype, value = sys.exc_info()[:2]
     validator.log(logging.UnicodeError({"exception":value}))
 
   if validator.getFeedType() == TYPE_RSS1:
     try:
-      from rdflib.syntax.parsers.RDFXMLHandler import RDFXMLHandler
+      from rdflib.plugins.parsers.rdfxml import RDFXMLHandler
 
       class Handler(RDFXMLHandler):
         ns_prefix_map = {}
         prefix_ns_map = {}
+        def bind(self, prefix, namespace, override=False):
+          self.ns_prefix_map[prefix] = namespace
+          self.prefix_ns_map[namespace] = prefix
         def add(self, triple): pass
         def __init__(self, dispatcher):
           RDFXMLHandler.__init__(self, self)
@@ -137,13 +143,16 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
           self.dispatcher.log(InvalidRDF({"message": message}))
 
       source = InputSource()
-      source.setByteStream(StringIO(xmlEncoding.asUTF8(aString)))
+      source.setByteStream(StringIO(aString))
 
       parser.reset()
       parser.setContentHandler(Handler(parser.getContentHandler()))
       parser.setErrorHandler(handler.ErrorHandler())
-      parser.parse(source)
-    except:
+      try:
+        parser.parse(source)
+      except SAXParseException as e:
+        self.dispatcher.log(SAXError({"message": e.message}))
+    except Exception as e:
       pass
 
   return validator
@@ -172,7 +181,7 @@ def validateStream(aFile, firstOccurrenceOnly=0, contentType=None, base=""):
 
 def validateString(aString, firstOccurrenceOnly=0, fallback=None, base=""):
   loggedEvents = []
-  if type(aString) != unicode:
+  if type(aString) != str:
     encoding, aString = xmlEncoding.decode("", None, aString, loggedEvents, fallback)
   else:
     encoding = "utf-8" # setting a sane (?) default
@@ -186,7 +195,7 @@ def validateString(aString, firstOccurrenceOnly=0, fallback=None, base=""):
 def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
   """validate RSS from URL, returns events list, or (events, rawdata) tuple"""
   loggedEvents = []
-  request = urllib2.Request(url)
+  request = urllib.request.Request(url)
   request.add_header("Accept-encoding", "gzip, deflate")
   request.add_header("User-Agent", "FeedValidator/1.3")
   usock = None
@@ -197,15 +206,15 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
   try:
     try:
       try:
-        usock = urllib2.urlopen(request, context=ctx2)
-      except urllib2.URLError as x:
+        usock = urllib.request.urlopen(request, context=ctx2)
+      except urllib.error.URLError as x:
         if isinstance(x.reason, socket.timeout):
           raise ValidationFailure(logging.IOError({"message": 'Server timed out', "exception":x}))
-        if "WRONG_SIGNATURE_TYPE" in x.reason[1]:
+        if isinstance(x.reason, ssl.SSLError) and "WRONG_SIGNATURE_TYPE" in x.reason.reason:
           loggedEvents.append(HttpsProtocolWarning({'message': "Weak signature used by HTTPS server"}))
-          usock = urllib2.urlopen(request, context=ctx1)
-        elif "CERTIFICATE_VERIFY_FAILED" in x.reason[1]:
-          raise logging.HttpsProtocolError({'message': "HTTPs server has incorrect certificate configuration"})
+          usock = urllib.request.urlopen(request, context=ctx1)
+        elif isinstance(x.reason, ssl.SSLCertVerificationError) and "CERTIFICATE_VERIFY_FAILED" in x.reason.reason:
+          raise ValidationFailure(logging.HttpsProtocolError({'message': "HTTPs server has incorrect certificate configuration"}))
         else:
           raise x
       rawdata = usock.read(MAXDATALENGTH)
@@ -214,10 +223,10 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
 
       # check for temporary redirects
       if usock.geturl() != request.get_full_url():
-        from urlparse import urlsplit
+        from urllib.parse import urlsplit
         (scheme, netloc, path, query, fragment) = urlsplit(url)
         if scheme == 'http':
-          from httplib import HTTPConnection
+          from http.client import HTTPConnection
           requestUri = (path or '/') + (query and '?' + query)
 
           conn=HTTPConnection(netloc)
@@ -228,10 +237,10 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
 
     except BadStatusLine as status:
       raise ValidationFailure(logging.HttpError({'status': status.__class__}))
-    except logging.HttpsProtocolError as x:
-      raise ValidationFailure(x)
+    except ValidationFailure as x:
+      raise x
 
-    except urllib2.HTTPError as status:
+    except urllib.error.HTTPError as status:
       rawdata = status.read()
       if len(rawdata) < 512 or 'content-encoding' in status.headers:
         loggedEvents.append(logging.HttpError({'status': status}))
@@ -245,7 +254,7 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
           usock = status
         else:
           raise ValidationFailure(logging.HttpError({'status': status}))
-    except urllib2.URLError as x:
+    except urllib.error.URLError as x:
       raise ValidationFailure(logging.HttpError({'status': x.reason}))
     except Timeout as x:
       raise ValidationFailure(logging.IOError({"message": 'Server timed out', "exception":x}))
@@ -257,9 +266,9 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
       loggedEvents.append(Uncompressed({}))
 
     if usock.headers.get('content-encoding', None) == 'gzip':
-      import gzip, StringIO
+      import gzip, io
       try:
-        rawdata = gzip.GzipFile(fileobj=StringIO.StringIO(rawdata)).read()
+        rawdata = gzip.GzipFile(fileobj=io.BytesIO(rawdata)).read()
       except:
         import sys
         exctype, value = sys.exc_info()[:2]
@@ -304,7 +313,7 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
       (mediaType, charset) = mediaTypes.checkValid(contentType, loggedEvents)
 
     # Check for malformed HTTP headers
-    for (h, v) in usock.headers.items():
+    for (h, v) in list(usock.headers.items()):
       if (h.find(' ') >= 0):
         loggedEvents.append(HttpProtocolError({'header': h}))
 
@@ -314,10 +323,10 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
 
     # Get baseURI from content-location and/or redirect information
     if usock.headers.get('content-location', None):
-      from urlparse import urljoin
+      from urllib.parse import urljoin
       baseURI=urljoin(baseURI,usock.headers.get('content-location', ""))
     elif usock.headers.get('location', None):
-      from urlparse import urljoin
+      from urllib.parse import urljoin
       baseURI=urljoin(baseURI,usock.headers.get('location', ""))
 
     if not baseURI in selfURIs: selfURIs.append(baseURI)

@@ -124,10 +124,9 @@ class QueryRole(enumeration):
 
 class UrlEncoded(validatorBase):
   def validate(self):
-    from urllib import quote, unquote
+    from urllib.parse import quote, unquote
     import re
     for value in self.value.split():
-      if type(value) == unicode: value = value.encode('utf-8')
       value = re.sub('%\w\w', lambda x: x.group(0).upper(), value)
       if value != quote(unquote(value)):
         self.log(NotURLEncoded({}))

@@ -5,7 +5,7 @@ from .logging import ConflictingCatAttr, ConflictingCatChildren
 
 class categories(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None,u'scheme'),(None,u'fixed'),(None,u'href')]
+    return [(None,'scheme'),(None,'fixed'),(None,'href')]
 
   def prevalidate(self):
     self.validate_optional_attribute((None,'fixed'), yesno)

@@ -6,15 +6,15 @@ from .base import validatorBase
 from .logging import *
 import re, time, datetime
 from .uri import canonicalForm, urljoin
-from rfc822 import AddressList, parsedate, parsedate_tz, mktime_tz
+from email.utils import getaddresses, parsedate, parsedate_tz, mktime_tz
+import collections
+from functools import reduce
 
 rdfNS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
 def implausible_822(value):
-  if value[0] < 1990: return True
-
   try:
-    from rfc822 import parsedate_tz, mktime_tz
+    from email.utils import parsedate_tz, mktime_tz
   except:
     # no time zone functions available, granularity is a day
     pvalue=parsedate(value)
@@ -73,7 +73,7 @@ class eater(validatorBase):
 
   def characters(self, string):
     for c in string:
-      if 0x80 <= ord(c) <= 0x9F or c == u'\ufffd':
+      if 0x80 <= ord(c) <= 0x9F or c == '\ufffd':
         from .validators import BadCharacters
         self.log(BadCharacters({"parent":self.parent.name, "element":self.name}))
 
@@ -90,12 +90,12 @@ class eater(validatorBase):
       self.log(MissingNamespace({"parent":self.name, "element":name}))
 
     # ensure all attribute namespaces are properly defined
-    for (namespace,attr) in attrs.keys():
+    for (namespace,attr) in list(attrs.keys()):
       if ':' in attr and not namespace:
         from .logging import MissingNamespace
         self.log(MissingNamespace({"parent":self.name, "element":attr}))
       for c in attrs.get((namespace,attr)):
-        if 0x80 <= ord(c) <= 0x9F or c == u'\ufffd':
+        if 0x80 <= ord(c) <= 0x9F or c == '\ufffd':
           from .validators import BadCharacters
           self.log(BadCharacters({"parent":name, "element":attr}))
 
@@ -259,7 +259,7 @@ class HTMLValidator:
       for tag in etree.iter():
         # tag.tag is DOCUMENT_FRAGMENT for the "root" element
         # and is a function when hitting comments which we're happy to ignore
-        if tag.tag != "DOCUMENT_FRAGMENT" and not(callable(tag.tag)):
+        if tag.tag != "DOCUMENT_FRAGMENT" and not(isinstance(tag.tag, collections.abc.Callable)):
           self.handle_tag(tag.tag.split('}')[-1], tag.attrib, tag.text)
     except ParseError as msg:
       element = self.element
@@ -276,7 +276,7 @@ class HTMLValidator:
     elif tag.lower() not in HTMLValidator.acceptable_elements:
       self.log(SecurityRisk({"parent":self.element.parent.name, "element":self.element.name, "tag":tag}))
     else:
-      for (name,value) in attributes.iteritems():
+      for (name,value) in attributes.items():
         if name.lower() == 'style':
           for evil in checkStyle(value):
             self.log(DangerousStyleAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":"style", "value":evil}))
@@ -336,15 +336,15 @@ class text(validatorBase):
   def textOK(self): pass
   def getExpectedAttrNames(self):
     if self.getFeedType() == TYPE_RSS1:
-      return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType'),
-              (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'datatype'),
-              (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'resource')]
+      return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType'),
+              ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'datatype'),
+              ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource')]
     else:
       return []
   def startElementNS(self, name, qname, attrs):
     if self.getFeedType() == TYPE_RSS1:
       if self.value.strip() or self.children:
-        if self.attrs.get((u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType')) != 'Literal':
+        if self.attrs.get(('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType')) != 'Literal':
           self.log(InvalidRDF({"message":"mixed content"}))
       if name=="div" and qname=="http://www.w3.org/1999/xhtml":
         from .content import diveater
@@ -410,7 +410,7 @@ def iso639_validate(log,value,element,parent):
     lang, sublang = value.split('-', 1)
   else:
     lang = value
-  if unicode.lower(unicode(lang)) not in iso639codes.isoLang:
+  if str.lower(str(lang)) not in iso639codes.isoLang:
     log(InvalidLanguage({"parent":parent, "element":element, "value":value}))
   else:
     log(ValidLanguage({"parent":parent, "element":element}))
@@ -583,13 +583,13 @@ class rfc2396(text):
           break
       else:
         try:
-          if self.rfc2396_re.match(self.value.encode('idna')):
+          if self.rfc2396_re.match(self.value.encode('idna').decode('utf-8')):
             errorClass=UriNotIri
         except:
           pass
         self.log(errorClass(logparams))
     elif scheme in ['http','ftp']:
-      if not re.match('^\w+://[^/].*',self.value):
+      if not re.match(r'^\w+://[^/].*',self.value):
         logparams = {"parent":self.parent.name, "element":self.name, "value":self.value}
         logparams.update(extraParams)
         self.log(errorClass(logparams))
@@ -611,7 +611,7 @@ class rfc2396(text):
 class rfc3987(rfc2396):
   def validate(self, errorClass=InvalidIRI, successClass=ValidURI, extraParams={}):
     try:
-      if self.value: self.value = self.value.encode('idna')
+      if self.value: self.value = self.value.encode('idna').decode('utf-8')
     except:
       pass # apparently '.' produces label too long
     return rfc2396.validate(self, errorClass, successClass, extraParams)
@@ -632,7 +632,7 @@ class xmlbase(rfc3987):
         docbase=canonicalForm(self.dispatcher.xmlBase).split('#')[0]
         elembase=canonicalForm(self.xmlBase).split('#')[0]
         value=canonicalForm(urljoin(elembase,self.value)).split('#')[0]
-        if (value==elembase) and (elembase.encode('idna')!=docbase):
+        if (value==elembase) and (elembase!=docbase):
           self.log(SameDocumentReference({"parent":self.parent.name, "element":self.name, "value":self.value}))
 
 #
@@ -680,21 +680,21 @@ class rfc822(text):
 #
 # Decode html entityrefs
 #
-from htmlentitydefs import name2codepoint
+from html.entities import name2codepoint
 def decodehtml(data):
   chunks=re.split('&#?(\w+);',data)
 
   for i in range(1,len(chunks),2):
     if chunks[i].isdigit():
 #      print chunks[i]
-      chunks[i]=unichr(int(chunks[i]))
+      chunks[i]=chr(int(chunks[i]))
     elif chunks[i] in name2codepoint:
-      chunks[i]=unichr(name2codepoint[chunks[i]])
+      chunks[i]=chr(name2codepoint[chunks[i]])
     else:
       chunks[i]='&' + chunks[i] +';'
 
 #  print repr(chunks)
-  return u"".join(map(unicode,chunks))
+  return "".join(map(str,chunks))
 
 #
 # Scan HTML for relative URLs
@@ -710,8 +710,6 @@ class absUrlMixin:
       if not self.absref_re.match(ref):
         for c in ref:
           if ord(c)<128 and not rfc2396.urichars_re.match(c):
-#            print "Invalid character:", ref
-#            self.log(InvalidUriChar({'value':repr(str(c))}))
             self.log(InvalidUriChar({'value':ref, 'char':repr(str(c))}))
             break
         else:
@@ -752,6 +750,11 @@ class nonhtml(text,safeHtmlMixin):#,absUrlMixin):
     self.start()
     self.children.append(True) # force warnings about "mixed" content
   def validate(self, message=ContainsHTML):
+    if not isinstance(self.value, str):
+      try:
+        self.value = self.value.decode("utf-8")
+      except:
+        return
     tags = [t for t in self.htmlEndTag_re.findall(self.value) if t.lower() in HTMLValidator.htmltags]
     if tags:
       self.log(message({"parent":self.parent.name, "element":self.name, "value":tags[0]}))
@@ -759,7 +762,7 @@ class nonhtml(text,safeHtmlMixin):#,absUrlMixin):
     # experimental RSS-Profile support
     elif self.htmlEntity_re.search(self.value):
       for value in self.htmlEntity_re.findall(self.value):
-        from htmlentitydefs import name2codepoint
+        from html.entities import name2codepoint
         if value in name2codepoint or value == 'apos' or not value.isalpha():
           if not hasattr(self,'startline'): self.startline=self.line
           lines = self.dispatcher.rssCharData[self.startline-1:self.line]
@@ -785,7 +788,7 @@ class email(addr_spec,nonhtml):
   def validate(self):
 
     value=self.value
-    list = AddressList(value)
+    list = getaddresses([value])
     if len(list)==1: value=list[0][1]
 
     nonhtml.validate(self)
@@ -794,7 +797,7 @@ class email(addr_spec,nonhtml):
 class email_with_name(email):
   def validate(self):
     if self.value.startswith('mailto:'):
-      from urllib import unquote
+      from urllib.parse import unquote
       self.value = unquote(self.value.split(':',1)[1])
 
     if self.value.find('@')>0:
@@ -901,8 +904,8 @@ class httpURL(text):
 
 class rdfResourceURI(rfc2396):
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'resource'),
-            (u'http://purl.org/dc/elements/1.1/', u'title')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource'),
+            ('http://purl.org/dc/elements/1.1/', 'title')]
   def validate(self):
     if (rdfNS, 'resource') in self.attrs.getNames():
       self.value=self.attrs.getValue((rdfNS, 'resource'))
@@ -912,7 +915,7 @@ class rdfResourceURI(rfc2396):
 
 class rdfAbout(validatorBase):
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'about')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about')]
   def startElementNS(self, name, qname, attrs):
     pass
   def validate(self):

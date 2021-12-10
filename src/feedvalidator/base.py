@@ -95,12 +95,12 @@ def near_miss(ns):
   except:
     return ns
 
-nearly_namespaces = dict([(near_miss(u),p) for u,p in namespaces.items()])
+nearly_namespaces = dict([(near_miss(u),p) for u,p in list(namespaces.items())])
 
-stdattrs = [(u'http://www.w3.org/XML/1998/namespace', u'base'),
-            (u'http://www.w3.org/XML/1998/namespace', u'id'),
-            (u'http://www.w3.org/XML/1998/namespace', u'lang'),
-            (u'http://www.w3.org/XML/1998/namespace', u'space')]
+stdattrs = [('http://www.w3.org/XML/1998/namespace', 'base'),
+            ('http://www.w3.org/XML/1998/namespace', 'id'),
+            ('http://www.w3.org/XML/1998/namespace', 'lang'),
+            ('http://www.w3.org/XML/1998/namespace', 'space')]
 
 #
 # From the SAX parser's point of view, this class is the one responsible for
@@ -121,7 +121,7 @@ class SAXDispatcher(ContentHandler):
     self.loggedEvents = []
     self.feedType = 0
     try:
-       self.xmlBase = base.encode('idna')
+       self.xmlBase = base.encode('idna').decode('utf-8')
     except:
        self.xmlBase = base
     self.selfURIs = selfURIs
@@ -148,10 +148,10 @@ class SAXDispatcher(ContentHandler):
     if uri and len(uri.split())>1:
       from xml.sax import SAXException
       self.error(SAXException('Invalid Namespace: %s' % uri))
-    if prefix in namespaces.values():
+    if prefix in list(namespaces.values()):
       if not namespaces.get(uri,'') == prefix and prefix:
         from .logging import ReservedPrefix, MediaRssNamespace
-        preferredURI = [key for key, value in namespaces.items() if value == prefix][0]
+        preferredURI = [key for key, value in list(namespaces.items()) if value == prefix][0]
         if uri == 'http://search.yahoo.com/mrss':
           self.log(MediaRssNamespace({'prefix':prefix, 'ns':preferredURI}))
         else:
@@ -201,10 +201,10 @@ class SAXDispatcher(ContentHandler):
 
     if len(attrs):
       present = attrs.getNames()
-      unexpected = filter(lambda x: x not in stdattrs, present)
+      unexpected = [x for x in present if x not in stdattrs]
       for handler in iter(self.handler_stack[-1]):
         ean = handler.getExpectedAttrNames()
-        if ean: unexpected = filter(lambda x: x not in ean, unexpected)
+        if ean: unexpected = [x for x in unexpected if x not in ean]
       for u in unexpected:
         if u[0] and near_miss(u[0]) not in nearly_namespaces:
           feedtype=self.getFeedType()
@@ -218,8 +218,8 @@ class SAXDispatcher(ContentHandler):
 
   def resolveEntity(self, publicId, systemId):
     if not publicId and not systemId:
-      import cStringIO
-      return cStringIO.StringIO()
+      import io
+      return io.StringIO()
 
     try:
       def log(exception):
@@ -245,13 +245,13 @@ class SAXDispatcher(ContentHandler):
       self.lastKnownLine = self.locator.getLineNumber()
       self.lastKnownColumn = self.locator.getColumnNumber()
       self.log(ContainsSystemEntity({}))
-    from StringIO import StringIO
+    from io import StringIO
     return StringIO()
 
   def skippedEntity(self, name):
     from .logging import ValidDoctype
     if [e for e in self.loggedEvents if e.__class__ == ValidDoctype]:
-      from htmlentitydefs import name2codepoint
+      from html.entities import name2codepoint
       if name in name2codepoint: return
     from .logging import UndefinedNamedEntity
     self.log(UndefinedNamedEntity({'value':name}))
@@ -290,7 +290,7 @@ class SAXDispatcher(ContentHandler):
         return duplicates[0]
 
       for dup in duplicates:
-        for k, v in event.params.items():
+        for k, v in list(event.params.items()):
           if k != 'value':
             if not k in dup.params or dup.params[k] != v: break
         else:
@@ -299,7 +299,7 @@ class SAXDispatcher(ContentHandler):
     if 'element' in event.params and event.params['element']:
       if not isinstance(event.params['element'],tuple):
         event.params['element']=':'.join(event.params['element'].split('_', 1))
-      elif event.params['element'][0]==u'http://www.w3.org/XML/1998/namespace':
+      elif event.params['element'][0]=='http://www.w3.org/XML/1998/namespace':
         event.params['element'] = 'xml:' + event.params['element'][-1]
     if self.firstOccurrenceOnly:
       dup = findDuplicate(self, event)
@@ -382,12 +382,12 @@ class validatorBase(ContentHandler):
     self.col  = self.dispatcher.locator.getColumnNumber()
     self.xmlLang = parent.xmlLang
 
-    if attrs and (u'http://www.w3.org/XML/1998/namespace', u'base') in attrs:
-      self.xmlBase=attrs.getValue((u'http://www.w3.org/XML/1998/namespace', u'base'))
+    if attrs and ('http://www.w3.org/XML/1998/namespace', 'base') in attrs:
+      self.xmlBase=attrs.getValue(('http://www.w3.org/XML/1998/namespace', 'base'))
       from .validators import rfc3987
-      self.validate_attribute((u'http://www.w3.org/XML/1998/namespace',u'base'),
+      self.validate_attribute(('http://www.w3.org/XML/1998/namespace','base'),
           rfc3987)
-      from urlparse import urljoin
+      from urllib.parse import urljoin
       self.xmlBase = urljoin(parent.xmlBase, self.xmlBase)
     else:
       self.xmlBase = parent.xmlBase
@@ -432,8 +432,8 @@ class validatorBase(ContentHandler):
     return any(self, name, qname, attrs)
 
   def startElementNS(self, name, qname, attrs):
-    if (u'http://www.w3.org/XML/1998/namespace', u'lang') in attrs:
-      self.xmlLang=attrs.getValue((u'http://www.w3.org/XML/1998/namespace', u'lang'))
+    if ('http://www.w3.org/XML/1998/namespace', 'lang') in attrs:
+      self.xmlLang=attrs.getValue(('http://www.w3.org/XML/1998/namespace', 'lang'))
       if self.xmlLang:
         from .validators import iso639_validate
         iso639_validate(self.log, self.xmlLang, "xml:lang", name)
@@ -454,7 +454,7 @@ class validatorBase(ContentHandler):
         if hasattr(self, 'setItunes'): self.setItunes(True)
 
     # ensure all attribute namespaces are properly defined
-    for (namespace,attr) in attrs.keys():
+    for (namespace,attr) in list(attrs.keys()):
       if ':' in attr and not namespace:
         from .logging import MissingNamespace
         self.log(MissingNamespace({"parent":self.name, "element":attr}))
@@ -463,9 +463,9 @@ class validatorBase(ContentHandler):
       from .logging import ObsoleteNamespace
       self.log(ObsoleteNamespace({"element":"feed"}))
 
-    for key, string in attrs.items():
+    for key, string in list(attrs.items()):
       for c in string:
-        if 0x80 <= ord(c) <= 0x9F or c == u'\ufffd':
+        if 0x80 <= ord(c) <= 0x9F or c == '\ufffd':
           from .validators import BadCharacters
           self.log(BadCharacters({"parent":name, "element":key[-1]}))
 
@@ -554,7 +554,7 @@ class validatorBase(ContentHandler):
       pc = c
 
       # win1252
-      if 0x80 <= ord(c) <= 0x9F or c == u'\ufffd':
+      if 0x80 <= ord(c) <= 0x9F or c == '\ufffd':
         from .validators import BadCharacters
         self.log(BadCharacters({"parent":self.parent.name, "element":self.name}), offset=(line,column))
       column=column+1

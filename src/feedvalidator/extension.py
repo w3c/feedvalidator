@@ -702,7 +702,7 @@ class extension_item(extension_channel_item):
   def do_conversationsNetwork_ratingTimestamp(self):
     return iso8601(), noduplicates()
 
-class heisen_uri(rfc3987, rfc2396_full):
+class heisen_uri(rfc3987):
   def validate(self):
     if self.getFeedType() == TYPE_ATOM:
       rfc3987.validate(self)
@@ -711,7 +711,7 @@ class heisen_uri(rfc3987, rfc2396_full):
 
 class feedFlare(nonhtml):
   def getExpectedAttrNames(self):
-    return [(None,u'href'),(None,u'src')]
+    return [(None,'href'),(None,'src')]
   def prevalidate(self):
     self.validate_required_attribute((None,'href'),  heisen_uri)
     self.validate_required_attribute((None,'src'),  heisen_uri)
@@ -719,13 +719,13 @@ class feedFlare(nonhtml):
 
 class feedInfo(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None,u'uri')]
+    return [(None,'uri')]
   def prevalidate(self):
     self.validate_required_attribute((None,'uri'),  rfc3987)
 
 class xmlView(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None,u'href')]
+    return [(None,'href')]
   def prevalidate(self):
     self.validate_required_attribute((None,'href'),  rfc2396_full)
 
@@ -741,7 +741,7 @@ class georss_where(validatorBase):
 
 class geo_srsName(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None, u'srsName')]
+    return [(None, 'srsName')]
 
 class gml_point(geo_srsName):
   def do_gml_pos(self):
@@ -811,7 +811,7 @@ class access_restriction(enumeration):
   valuelist =  ["allow", "deny"]
 
   def getExpectedAttrNames(self):
-    return [(None, u'relationship')]
+    return [(None, 'relationship')]
 
   def prevalidate(self):
     self.children.append(True) # force warnings about "mixed" content
@@ -877,9 +877,9 @@ class extension_rss10_item(extension_item):
     return l_permalink()
 
 class l_permalink(rdfResourceURI, MimeType):
-  lNS = u'http://purl.org/rss/1.0/modules/link/'
+  lNS = 'http://purl.org/rss/1.0/modules/link/'
   def getExpectedAttrNames(self):
-    return rdfResourceURI.getExpectedAttrNames(self) + [(self.lNS, u'type')]
+    return rdfResourceURI.getExpectedAttrNames(self) + [(self.lNS, 'type')]
   def validate(self):
     if (self.lNS, 'type') in self.attrs.getNames():
       self.value=self.attrs.getValue((self.lNS, 'type'))
@@ -887,11 +887,11 @@ class l_permalink(rdfResourceURI, MimeType):
     return rdfResourceURI.validate(self)
 
 class l_link(rdfResourceURI, MimeType):
-  lNS = u'http://purl.org/rss/1.0/modules/link/'
+  lNS = 'http://purl.org/rss/1.0/modules/link/'
   def getExpectedAttrNames(self):
     return rdfResourceURI.getExpectedAttrNames(self) + [
-      (self.lNS, u'lang'), (self.lNS, u'rel'),
-      (self.lNS, u'type'), (self.lNS, u'title')
+      (self.lNS, 'lang'), (self.lNS, 'rel'),
+      (self.lNS, 'type'), (self.lNS, 'title')
     ]
   def prevalidate(self):
     self.validate_optional_attribute((self.lNS,'lang'), iso639)
@@ -1033,7 +1033,7 @@ class extension_channel(extension_channel_item):
 
 class xhtml_meta(validatorBase):
   def getExpectedAttrNames(self):
-    return [ (None, u'name'), (None, u'content') ]
+    return [ (None, 'name'), (None, 'content') ]
   def prevalidate(self):
     self.validate_required_attribute((None,'name'), xhtmlMetaEnumeration)
     self.validate_required_attribute((None,'content'), robotsEnumeration)
@@ -1084,7 +1084,7 @@ class sy_updatePeriod(text):
 class g_complex_type(validatorBase):
   def getExpectedAttrNames(self):
     if self.getFeedType() == TYPE_RSS1:
-      return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType')]
+      return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType')]
     else:
       return []
 
@@ -1203,7 +1203,7 @@ class maxten(validatorBase):
 
 class in_reply_to(canonicaluri, xmlbase):
   def getExpectedAttrNames(self):
-    return [(None, u'href'), (None, u'ref'), (None, u'source'), (None, u'type')]
+    return [(None, 'href'), (None, 'ref'), (None, 'source'), (None, 'type')]
 
   def validate(self):
     if (None, "href") in self.attrs:

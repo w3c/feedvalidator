@@ -86,7 +86,7 @@ testsCanonical = [
 
   ['http://example.com/?'],
 
-  [u'http://example.com/%C3%87'],
+  ['http://example.com/%C3%87'],
 
 
   # Other tests
@@ -202,7 +202,7 @@ def buildTestSuite():
   for a in testsInvalid:
     i+= 1
     def tstCanFindCanonicalForm(self, a):
-      self.assertEquals(feedvalidator.uri.canonicalForm(a), None)
+      self.assertEqual(feedvalidator.uri.canonicalForm(a), None)
     func = lambda self, a=a: tstCanFindCanonicalForm(self, a)
     func.__doc__ = 'Test ' + a + ' cannot be canonicalised'
     setattr(UriTest, 'test' + str(i), func)

@@ -13,11 +13,11 @@ from .extension import extension_feed
 #
 class feed(validatorBase, extension_feed, itunes_channel):
   def getExpectedAttrNames(self):
-    return [(u'urn:atom-extension:indexing', u'index')]
+    return [('urn:atom-extension:indexing', 'index')]
 
   def prevalidate(self):
     self.links = []
-    self.validate_optional_attribute((u'urn:atom-extension:indexing', u'index'), yesno)
+    self.validate_optional_attribute(('urn:atom-extension:indexing', 'index'), yesno)
 
   def missingElement(self, params):
     offset = [self.line - self.dispatcher.locator.getLineNumber(),

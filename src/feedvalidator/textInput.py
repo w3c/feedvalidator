@@ -10,7 +10,7 @@ from .extension import extension_everywhere
 #
 class textInput(validatorBase, extension_everywhere):
   def getExpectedAttrNames(self):
-      return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'about')]
+      return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'about')]
 
   def validate(self):
     if not "title" in self.children:

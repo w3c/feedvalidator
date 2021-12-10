@@ -1,6 +1,6 @@
 <!--
   Description:  Accept using wildcard
-  Expect:       !InvalidMediaRange
+  Expect:       !InvalidMIMEType
 -->
 
 <service xmlns="http://www.w3.org/2007/app"

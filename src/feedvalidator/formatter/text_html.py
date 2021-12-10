@@ -80,8 +80,8 @@ class Formatter(BaseFormatter):
       codeFragment = self.rawdata.split('\n')[line-1]
       markerColumn = column
       if column > self.FRAGMENTLEN:
-        codeFragment = '... ' + codeFragment[column-(self.FRAGMENTLEN/2):]
-        markerColumn = 5 + (self.FRAGMENTLEN/2)
+        codeFragment = '... ' + codeFragment[column-int(self.FRAGMENTLEN/2):]
+        markerColumn = 5 + int(self.FRAGMENTLEN/2)
       if len(codeFragment) > self.FRAGMENTLEN:
         codeFragment = codeFragment[:(self.FRAGMENTLEN-4)] + ' ...'
     else:
@@ -91,20 +91,20 @@ class Formatter(BaseFormatter):
 
     html = escapeAndMark(codeFragment)
 
-    rc = u'<li><p>'
+    rc = '<li><p>'
     if line:
-      rc += u'''<a href="#l%s">''' % line
-      rc += u'''%s</a>, ''' % self.getLine(event)
-      rc += u'''%s: ''' % self.getColumn(event)
+      rc += '''<a href="#l%s">''' % line
+      rc += '''%s</a>, ''' % self.getLine(event)
+      rc += '''%s: ''' % self.getColumn(event)
     if 'value' in event.params:
-      rc += u'''<span class="message">%s: <code>%s</code></span>''' % (escape(self.getMessage(event)), escape(unicode(event.params['value'])))
+      rc += '''<span class="message">%s: <code>%s</code></span>''' % (escape(self.getMessage(event)), escape(str(event.params['value'])))
     else:
-      rc += u'''<span class="message">%s</span>''' % escape(self.getMessage(event))
-    rc += u'''%s ''' % self.getCount(event)
-    rc += u'''[<a title="more information about this error" href="%s.html">help</a>]</p>''' % self.getHelpURL(event)
-    rc += u'''<blockquote><pre>''' + html + '''<br />'''
+      rc += '''<span class="message">%s</span>''' % escape(self.getMessage(event))
+    rc += '''%s ''' % self.getCount(event)
+    rc += '''[<a title="more information about this error" href="%s.html">help</a>]</p>''' % self.getHelpURL(event)
+    rc += '''<blockquote><pre>''' + html + '''<br />'''
     if markerColumn:
-      rc += u'&nbsp;' * markerColumn
-      rc += u'''<span class="marker">^</span>'''
-    rc += u'</pre></blockquote></li>'
+      rc += '&nbsp;' * markerColumn
+      rc += '''<span class="marker">^</span>'''
+    rc += '</pre></blockquote></li>'
     return rc

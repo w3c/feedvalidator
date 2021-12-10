@@ -25,10 +25,10 @@ class EncodingTestCase(unittest.TestCase):
   def testEncodingMatches(self):
     try:
       enc = xmlEncoding.detect(self.bytes)
-    except UnicodeError as u:
+    except UnicodeDecodeError as u:
       self.fail("'" + self.filename + "' should not cause an exception (" + str(u) + ")")
 
-    self.assert_(enc, 'An encoding must be returned for all valid files ('
+    self.assertTrue(enc, 'An encoding must be returned for all valid files ('
         + self.filename + ')')
     self.assertEqual(enc, self.expectedEncoding, 'Encoding for '
         + self.filename + ' should be ' + self.expectedEncoding + ', but was ' + enc)
@@ -38,7 +38,7 @@ class EncodingTestCase(unittest.TestCase):
 
     try:
       encoding = xmlEncoding.detect(self.bytes, eventLog)
-    except UnicodeError as u:
+    except UnicodeDecodeError as u:
       self.fail("'" + self.filename + "' should not cause an exception (" + str(u) + ")")
 
     if encoding:
@@ -49,14 +49,14 @@ class EncodingTestCase(unittest.TestCase):
 
 
 
-bom8='\xEF\xBB\xBF'
-bom16BE='\xFE\xFF'
-bom16LE='\xFF\xFE'
-bom32BE='\x00\x00\xFE\xFF'
-bom32LE='\xFF\xFE\x00\x00'
+bom8=b'\xEF\xBB\xBF'
+bom16BE=b'\xFE\xFF'
+bom16LE=b'\xFF\xFE'
+bom32BE=b'\x00\x00\xFE\xFF'
+bom32LE=b'\xFF\xFE\x00\x00'
 
 # Some fairly typical Unicode text. It should survive XML roundtripping.
-docText=u'<x>\u201c"This\uFEFF" is\na\r\u00A3t\u20Acst\u201D</x>'
+docText='<x>\u201c"This\uFEFF" is\na\r\u00A3t\u20Acst\u201D</x>'
 
 validDecl = re.compile('[A-Za-z][-A-Za-z0-9._]*')
 
@@ -76,22 +76,22 @@ def genValidXmlTestCases():
   # Required
 
   yield('UTF-8', ['BOM', 'declaration'],
-    bom8 + makeDecl('UTF-8') + encoded('UTF-8'))
+    bom8 + makeDecl('UTF-8').encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-8', [],
     encoded('UTF-8'))
 
   yield('UTF-8', ['noenc'],
-    makeDecl() + encoded('UTF-8'))
+    makeDecl().encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-8', ['declaration'],
-    makeDecl('UTF-8') + encoded('UTF-8'))
+    makeDecl('UTF-8').encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-8', ['BOM'],
     bom8 + encoded('UTF-8'))
 
   yield('UTF-8', ['BOM', 'noenc'],
-    bom8 + makeDecl('UTF-8') + encoded('UTF-8'))
+    bom8 + makeDecl('UTF-8').encode('utf-8') + encoded('UTF-8'))
 
   yield('UTF-16', ['BOM', 'declaration', 'BE'],
     bom16BE + encoded('UTF-16BE', makeDecl('UTF-16') + docText))
@@ -145,7 +145,7 @@ def genValidXmlTestCases():
     yield('ISO-10646-UCS-4', ['BOM', 'declaration', 'LE'],
       bom32LE + encoded('UCS-4LE', makeDecl('ISO-10646-UCS-4') + docText))
   except LookupError as e:
-    print e
+    print(e)
     someFailed = True
 
 
@@ -167,7 +167,7 @@ def genValidXmlTestCases():
     try:
       yield(enc, ['declaration'], encoded(enc, makeDecl(enc) + docText))
     except LookupError as e:
-      print e
+      print(e)
       someFailed = True
 
 
@@ -186,7 +186,7 @@ def genValidXmlTestCases():
     yield('ISO-10646-UCS-4', ['declaration', 'LE'],
       bom32LE + encoded('UCS-4LE', makeDecl('ISO-10646-UCS-4') + docText))
   except LookupError as e:
-    print e
+    print(e)
     someFailed = True
 
 
@@ -203,11 +203,11 @@ def genValidXmlTestCases():
     yield('csucs4', ['alias', 'BE'],
       encoded('csucs4', makeDecl('csucs4') + docText))
   except LookupError as e:
-    print e
+    print(e)
     someFailed = True
 
   if someFailed:
-    print "Unable to generate some tests; see README for details"
+    print("Unable to generate some tests; see README for details")
 
 def genInvalidXmlTestCases():
   # Invalid files
@@ -242,7 +242,7 @@ def genInvalidXmlTestCases():
     yield('UTF-32', ['BOM', 'BE', 'noenc'],
       bom32BE + encoded('UTF-32BE', makeDecl() + docText))
   except LookupError as e:
-    print e
+    print(e)
     someFailed = True
 
   # UTF-16, no BOM, no declaration
@@ -251,7 +251,7 @@ def genInvalidXmlTestCases():
   #  until we're doing decoding as well as detection.
 
   if someFailed:
-    print "Unable to generate some tests; see README for details"
+    print("Unable to generate some tests; see README for details")
 
 def genXmlTestCases():
   for (enc, t, x) in genValidXmlTestCases():
@@ -283,7 +283,7 @@ def buildTestSuite():
       t.bytes = x
       suite.addTest(t)
     except LookupError as e:
-      print "Skipping " + name + ": " + str(e)
+      print("Skipping " + name + ": " + str(e))
       skippedNames.append(name)
   return suite
 
@@ -291,5 +291,5 @@ if __name__ == "__main__":
   s = buildTestSuite()
   unittest.TextTestRunner().run(s)
   if skippedNames:
-    print "Tests skipped:",len(skippedNames)
-    print "Please see README for details"
+    print("Tests skipped:",len(skippedNames))
+    print("Please see README for details")

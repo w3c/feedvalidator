@@ -34,9 +34,9 @@ class Message(LoggedEvent): pass
 class Warning(Message): pass
 class Error(Message): pass
 
-class ValidationFailure(Error):
+class ValidationFailure(Error, Exception):
   def __init__(self, event):
-    LoggedEvent.__init__(self, {})
+    LoggedEvent.__init__(self, event.params)
     self.event = event
 
 ###################### error ######################
@@ -119,7 +119,6 @@ class ItemMustContainTitleOrDescription(MissingElement): pass
 class MissingXhtmlDiv(MissingElement): pass
 class MissingContentOrAlternate(MissingElement): pass
 
-class FatalSecurityRisk(Error): pass
 class ContainsSystemEntity(Info): pass
 
 class DuplicateValue(InvalidValue): pass
@@ -278,7 +277,6 @@ class ObsoleteNamespace(Error): pass
 
 class ConflictingCatAttr(Error): pass
 class ConflictingCatChildren(Error): pass
-class InvalidMediaRange(Error): pass
 class UndefinedParam(Warning): pass
 
 class InvalidURI(InvalidValue) : pass
@@ -286,7 +284,7 @@ class InvalidURN(InvalidValue): pass
 class InvalidUUID(InvalidValue): pass
 class InvalidTAG(InvalidValue): pass
 class InvalidContentMode(InvalidValue) : pass
-class InvalidMIMEType(InvalidMediaRange) : pass
+class InvalidMIMEType(Error) : pass
 class InvalidNamespace(Error): pass
 class NotEscaped(InvalidValue): pass
 class NotBase64(InvalidValue): pass

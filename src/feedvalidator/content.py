@@ -12,12 +12,12 @@ def _isXhtmlDiv(ns, elem):
 #
 # item element.
 #
-class textConstruct(validatorBase,rfc2396,nonhtml):
+class textConstruct(rfc2396,nonhtml):
   from .validators import mime_re
   import re
 
   def getExpectedAttrNames(self):
-      return [(None, u'type'),(None, u'src')]
+      return [(None, 'type'),(None, 'src')]
 
   def normalizeWhitespace(self):
       pass
@@ -73,8 +73,10 @@ class textConstruct(validatorBase,rfc2396,nonhtml):
          self.type.startswith('text/')):
         import base64
         try:
-          self.value=base64.decodestring(self.value)
-          if self.type.endswith('/html'): self.type='html'
+          self.value=base64.decodebytes(self.value.encode('us-ascii'))
+          if self.type.endswith('/html'):
+            self.type='html'
+            self.value = self.value.decode('utf-8')
         except:
           self.log(NotBase64({"parent":self.parent.name, "element":self.name,"value":self.value}))
 
@@ -95,7 +97,7 @@ class textConstruct(validatorBase,rfc2396,nonhtml):
 
   def characters(self, string):
     for c in string:
-      if 0x80 <= ord(c) <= 0x9F or c == u'\ufffd':
+      if 0x80 <= ord(c) <= 0x9F or c == '\ufffd':
         from .validators import BadCharacters
         self.log(BadCharacters({"parent":self.parent.name, "element":self.name}))
     if (self.type=='xhtml') and string.strip() and not self.value.strip():

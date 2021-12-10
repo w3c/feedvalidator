@@ -1,13 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from config import *
 
-import cgi, sys, os, urlparse, sys, re, urllib
+import cgi, sys, os, urllib, sys, re, html
 import cgitb
 cgitb.enable()
 
 import codecs
 ENCODING='UTF-8'
-sys.stdout = codecs.getwriter(ENCODING)(sys.stdout)
 
 # Used for CGI parameters
 decUTF8 = codecs.getdecoder('utf-8')
@@ -33,7 +32,7 @@ def applyTemplate(templateFile, params={}):
     fsock = open(os.path.join(WEBDIR, 'templates', templateFile))
     data = fsock.read() % params
     fsock.close()
-    return data.encode('utf-8')
+    return data
 
 def sanitizeURL(url):
     # Allow feed: URIs, as described by draft-obasanjo-feed-URI-scheme-02
@@ -52,11 +51,11 @@ def sanitizeURL(url):
     return url
 
 def escapeURL(url):
-    parts = list(urlparse.urlparse(url))
+    parts = list(urllib.parse.urlparse(url))
     safe = ['/', '/:@', '/', '/', '/?&=;', '/']
     for i in range(0,len(parts)):
-      parts[i] = urllib.quote(urllib.unquote(parts[i]),safe[i])
-    url = cgi.escape(urlparse.urlunparse(parts))
+      parts[i] = urllib.parse.quote(urllib.parse.unquote(parts[i]),safe[i])
+    url = html.escape(urllib.parse.urlunparse(parts))
     try:
       return url.decode('idna')
     except:
@@ -74,7 +73,7 @@ def buildCodeListing(events, rawdata, url):
         line = feedvalidator.formatter.text_html.escapeAndMark(line)
         if not line: line = '&nbsp;'
         linetype = linenum in linesWithErrors and "b" or "a"
-        codelines.append(applyTemplate('code_listing_line.tmpl', {"line":line, "linenum":linenum, "linetype":linetype}).decode('utf-8'))
+        codelines.append(applyTemplate('code_listing_line.tmpl', {"line":line, "linenum":linenum, "linetype":linetype}))
         linenum += 1
     codelisting = "".join(codelines)
     return applyTemplate('code_listing.tmpl', {"codelisting":codelisting, "url":escapeURL(url)})
@@ -84,7 +83,7 @@ def yieldEventList(output, unicorn=0):
 
   yield output.header()
   for o in output.getErrors():
-    yield o.encode('utf-8')
+    yield o
   if errors and warnings:
     yield output.footer()
     if len(warnings) == 1:
@@ -99,7 +98,7 @@ def yieldEventList(output, unicorn=0):
         yield applyTemplate('andwarn2.tmpl')
     yield output.header()
   for o in output.getWarnings():
-    yield o.encode('utf-8')
+    yield o
   yield output.footer()
 
 from feedvalidator.formatter.text_html import Formatter
@@ -151,18 +150,12 @@ def checker_app(environ, start_response):
         fs = cgi.FieldStorage(fp=environ.get('wsgi.input',None), environ=environ)
         url = fs.getvalue("url") or ''
         try:
-          if url: url = url.decode('utf-8').encode('idna')
+          if url: url = url.encode('idna').decode('utf-8')
         except:
           pass
         manual = fs.getvalue("manual") or 0
         rawdata = fs.getvalue("rawdata") or ''
         output_option = fs.getvalue("output") or ''
-
-        # XXX Should use 'charset'
-        try:
-            rawdata = decUTF8(rawdata)[0]
-        except UnicodeError:
-            rawdata = decW1252(rawdata)[0]
 
         rawdata = rawdata[:feedvalidator.MAXDATALENGTH].replace('\r\n', '\n').replace('\r', '\n')
     else:
@@ -227,7 +220,7 @@ def checker_app(environ, start_response):
 
         except:
             import traceback
-            tb = ''.join(apply(traceback.format_exception, sys.exc_info()))
+            tb = ''.join(traceback.format_exception(*sys.exc_info()))
 
             from feedvalidator.formatter.text_xml import xmlEncode
             start_response('500 Internal Error', [('Content-type', 'text/xml; charset=' + ENCODING)])
@@ -248,7 +241,7 @@ def checker_app(environ, start_response):
                 rawdata = params['rawdata']
                 feedType = params['feedType']
                 goon = 1
-            except ValidationFailure, vfv:
+            except ValidationFailure as vfv:
                 yield applyTemplate('header_ucn.tmpl', {'url':escapeURL(url)})
                 output = UCNFormatter([vfv.event], None)
                 for item in yieldEventList(output, 1):
@@ -266,9 +259,9 @@ def checker_app(environ, start_response):
                 feedType = validationData['feedType']
                 rawdata = validationData['rawdata']
                 
-                htmlUrl = escapeURL(urllib.quote(url))
+                htmlUrl = escapeURL(urllib.parse.quote(url))
                 try:
-                  htmlUrl = htmlUrl.encode('idna')
+                  htmlUrl = htmlUrl.encode('idna').decode('utf-8')
                 except:
                   pass
                 docType = 'feed'
@@ -334,7 +327,7 @@ def checker_app(environ, start_response):
                     events = params['loggedEvents']
                     feedType = params['feedType']
                     goon = 1
-                except ValidationFailure, vfv:
+                except ValidationFailure as vfv:
                     yield applyTemplate('header.tmpl', {'title':'Feed Validator Results: %s' % escapeURL(url)})
                     yield applyTemplate('manual.tmpl', {'rawdata':escapeURL(url)})
                     output = Formatter([vfv.event], None)
@@ -353,7 +346,7 @@ def checker_app(environ, start_response):
                     rawdata = params['rawdata']
                     feedType = params['feedType']
                     goon = 1
-                except ValidationFailure, vfv:
+                except ValidationFailure as vfv:
                     yield applyTemplate('header.tmpl', {'title':'Feed Validator Results: %s' % escapeURL(url)})
                     yield applyTemplate('index.tmpl', {'value':escapeURL(url)})
                     output = Formatter([vfv.event], None)
@@ -373,9 +366,9 @@ def checker_app(environ, start_response):
                 feedType = validationData['feedType']
                 rawdata = validationData['rawdata']
 
-                htmlUrl = escapeURL(urllib.quote(url))
+                htmlUrl = escapeURL(urllib.parse.quote(url))
                 try:
-                  htmlUrl = htmlUrl.encode('idna')
+                  htmlUrl = htmlUrl.encode('idna').decode("utf-8")
                 except:
                   pass
                 docType = 'feed'
@@ -387,7 +380,7 @@ def checker_app(environ, start_response):
 
                 yield applyTemplate('header.tmpl', {'title':'Feed Validator Results: %s' % escapeURL(url)})
                 if manual:
-                    yield applyTemplate('manual.tmpl', {'rawdata':cgi.escape(rawdata)})
+                    yield applyTemplate('manual.tmpl', {'rawdata':html.escape(rawdata)})
                 else:
                     yield applyTemplate('index.tmpl', {'value':escapeURL(url)})
 
@@ -443,16 +436,20 @@ def checker_app(environ, start_response):
 if __name__ == "__main__":
     if len(sys.argv)==1 or not sys.argv[1].isdigit():
         def start_response(status, headers):
-            print 'Status: %s\r\n' % status,
+            print('Status: %s' % status)
             for header,value in headers:
-                print '%s: %s\r\n' % (header, value),
-            print
+                print('%s: %s' % (header, value))
+            print()
         for output in checker_app(os.environ, start_response):
-            print output.decode('utf-8')
+            print(output)
     else:
         # export HTTP_HOST=http://feedvalidator.org/
         # export SCRIPT_NAME=check.cgi
         # export SCRIPT_FILENAME=/home/rubys/svn/feedvalidator/check.cgi
-        import fcgi
+        import http.server
+        server = http.server.HTTPServer
+        handler = http.server.CGIHTTPRequestHandler
+        handler.cgi_directories = ["/"]
         port=int(sys.argv[1])
-        fcgi.WSGIServer(checker_app, bindAddress=("127.0.0.1", port)).run()
+        httpd = server(("127.0.0.1", port), handler)
+        httpd.serve_forever()

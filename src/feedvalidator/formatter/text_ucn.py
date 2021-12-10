@@ -7,7 +7,7 @@ __copyright__ = "Copyright (c) 1994-2009 W3C (MIT, ERCIM, KEIO)"
 
 """Output class for unicorn output"""
 
-from base import BaseFormatter
+from .base import BaseFormatter
 from feedvalidator.logging import *
 import feedvalidator
 
@@ -46,7 +46,7 @@ class Formatter(BaseFormatter):
 
   def getContext(self, event):
     params = event.params
-    if event.params.has_key('line'):
+    if 'line' in event.params:
       line = event.params['line']
       if line >= len(self.rawdata.split('\n')):
         # For some odd reason, UnicodeErrors tend to trigger a bug
@@ -125,7 +125,7 @@ class Formatter(BaseFormatter):
         result = result + ' column="' + position['column'] + '"'
       result = result + '>' + self.getContext(event) + '</context>\n\t'
       #result = result + '<context line="' + position['line'] + '" column="' + position['column'] + '">' + self.getContext(event) + '</context>\n\t'
-    rc = u'''[<a title="more information about this error" href="%s.html">help</a>]''' % self.getHelpURL(event)
+    rc = '''[<a title="more information about this error" href="%s.html">help</a>]''' % self.getHelpURL(event)
     result = result + '<title></title>\n<description>' + xmlEncode(params['text']) + ' ' + rc + '</description>\n'
     result = result + '</message>\n'
 

@@ -27,7 +27,7 @@ class workspace(validatorBase, extension_everywhere):
 
 class collection(validatorBase, extension_everywhere):
   def getExpectedAttrNames(self):
-    return [(None,u'href')]
+    return [(None,'href')]
 
   def prevalidate(self):
     self.validate_required_attribute((None,'href'), rfc3987)

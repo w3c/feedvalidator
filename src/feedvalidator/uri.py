@@ -7,15 +7,13 @@ __author__ = "Joseph Walton <http://www.kafsemo.org/>"
 __version__ = "$Revision$"
 __copyright__ = "Copyright (c) 2004, 2007 Joseph Walton"
 
-from urlparse import urljoin
-from urllib import quote, quote_plus, unquote, unquote_plus
+from urllib.parse import urljoin
+from urllib.parse import quote, quote_plus, unquote, unquote_plus
 
 from unicodedata import normalize
 from codecs import lookup
 
 import re
-
-(enc, dec) = lookup('UTF-8')[:2]
 
 SUBDELIMS='!$&\'()*+,;='
 PCHAR='-._~' + SUBDELIMS + ':@'
@@ -39,7 +37,7 @@ class BadUri(Exception):
   pass
 
 def _n(s):
-  return enc(normalize('NFC', dec(s)[0]))[0]
+  return normalize('NFC', s).encode('utf-8')
 
 octetRe = re.compile('([^%]|%[a-fA-F0-9]{2})')
 
@@ -52,9 +50,9 @@ def asOctets(s):
 
     c = m.group(1)
     if (c[0] == '%'):
-      yield(c.upper(), chr(int(c[1:], 0x10)))
+      yield(c.upper(), int(c[1:], 0x10))
     else:
-      yield(c, c)
+      yield(c, ord(c))
 
     s = s[m.end(1):]
 
@@ -64,19 +62,20 @@ def _qnu(s,safe=''):
   # unquote{,_plus} leave high-bit octets unconverted in Unicode strings
   # This conversion will, correctly, cause UnicodeEncodeError if there are
   #  non-ASCII characters present in the string
-  s = str(s)
+  s = s
 
   res = ''
-  b = ''
+  b = []
   for (c,x) in asOctets(s):
-    if x in RESERVED and x in safe:
-      res += quote(_n(unquote(b)), safe)
-      b = ''
+    # convert x to char for comparison
+    if chr(x) in RESERVED and chr(x) in safe:
+      res += quote(_n(unquote(bytearray(b).decode('utf-8'))), safe)
+      b = []
       res += c
     else:
-      b += x
+      b.append(x)
 
-  res += quote(_n(unquote(b)), safe)
+  res += quote(_n(unquote(bytearray(b).decode('utf-8'))), safe)
 
   return res
 
@@ -121,7 +120,7 @@ def _normAuth(auth,port):
     return _normPort(h,port)
 
 def _normPath(p):
-  l = p.split(u'/')
+  l = p.split('/')
   i = 0
   if l and l[0]:
     i = len(l)
@@ -144,7 +143,7 @@ def _normPath(p):
       i += 1
   if l == ['']:
     l = ['', '']
-  return u'/'.join([_qnu(c, PCHAR) for c in l])
+  return '/'.join([_qnu(c, PCHAR) for c in l])
 
 # From RFC 2396bis, with added end-of-string marker
 uriRe = re.compile('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$')
@@ -197,7 +196,7 @@ def _canonical(s):
   query = _qnu(m.group(7), PCHAR + "/?")
   fragment = _qnu(m.group(9), PCHAR + "/?")
 
-  s = u''
+  s = ''
   if scheme != None:
     s += scheme + ':'
 

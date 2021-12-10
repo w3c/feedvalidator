@@ -76,14 +76,14 @@ def contentSniffing(mediaType, rawdata, loggedEvents):
 
   block = rawdata[:512]
 
-  if block.find('<rss') >= 0: return
-  if block.find('<feed') >= 0: return
-  if block.find('<opml') >= 0: return
-  if block.find('<kml') >= 0: return
-  if block.find('<OpenSearchDescription') >= 0: return
-  if (block.find('<rdf:RDF') >=0 and
-      block.find('http://www.w3.org/1999/02/22-rdf-syntax-ns#') >= 0 and
-      block.find( 'http://purl.org/rss/1.0/')): return
+  if block.find(b'<rss') >= 0: return
+  if block.find(b'<feed') >= 0: return
+  if block.find(b'<opml') >= 0: return
+  if block.find(b'<kml') >= 0: return
+  if block.find(b'<OpenSearchDescription') >= 0: return
+  if (block.find(b'<rdf:RDF') >=0 and
+      block.find(b'http://www.w3.org/1999/02/22-rdf-syntax-ns#') >= 0 and
+      block.find( b'http://purl.org/rss/1.0/')): return
 
   from .logging import NonSpecificMediaType
   loggedEvents.append(NonSpecificMediaType({"contentType": mediaType}))

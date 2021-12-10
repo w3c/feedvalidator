@@ -5,7 +5,7 @@ import re
 
 class Sharing(validatorBase):
   def getExpectedAttrNames(self):
-    return [ (None, u'expires'), (None, u'since'), (None, u'until') ]
+    return [ (None, 'expires'), (None, 'since'), (None, 'until') ]
 
   def prevalidate(self):
     if (None,'until') in self.attrs:
@@ -30,8 +30,8 @@ class Sharing(validatorBase):
 
 class Sync(validatorBase):
   def getExpectedAttrNames(self):
-    return [ (None, u'deleted'), (None, u'noconflicts'),
-             (None, u'id'), (None, u'updates') ]
+    return [ (None, 'deleted'), (None, 'noconflicts'),
+             (None, 'id'), (None, 'updates') ]
 
   def prevalidate(self):
     self.validate_optional_attribute((None,'deleted'), truefalsestrict)
@@ -52,7 +52,7 @@ class Sync(validatorBase):
 
 class Related(validatorBase):
   def getExpectedAttrNames(self):
-    return [ (None, u'link'), (None, u'title'), (None, u'type') ]
+    return [ (None, 'link'), (None, 'title'), (None, 'type') ]
 
   def prevalidate(self):
     self.validate_required_attribute((None,'link'), rfc2396_full)
@@ -62,7 +62,7 @@ class Related(validatorBase):
 
 class History(validatorBase):
   def getExpectedAttrNames(self):
-    return [ (None, u'by'), (None, u'sequence'), (None, u'when') ]
+    return [ (None, 'by'), (None, 'sequence'), (None, 'when') ]
 
   def prevalidate(self):
     self.validate_optional_attribute((None,'by'), nonhtml)

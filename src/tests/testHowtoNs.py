@@ -17,7 +17,7 @@ class HowtoNsTest(unittest.TestCase):
     handle=open(filename)
     page=handle.read()
     handle.close()
-    for uri,prefix in namespaces.items():
+    for uri,prefix in list(namespaces.items()):
       if prefix=='xml': continue
       if prefix=='soap': continue
       if uri.find('ModWiki')>0: continue

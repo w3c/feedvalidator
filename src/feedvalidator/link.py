@@ -8,7 +8,7 @@ from .validators import *
 #
 # Atom link element
 #
-class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339,nonblank):
+class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339):
   validRelations = [
     # http://www.iana.org/assignments/link-relations.html
     'alternate',    # RFC4287
@@ -46,13 +46,13 @@ class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339,nonblank):
     ]
 
   def getExpectedAttrNames(self):
-    return [(None, u'type'), (None, u'title'), (None, u'rel'),
-      (None, u'href'), (None, u'length'), (None, u'hreflang'),
-      (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'type'),
-      (u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'resource'),
-      (u'http://purl.org/syndication/thread/1.0', u'count'),
-      (u'http://purl.org/syndication/thread/1.0', u'when'),
-      (u'http://purl.org/syndication/thread/1.0', u'updated')]
+    return [(None, 'type'), (None, 'title'), (None, 'rel'),
+      (None, 'href'), (None, 'length'), (None, 'hreflang'),
+      ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'type'),
+      ('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource'),
+      ('http://purl.org/syndication/thread/1.0', 'count'),
+      ('http://purl.org/syndication/thread/1.0', 'when'),
+      ('http://purl.org/syndication/thread/1.0', 'updated')]
 
   def validate(self):
     self.type = ""
@@ -69,7 +69,7 @@ class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339,nonblank):
 
       if self.rel in self.validRelations:
         self.log(ValidAtomLinkRel({"parent":self.parent.name, "element":self.name, "attr":"rel", "value":self.rel}))
-      elif rfc2396_full.rfc2396_re.match(self.rel.encode('idna')):
+      elif rfc2396_full.rfc2396_re.match(self.rel.encode('idna').decode('utf-8')):
         self.log(ValidAtomLinkRel({"parent":self.parent.name, "element":self.name, "attr":"rel", "value":self.rel}))
       else:
         self.log(UnregisteredAtomLinkRel({"parent":self.parent.name, "element":self.name, "attr":"rel", "value":self.rel}))
@@ -112,19 +112,19 @@ class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339,nonblank):
       if self.rel == "self" and self.parent.name in ["feed","channel"]:
 
         # detect relative self values
-        from urlparse import urlparse
+        from urllib.parse import urlparse
         from xml.dom import XML_NAMESPACE
         absolute = urlparse(self.href)[1]
         element = self
         while not absolute and element and hasattr(element,'attrs'):
           pattrs = element.attrs
-          if pattrs and (XML_NAMESPACE, u'base') in pattrs:
-            absolute=urlparse(pattrs.getValue((XML_NAMESPACE, u'base')))[1]
+          if pattrs and (XML_NAMESPACE, 'base') in pattrs:
+            absolute=urlparse(pattrs.getValue((XML_NAMESPACE, 'base')))[1]
           element = element.parent
         if not absolute:
           self.log(RelativeSelf({"value":self.href}))
 
-        from urlparse import urljoin
+        from urllib.parse import urljoin
         if urljoin(self.xmlBase,self.value) not in self.dispatcher.selfURIs:
           if urljoin(self.xmlBase,self.value).split('#')[0] != self.xmlBase.split('#')[0]:
             from .uri import Uri
@@ -146,20 +146,20 @@ class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339,nonblank):
     else:
       self.log(MissingHref({"parent":self.parent.name, "element":self.name, "attr":"href"}))
 
-    if (u'http://purl.org/syndication/thread/1.0', u'count') in self.attrs:
+    if ('http://purl.org/syndication/thread/1.0', 'count') in self.attrs:
       if self.rel != "replies":
         self.log(UnexpectedAttribute({"parent":self.parent.name, "element":self.name, "attribute":"thr:count"}))
-      self.value = self.attrs.getValue((u'http://purl.org/syndication/thread/1.0', u'count'))
+      self.value = self.attrs.getValue(('http://purl.org/syndication/thread/1.0', 'count'))
       self.name="thr:count"
       nonNegativeInteger.validate(self)
 
-    if (u'http://purl.org/syndication/thread/1.0', u'when') in self.attrs:
+    if ('http://purl.org/syndication/thread/1.0', 'when') in self.attrs:
         self.log(NoThrWhen({"parent":self.parent.name, "element":self.name, "attribute":"thr:when"}))
 
-    if (u'http://purl.org/syndication/thread/1.0', u'updated') in self.attrs:
+    if ('http://purl.org/syndication/thread/1.0', 'updated') in self.attrs:
       if self.rel != "replies":
         self.log(UnexpectedAttribute({"parent":self.parent.name, "element":self.name, "attribute":"thr:updated"}))
-      self.value = self.attrs.getValue((u'http://purl.org/syndication/thread/1.0', u'updated'))
+      self.value = self.attrs.getValue(('http://purl.org/syndication/thread/1.0', 'updated'))
       self.name="thr:updated"
       rfc3339.validate(self)
 

@@ -10,7 +10,7 @@ from .validators import *
 #
 class author(validatorBase):
   def getExpectedAttrNames(self):
-    return [(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#', u'parseType')]
+    return [('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'parseType')]
 
   def validate(self):
     if not "name" in self.children and not "atom_name" in self.children:

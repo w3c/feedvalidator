@@ -10,7 +10,7 @@ from .validators import *
 #
 class category(validatorBase):
   def getExpectedAttrNames(self):
-    return [(None,u'term'),(None,u'scheme'),(None,u'label')]
+    return [(None,'term'),(None,'scheme'),(None,'label')]
 
   def prevalidate(self):
     self.children.append(True) # force warnings about "mixed" content
