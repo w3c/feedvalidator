@@ -41,7 +41,7 @@ class Formatter(BaseFormatter):
     # output the elements
     result = "<%s>\n" % level
     for key in order:
-      value = xmlEncode(str(params[key]))
+      value = xmlEncode(unicode(params[key], 'utf-8')) if isinstance(params[key], str) else params[key]
       pub_key = key
       if key == "backupcolumn":
         pubkey = "column"
