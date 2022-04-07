@@ -246,9 +246,9 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
         loggedEvents.append(logging.HttpError({'status': status}))
         usock = status
       else:
-        rawdata=re.sub('<!--.*?-->','',rawdata)
-        lastline = rawdata.strip().split('\n')[-1].strip()
-        if sniffPossibleFeed(rawdata):
+        rawdata = re.sub(b'<!--.*?-->','',rawdata)
+        lastline = rawdata.strip().split(b'\n')[-1].strip()
+        if sniffPossibleFeed(rawdata.decode('utf-8')):
           loggedEvents.append(logging.HttpError({'status': status}))
           loggedEvents.append(logging.HttpErrorWithPossibleFeed({}))
           usock = status
