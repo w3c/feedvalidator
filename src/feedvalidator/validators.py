@@ -628,7 +628,7 @@ class rfc2396_full(rfc2396):
 class xmlbase(rfc3987):
   def validate(self, errorClass=InvalidIRI, successClass=ValidURI, extraParams={}):
     if rfc3987.validate(self, errorClass, successClass, extraParams):
-      if self.dispatcher.xmlBase != self.xmlBase:
+      if self.dispatcher.xmlBase and self.dispatcher.xmlBase != self.xmlBase:
         docbase=canonicalForm(self.dispatcher.xmlBase).split('#')[0]
         elembase=canonicalForm(self.xmlBase).split('#')[0]
         value=canonicalForm(urljoin(elembase,self.value)).split('#')[0]
