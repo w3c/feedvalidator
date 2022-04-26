@@ -21,6 +21,8 @@ FEEDTYPEDISPLAY = {0:"(unknown type)", 1:"RSS", 2:"RSS", 3:"Atom 1.0", 4:"Atom 1
 
 VALIDFEEDGRAPHIC = {0:"", 1:"valid-rss.png", 2:"valid-rss-rogers.png", 3:"valid-atom.png", 4:"valid-atom.png", 5:"valid-atom.png",  6:"valid-atom.png", 7:"valid-xrd.png", 8:"valid-opensearch.png", 9:"valid-opml.gif", 10:"valid-kml.png", 11:"valid-kml.png", 12:"valid-kml.png"}
 
+HOMEPATH = "https://validator.w3.org/feed"
+
 #
 # logging support
 #

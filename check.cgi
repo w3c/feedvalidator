@@ -21,7 +21,7 @@ if WEBDIR not in sys.path:
 if SRCDIR not in sys.path:
     sys.path.insert(0, SRCDIR)
 import feedvalidator
-from feedvalidator.logging import FEEDTYPEDISPLAY, VALIDFEEDGRAPHIC
+from feedvalidator.logging import FEEDTYPEDISPLAY, VALIDFEEDGRAPHIC, HOMEPATH
 
 from feedvalidator.logging import Info, Warning, Error, ValidationFailure
 from feedvalidator.logging import TYPE_ATOM_ENTRY, TYPE_OPENSEARCH, TYPE_XRD
