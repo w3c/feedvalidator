@@ -86,7 +86,9 @@ namespaces = {
 
 unsupported_namespaces = {
   "http://schemas.google.com/g/2005": ("Google Data", "https://developers.google.com/gdata/docs/1.0/elements"),
-  "http://www.rawvoice.com/rawvoiceRssModule/":	("RawVoice", "http://www.rawvoice.com/services/tools-and-resources/rawvoice-rss-2-0-module-xmlns-namespace-rss2/")
+  "http://www.rawvoice.com/rawvoiceRssModule/":	("RawVoice", "http://www.rawvoice.com/services/tools-and-resources/rawvoice-rss-2-0-module-xmlns-namespace-rss2/"),
+  "https://schema.org/": ("Schema.org", "https://schema.org/"),
+  "http://schema.org/": ("Schema.org", "https://schema.org/")
 }
 
 def near_miss(ns):

@@ -251,7 +251,7 @@ class MisplacedXHTMLContent(Warning): pass
 class SchemeNotIANARegistered(Warning): pass
 class AvoidNamespacePrefix(Warning): pass
 class UnknownNamespace(Warning): pass
-class UnsupportedNamespace(Warning): pass
+class UnsupportedNamespace(Info): pass
 
 class MissingRecommendedAttribute(Warning): pass
 
