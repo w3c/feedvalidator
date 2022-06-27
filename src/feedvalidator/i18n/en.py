@@ -256,7 +256,7 @@ messages = {
   UseZeroForUnknown:       "Use zero for unknown length",
   UnknownHost:             "Unknown host",
   UnknownNamespace:        "Use of unknown namespace: %(namespace)s",
-  UnsupportedNamespace:    "Unable to validate namespace: %(namespace)s. See the %(name)s specification at %(specification)s",
+  UnsupportedNamespace:    "Did not validate namespace: %(namespace)s. See the %(name)s specification at %(specification)s",
   IntegerOverflow:         "%(element)s value too large",
   InvalidNSS:              "Invalid Namespace Specific String: %(element)s",
   SinceAfterUntil:         "Since After until",

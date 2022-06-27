@@ -82,7 +82,7 @@ class link(nonblank,xmlbase,iso639,nonhtml,nonNegativeInteger,rfc3339):
       self.value = self.type = self.attrs.getValue((None, "type"))
       if not mime_re.match(self.type):
         self.log(InvalidMIMEType({"parent":self.parent.name, "element":self.name, "attr":"type", "value":self.type}))
-      elif self.rel == "self" and self.type not in ["application/atom+xml", "application/rss+xml", "application/rdf+xml"]:
+      elif self.rel == "self" and self.type.split(";")[0] not in ["application/atom+xml", "application/rss+xml", "application/rdf+xml"]:
         self.log(SelfNotAtom({"parent":self.parent.name, "element":self.name, "attr":"type", "value":self.type}))
       else:
         self.log(ValidMIMEAttribute({"parent":self.parent.name, "element":self.name, "attr":"type", "value":self.type}))
