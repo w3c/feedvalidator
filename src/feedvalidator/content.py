@@ -153,11 +153,11 @@ class diveater(eater):
       elif name not in HTMLValidator.acceptable_elements:
         self.log(SecurityRisk({'tag':name}))
       for ns,attr in attrs.getNames():
-        if not ns and attr not in HTMLValidator.acceptable_attributes:
+        if not ns:
           if attr == 'style':
             for value in checkStyle(attrs.get((ns,attr))):
               self.log(DangerousStyleAttr({"attr":attr, "value":value}))
-          else:
+          elif attr.startswith("on"):
             self.log(SecurityRiskAttr({'attr':attr}))
     elif qname == 'http://www.w3.org/2000/svg':
       if name not in HTMLValidator.svg_elements:

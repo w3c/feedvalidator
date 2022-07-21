@@ -5,7 +5,7 @@ Author:       Sam Ruby <rubys@intertwingly.net>
 
 <!--
 Description:  xhtml content with bogus attribute
-Expect:       SecurityRiskAttr{attr:bogus}
+Expect:       SecurityRiskAttr{attr:onbug}
 -->
 
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -25,7 +25,7 @@ Expect:       SecurityRiskAttr{attr:bogus}
     <updated>2003-12-13T18:30:02Z</updated>
     <summary type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        This is <b bogus="true">XHTML</b> content.
+        This is <b onbug="true">XHTML</b> content.
       </div>
     </summary>
   </entry>
