@@ -134,29 +134,6 @@ class HTMLValidator:
     'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'time', 'tfoot', 'th',
     'thead', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'noscript', 'wbr']
 
-  acceptable_attributes = ['abbr', 'accept', 'accept-charset', 'accesskey',
-    'action', 'align', 'allow', 'allowfullscreen', 'allowpaymentrequest', 'alt', 'as', 'autoplay', 'autocapitalize', 'autocomplete', 'autofocus', 'autoplay', 'axis',
-    'background', 'balance', 'bgcolor', 'bgproperties', 'border',
-    'bordercolor', 'bordercolordark', 'bordercolorlight', 'bottompadding',
-    'cellpadding', 'cellspacing', 'ch', 'challenge', 'char', 'charoff',
-    'choff', 'charset', 'checked', 'cite', 'class', 'clear', 'color', 'cols',
-    'colspan', 'compact', 'contenteditable', 'coords', 'crossorigin', 'data', 'datafld',
-    'datapagesize', 'datasrc', 'datetime', 'decoding', 'default', 'delay', 'dir', 'dirname',
-    'disabled', 'download', 'draggable', 'dynsrc', 'enctype','end', 'enterkeyhint', 'face', 'for',
-    'form', 'formenctype',  'frame', 'galleryimg', 'gutter', 'headers', 'height', 'hidefocus',
-    'hidden', 'high', 'href', 'hreflang', 'hspace', 'icon', 'id', 'inputmode',
-    'is', 'ismap', 'itemid', 'itemprop', 'itemref', 'itemscope', 'itemtype', 'kind','keytype', 'label', 'lang', 'leftspacing', 'loading', 'list', 'longdesc',
-    'loop', 'loopcount', 'loopend', 'loopstart', 'low', 'lowsrc', 'max',
-    'maxlength', 'media', 'method', 'min', 'minlength', 'multiple', 'muted', 'name', 'nohref', 'nonce',
-    'noshade', 'nowrap', 'open', 'optimum', 'pattern', 'ping', 'placeholder', 'playsinline', 'point-size', 'poster', 'preload',
-    'prompt', 'pqg', 'radiogroup', 'readonly', 'referrerpolicy', 'rel', 'repeat-max',
-    'repeat-min', 'replace', 'required', 'rev', 'reversed', 'rightspacing', 'rows',
-    'rowspan', 'rules', 'scope', 'selected', 'shape', 'size', 'sizes', 'span', 'spellcheck', 'src',
-    'srclang', 'srcset',
-    'start', 'step', 'summary', 'suppress', 'tabindex', 'target', 'template',
-    'title', 'toppadding', 'translate', 'type', 'unselectable', 'usemap', 'urn', 'valign',
-    'value', 'variable', 'volume', 'vspace', 'vrml', 'width', 'wrap',
-    'xml:lang', 'xmlns']
 
   acceptable_css_properties = ['azimuth', 'background', 'background-color',
     'border', 'border-bottom', 'border-bottom-color', 'border-bottom-style',
@@ -280,10 +257,8 @@ class HTMLValidator:
         if name.lower() == 'style':
           for evil in checkStyle(value):
             self.log(DangerousStyleAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":"style", "value":evil}))
-        elif name.lower() not in self.acceptable_attributes:
-          # data-* attributes are acceptable
-          if name.lower()[:5] != "data-":
-            self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
+        elif name.lower().startswith("on"):
+          self.log(SecurityRiskAttr({"parent":self.element.parent.name, "element":self.element.name, "attr":name}))
 
 
 #
@@ -321,7 +296,7 @@ class htmlEater(validatorBase):
         if attr[1].lower() == 'style':
           for value in checkStyle(attrs.get(attr)):
             self.log(DangerousStyleAttr({"parent":self.parent.name, "element":self.name, "attr":attr[1], "value":value}))
-        elif attr[1].lower() not in HTMLValidator.acceptable_attributes:
+        elif attr[1].lower().startswith("on"):
           self.log(SecurityRiskAttr({"parent":self.parent.name, "element":self.name, "attr":attr[1]}))
     self.push(htmlEater(), self.name, attrs)
     if name.lower() not in HTMLValidator.acceptable_elements:
