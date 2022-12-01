@@ -4,7 +4,7 @@
 <p><code>element</code> should not contain relative URL references</p>
 </div>
 <div id='explanation'>
-<p>Some RSS elements are allowed to contain HTML, including links and images.  However, if these links use relative URLs to point to resources, users of some news aggregators will not be able to click on them.  And your images use the relative URLs, the images may not appear (since the news aggregator will be looking for the images locally on the user's hard drive, rather than on your web site).</p>
+<p>Some RSS elements are allowed to contain HTML, including links and images.  However, if these links use relative URLs to point to resources, users of some news aggregators will not be able to click on them.  And if your images use relative URLs, the images may not appear (since the news aggregator will be looking for the images locally on the user's hard drive, rather than on your web site).</p>
 </div>
 <div id='solution'>
 <p>Make sure all URLs are absolute, that is, that they include your server name and a full path.</p>
