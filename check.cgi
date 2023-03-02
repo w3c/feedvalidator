@@ -62,7 +62,6 @@ def escapeURL(url):
       return url
 
 import feedvalidator.formatter.text_html
-import feedvalidator.formatter.text_ucn
 
 def buildCodeListing(events, rawdata, url):
     # print feed
@@ -78,7 +77,7 @@ def buildCodeListing(events, rawdata, url):
     codelisting = "".join(codelines)
     return applyTemplate('code_listing.tmpl', {"codelisting":codelisting, "url":escapeURL(url)})
 
-def yieldEventList(output, unicorn=0):
+def yieldEventList(output):
   errors, warnings = output.getErrors(), output.getWarnings()
 
   yield output.header()
@@ -87,24 +86,17 @@ def yieldEventList(output, unicorn=0):
   if errors and warnings:
     yield output.footer()
     if len(warnings) == 1:
-      if unicorn:
-        yield applyTemplate('andwarn1_ucn.tmpl')
-      else:
-        yield applyTemplate('andwarn1.tmpl')
+      yield applyTemplate('andwarn1.tmpl')
     else:
-      if unicorn:
-        yield applyTemplate('andwarn2_ucn.tmpl')
-      else:
-        yield applyTemplate('andwarn2.tmpl')
+      yield applyTemplate('andwarn2.tmpl')
     yield output.header()
   for o in output.getWarnings():
     yield o
   yield output.footer()
 
 from feedvalidator.formatter.text_html import Formatter
-from feedvalidator.formatter.text_ucn import Formatter as UCNFormatter
 
-def postvalidate(url, events, rawdata, feedType, autofind=1, firstOccurrenceOnly=1, unicornFormatter=0):
+def postvalidate(url, events, rawdata, feedType, autofind=1, firstOccurrenceOnly=1):
     """returns dictionary including 'url', 'events', 'rawdata', 'output', 'specialCase', 'feedType'"""
     # filter based on compatibility level
     from feedvalidator import compatibility
@@ -112,12 +104,8 @@ def postvalidate(url, events, rawdata, feedType, autofind=1, firstOccurrenceOnly
     events = filterFunc(events)
 
     specialCase = None
-    if not unicornFormatter:
-      groupEvents = 0
-      formattedOutput = Formatter(events, rawdata)
-    else:
-      groupEvents = 1
-      formattedOutput = UCNFormatter(events, rawdata)
+    groupEvents = 0
+    formattedOutput = Formatter(events, rawdata)
     if formattedOutput:
         # check for special cases
         specialCase = compatibility.analyze(events, rawdata)
@@ -134,7 +122,7 @@ def postvalidate(url, events, rawdata, feedType, autofind=1, firstOccurrenceOnly
                     events = params['loggedEvents']
                     rawdata = params['rawdata']
                     feedType = params['feedType']
-                    return postvalidate(url, events, rawdata, feedType, 0, firstOccurrenceOnly, unicornFormatter)
+                    return postvalidate(url, events, rawdata, feedType, 0, firstOccurrenceOnly)
             except:
                 pass
 
@@ -227,92 +215,6 @@ def checker_app(environ, start_response):
 
             yield applyTemplate('fault.tmpl', {'code':sys.exc_info()[0],
               'string':sys.exc_info()[1], 'traceback':xmlEncode(tb)})
-
-    elif (output_option == "ucn"):
-        start_response('200 OK', [('Content-type', 'application/xml; charset=' + ENCODING)])
-
-        if url:
-            # validate
-            goon = 0
-            url = sanitizeURL(url)
-            try:
-                params = feedvalidator.validateURL(url, firstOccurrenceOnly=0, wantRawData=1, groupEvents=1)
-                events = params['loggedEvents']
-                rawdata = params['rawdata']
-                feedType = params['feedType']
-                goon = 1
-            except ValidationFailure as vfv:
-                yield applyTemplate('header_ucn.tmpl', {'url':escapeURL(url)})
-                output = UCNFormatter([vfv.event], None)
-                for item in yieldEventList(output, 1):
-                    yield item
-                yield applyTemplate('error_ucn.tmpl')
-            except:
-                yield applyTemplate('header_ucn.tmpl', {'url':escapeURL(url)})
-                yield applyTemplate('error_ucn.tmpl')
-            if goon:
-                # post-validate (will do RSS autodiscovery if needed)
-                validationData = postvalidate(url, events, rawdata, feedType, autofind=1, firstOccurrenceOnly=0, unicornFormatter=1)
-
-                # write output header
-                url = validationData['url']
-                feedType = validationData['feedType']
-                rawdata = validationData['rawdata']
-                
-                htmlUrl = escapeURL(urllib.parse.quote(url))
-                try:
-                  htmlUrl = htmlUrl.encode('idna').decode('utf-8')
-                except:
-                  pass
-                docType = 'feed'
-                if feedType == TYPE_ATOM_ENTRY: docType = 'entry'
-                if feedType == TYPE_XRD: docType = 'document'
-                if feedType == TYPE_APP_CATEGORIES: docType = 'Document'
-                if feedType == TYPE_APP_SERVICE: docType = 'Document'
-                if feedType == TYPE_OPENSEARCH: docType = 'description document'
-                
-                yield applyTemplate('header_ucn.tmpl', {'url':escapeURL(url)})
-
-                output = validationData.get('output', None)
-
-                # print special case, if any
-                specialCase = validationData.get('specialCase', None)
-                if specialCase:
-                    yield applyTemplate('%s_ucn.tmpl' % specialCase)
-
-                msc = output.mostSeriousClass()
-
-                # Explain the overall verdict
-                if msc == Error:
-                    from feedvalidator.logging import ObsoleteNamespace
-                    if len(output.getErrors())==1 and \
-                        isinstance(output.data[0],ObsoleteNamespace):
-                        yield applyTemplate('notsupported_ucn.tmpl')
-                    elif specialCase != 'html':
-                        yield applyTemplate('invalid_ucn.tmpl')
-                else:
-                    yield applyTemplate('congrats_ucn.tmpl', {"feedType":FEEDTYPEDISPLAY[feedType], "graphic":VALIDFEEDGRAPHIC[feedType], "HOMEPATH":HOMEPATH, "docType":docType})
-                    if msc == Warning:
-                        yield applyTemplate('warning_ucn.tmpl')
-                    elif msc == Info:
-                        yield applyTemplate('info_ucn.tmpl')
-
-                # Print any issues, whether or not the overall feed is valid
-                if output:
-                    if specialCase != 'html':
-                        for item in yieldEventList(output, 1):
-                            yield item
-
-                # As long as there were no errors, show that the feed is valid
-                if msc != Error:
-                    # valid
-                    yield applyTemplate('valid_ucn.tmpl', {"url":htmlUrl, "srcUrl":htmlUrl, "feedType":FEEDTYPEDISPLAY[feedType], "graphic":VALIDFEEDGRAPHIC[feedType], "HOMEURL":HOMEURL, "HOMEPATH":HOMEPATH, "docType":docType})
-        else:
-            # nothing to validate, just write basic form
-            yield applyTemplate('header_ucn.tmpl', {'url':'http://www.w3.org'})
-            yield applyTemplate('special_ucn.tmpl', {})
-
-        yield applyTemplate('footer_ucn.tmpl')
 
     else:
         start_response('200 OK', [('Content-type', 'text/html; charset=' + ENCODING)])
