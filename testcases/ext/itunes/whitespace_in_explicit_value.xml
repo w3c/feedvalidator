@@ -5,7 +5,7 @@
 
 <!--
   Description:  Whitespace in Explict Value
-  Expect:       InvalidYesNoClean{element:itunes:explicit}
+  Expect:       InvalidTrueFalse{element:itunes:explicit}
 -->
 
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
@@ -18,7 +18,7 @@
       <title>Shake Shake Shake Your Spices</title>
       <description>This week we talk about salt and pepper shakers, comparing and contrasting pour rates, construction materials, and overall aesthetics.</description>
       <enclosure url="http://www.itunes.com/podcasts/everything/AllAboutEverythingEpisode3.mp3" length="8727310" type="x-audio/mp3" />
-      <itunes:explicit> yes </itunes:explicit>
+      <itunes:explicit> true </itunes:explicit>
     </item>
   </channel>
 </rss>
