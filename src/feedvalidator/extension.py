@@ -777,7 +777,7 @@ class gml_posList(text):
     if self.value.find(',')>=0:
       # ensure that commas are only used to separate lat and long
       if not re.match('^[-+.0-9]+[, ][-+.0-9]( [-+.0-9]+[, ][-+.0-9])+$',
-        value.strip()):
+        self.value.strip()):
         return self.log(InvalidCoordList({'value':self.value}))
       self.log(CoordComma({'value':self.value}))
       self.value=self.value.replace(',',' ')
