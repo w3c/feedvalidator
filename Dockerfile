@@ -1,8 +1,8 @@
-FROM debian:9.6
+FROM debian:12
 
 RUN apt-get update
 RUN apt-get --yes install apache2
-RUN apt-get --yes install python
+RUN apt-get --yes install python3 python3-libxml2 python3-rdflib python3-rdflib-jsonld
 RUN apt-get --yes install ca-certificates
 
 RUN a2dissite 000-default
