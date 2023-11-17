@@ -4,7 +4,7 @@
 <p><code>foo</code> must be an email address</p>
 </div>
 <div id='explanation'>
-<p>MUST conform to the "addr-spec" production in <a href="http://www.faqs.org/rfcs/rfc2822.html">RFC 2822</a></p>
+<p>MUST conform to the "addr-spec" production in <a href="http://www.rfc-editor.org/rfc/rfc2822.html">RFC 2822</a></p>
 </div>
 <div id='solution'>
 <p>Convert the email address to a valid form.  Examples of valid email

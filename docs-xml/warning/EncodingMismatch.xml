@@ -14,7 +14,7 @@ web server's version takes preference, but many aggregators ignore this.
 Note that, if you are serving content as '<code>text/*</code>', then
 the default charset is US-ASCII, which is probably not what you want.
 (See
-<a href="http://www.faqs.org/rfcs/rfc3023.html" title="RFC 3023 (rfc3023) - XML Media Types">RFC 3023</a> for technical details.)</p>
+<a href="http://www.rfc-editor.org/rfc/rfc3023.html" title="RFC 3023 (rfc3023) - XML Media Types">RFC 3023</a> for technical details.)</p>
 <p>RSS feeds should be served as <code>application/rss+xml</code>
 (RSS 1.0 is an RDF format, so it may be served as
 <code>application/rdf+xml</code> instead).

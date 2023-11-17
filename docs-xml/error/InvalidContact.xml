@@ -4,7 +4,7 @@
 <p>Invalid email address</p>
 </div>
 <div id='explanation'>
-<p>Email addresses must conform to <a href="http://www.faqs.org/rfcs/rfc2822.html">
+<p>Email addresses must conform to <a href="http://www.rfc-editor.org/rfc/rfc2822.html">
 RFC 2822</a></p>
 </div>
 <div id='solution'>

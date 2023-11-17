@@ -4,7 +4,7 @@
 <p><code>element</code> must be an RFC-822 date-time</p>
 </div>
 <div id='explanation'>
-<p>Invalid date-time.  The value specified must meet the Date and Time specifications as defined by <a href="http://www.faqs.org/rfcs/rfc822.html">RFC822</a>, with the exception that the year should be expressed as four digits.</p>
+<p>Invalid date-time.  The value specified must meet the Date and Time specifications as defined by <a href="http://www.rfc-editor.org/rfc/rfc822.html">RFC822</a>, with the exception that the year should be expressed as four digits.</p>
 </div>
 <div id='solution'>
 <p>Change the date-time format to comply with RFC822.  Here are examples of valid RFC822 date-times:</p>

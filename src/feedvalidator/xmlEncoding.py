@@ -210,26 +210,19 @@ def decode(mediaType, charset, bs, loggedEvents, fallback=None):
     encoding = None
 
   if charset and encoding and charset.lower() != encoding.lower():
-    # RFC 3023 requires us to use 'charset', but a number of aggregators
-    # ignore this recommendation, so we should warn.
+    # Warn about discrepancies between charset param and encoding
+    # See also https://datatracker.ietf.org/doc/html/rfc7303#section-3
     loggedEvents.append(logging.EncodingMismatch({"charset": charset, "encoding": encoding}))
-
+    
   if mediaType and mediaType.startswith("text/") and charset is None:
     loggedEvents.append(logging.TextXml({}))
 
-    # RFC 3023 requires text/* to default to US-ASCII.  Issue a warning
-    # if this occurs, but continue validation using the detected encoding
-    try:
-      bs.decode("US-ASCII")
-    except:
-      if not encoding:
-        try:
-          bs.decode(fallback)
-          encoding=fallback
-        except:
-          pass
-      if encoding and encoding.lower() != 'us-ascii':
-        loggedEvents.append(logging.EncodingMismatch({"charset": "US-ASCII", "encoding": encoding}))
+    if not encoding:
+      try:
+        bs.decode(fallback)
+        encoding=fallback
+      except:
+        pass
 
   enc = charset or encoding
   if enc is None:
