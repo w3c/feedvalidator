@@ -4,7 +4,7 @@
 <p><code>foo</code> is not a valid URN</p>
 </div>
 <div id='explanation'>
-<p>Value is not a valid URN, as defined by <a href="http://www.faqs.org/rfcs/rfc2141.html">RFC 2141</a>.</p>
+<p>Value is not a valid URN, as defined by <a href="http://www.rfc-editor.org/rfc/rfc2141.html">RFC 2141</a>.</p>
 </div>
 <div id='solution'>
 <p>URNs have very picky syntax requirements.  A common problem is trying to use domain names as namespace identifiers in URNs.  For example, this is an <em>invalid URN</em>:</p>
@@ -17,7 +17,7 @@
 
 <p>Note that the periods in the domain name have been replaced by dashes.</p>
 
-<p>If this is not your problem, try reading <a href="http://www.faqs.org/rfcs/rfc2141.html">RFC 2141</a>.  It's quite short.  Section 2.1 talks about what's allowed in namespace identifiers (immediately after the "urn:" part); section 2.2 talks about what's allowed in the rest of it.</p>
+<p>If this is not your problem, try reading <a href="http://www.rfc-editor.org/rfc/rfc2141.html">RFC 2141</a>.  It's quite short.  Section 2.1 talks about what's allowed in namespace identifiers (immediately after the "urn:" part); section 2.2 talks about what's allowed in the rest of it.</p>
 </div>
 </div>
 </fvdoc>

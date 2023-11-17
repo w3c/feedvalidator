@@ -7,7 +7,7 @@
 <p>This attribute is not a valid MIME type.</p>
 </div>
 <div id='solution'>
-<p>Valid MIME types are specified in <a href="http://www.faqs.org/rfcs/rfc2046.html">RFC 2046</a>.</p>
+<p>Valid MIME types are specified in <a href="http://www.rfc-editor.org/rfc/rfc2046.html">RFC 2046</a>.</p>
 
 <p>Examples of valid MIME types:</p>
 
