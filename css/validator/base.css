@@ -859,4 +859,21 @@ div.intro p {
 	padding-left: 18px;
 }
 
+/* feedvalidator results */
+ol.codeListing {
+	padding-left: 28px;
+	margin: 0 0 2em 0;
+	width: auto;
+	max-width: 100%
+}
+ol.codeListing li {
+	padding: .2em;
+}
+ol.codeListing li a {
+	background-color: #eee;
+}
+ol.codeListing li a:hover, ol.codeListing li a:active {
+	text-decoration: none;
+}
+
 /* @end */
