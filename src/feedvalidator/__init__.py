@@ -215,8 +215,7 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
           usock = urllib.request.urlopen(request, context=ctx1)
         elif isinstance(x.reason, ssl.SSLCertVerificationError) and "CERTIFICATE_VERIFY_FAILED" in x.reason.reason:
           raise ValidationFailure(logging.HttpsProtocolError({'message': "HTTPs server has incorrect certificate configuration"}))
-        else:
-          raise x
+        raise
       rawdata = usock.read(MAXDATALENGTH)
       if usock.read(1):
         raise ValidationFailure(logging.ValidatorLimit({'limit': 'feed length > ' + str(MAXDATALENGTH) + ' bytes'}))
@@ -238,22 +237,10 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
     except BadStatusLine as status:
       raise ValidationFailure(logging.HttpError({'status': status.__class__}))
     except ValidationFailure as x:
-      raise x
+      raise
 
     except urllib.error.HTTPError as status:
-      rawdata = status.read()
-      if len(rawdata) < 512 or 'content-encoding' in status.headers:
-        loggedEvents.append(logging.HttpError({'status': status}))
-        usock = status
-      else:
-        rawdata = re.sub(b'<!--.*?-->','',rawdata)
-        lastline = rawdata.strip().split(b'\n')[-1].strip()
-        if sniffPossibleFeed(rawdata.decode('utf-8')):
-          loggedEvents.append(logging.HttpError({'status': status}))
-          loggedEvents.append(logging.HttpErrorWithPossibleFeed({}))
-          usock = status
-        else:
-          raise ValidationFailure(logging.HttpError({'status': status}))
+      raise ValidationFailure(logging.HttpError({'status': status}))
     except urllib.error.URLError as x:
       raise ValidationFailure(logging.HttpError({'status': x.reason}))
     except Timeout as x:
