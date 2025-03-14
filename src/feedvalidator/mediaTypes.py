@@ -6,8 +6,8 @@ __author__ = "Joseph Walton <http://www.kafsemo.org/>"
 __version__ = "$Revision$"
 __copyright__ = "Copyright (c) 2004 Joseph Walton"
 
-from cgi import parse_header
 from .logging import *
+from email import message
 
 FEED_TYPES = [
   'text/xml', 'application/xml', 'application/rss+xml', 'application/rdf+xml',
@@ -18,14 +18,12 @@ FEED_TYPES = [
 
 # Is the Content-Type correct?
 def checkValid(contentType, loggedEvents):
-  (mediaType, params) = parse_header(contentType)
+  m = message.Message()
+  m["content-type"] = contentType
+  mediaType = m.get_params()[0][0]
   if mediaType.lower() not in FEED_TYPES:
     loggedEvents.append(UnexpectedContentType({"type": "Feeds", "contentType": mediaType}))
-  if 'charset' in params:
-    charset = params['charset']
-  else:
-    charset = None
-
+  charset = m.get_param('charset')
   return (mediaType, charset)
 
 # Warn about mismatches between media type and feed version
