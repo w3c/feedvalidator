@@ -2,9 +2,9 @@ import feedvalidator
 import sys
 
 def escapeURL(url):
-    import cgi, urllib.request, urllib.parse, urllib.error, urllib.parse
+    import html, urllib.request, urllib.parse, urllib.error, urllib.parse
     parts = list(map(urllib.parse.quote, list(map(urllib.parse.unquote, urllib.parse.urlparse(url)))))
-    return cgi.escape(urllib.parse.urlunparse(parts))
+    return html.escape(urllib.parse.urlunparse(parts))
 
 def sanitizeURL(url):
     # Allow feed: URIs, as described by draft-obasanjo-feed-URI-scheme-02
