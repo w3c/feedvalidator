@@ -332,9 +332,17 @@ div#banner {
 	border-bottom-left-radius: 6px;
 }
 
+#logo {
+	border-radius: 10px;
+	width: 100px;
+	margin-left: 20px;
+	margin-top: 10px;
+	height: 100px;
+}
+
 p#tagline {
 	font-size: 0.7em;
-	margin: -2em 0 0 12.1em;
+	margin: -4em 0 4em 13em;
 	padding-bottom: 1em;
 	letter-spacing: 0.1em;
 	line-height: 100% !important;
