@@ -763,7 +763,7 @@ class geo_point(validatorBase):
 
 class gml_pos(text):
   def validate(self):
-    if not re.match('^[-+]?\d+\.?\d*[ ,][-+]?\d+\.?\d*$', self.value):
+    if not re.match(r'^[-+]?\d+\.?\d*[ ,][-+]?\d+\.?\d*$', self.value):
       return self.log(InvalidCoord({'value':self.value}))
     if self.value.find(',')>=0:
       self.log(CoordComma({'value':self.value}))
@@ -785,7 +785,7 @@ class gml_posList(text):
     if len(values)<3 or len(values)%2 == 1:
       return self.log(InvalidCoordList({'value':self.value}))
     for value in values:
-      if not re.match('^[-+]?\d+\.?\d*$', value):
+      if not re.match(r'^[-+]?\d+\.?\d*$', value):
         return self.log(InvalidCoordList({'value':value}))
 
 class gml_polygon(geo_srsName):
@@ -1157,21 +1157,21 @@ class g_serviceTypeEnumeration(enumeration):
 class g_float(text):
   def validate(self):
     import re
-    if not re.match('\d+\.?\d*\s*\w*', self.value):
+    if not re.match(r'\d+\.?\d*\s*\w*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": ':'.join(self.name.split('_',1)), "value":self.value}))
 
 class floatUnit(text):
   def validate(self):
     import re
-    if not re.match('\d+\.?\d*\s*\w*$', self.value):
+    if not re.match(r'\d+\.?\d*\s*\w*$', self.value):
       self.log(InvalidFloatUnit({"parent":self.parent.name, "element":self.name,
         "attr": ':'.join(self.name.split('_',1)), "value":self.value}))
 
 class decimal(text):
   def validate(self):
     import re
-    if not re.match('[-+]?\d+\.?\d*\s*$', self.value):
+    if not re.match(r'[-+]?\d+\.?\d*\s*$', self.value):
       self.log(InvalidFloatUnit({"parent":self.parent.name, "element":self.name,
         "attr": ':'.join(self.name.split('_',1)), "value":self.value}))
 

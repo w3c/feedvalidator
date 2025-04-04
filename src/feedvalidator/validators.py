@@ -52,7 +52,7 @@ def implausible_8601(value):
 #
 # Valid mime type
 #
-mime_re = re.compile('[^\s()<>,;:\\"/[\]?=]+/[^\s()<>,;:\\"/[\]?=]+(\s*;\s*[^\s()<>,;:\\"/[\]?=]+=("(\\"|[^"])*"|[^\s()<>,;:\\"/[\]?=]+))*$')
+mime_re = re.compile('[^\\s()<>,;:\\"/[\\]?=]+/[^\\s()<>,;:\\"/[\\]?=]+(\\s*;\\s*[^\\s()<>,;:\\"/[\\]?=]+=("(\\"|[^"])*"|[^\\s()<>,;:\\"/[\\]?=]+))*$')
 
 #
 # Extensibility hook: logic varies based on type of feed
@@ -161,8 +161,8 @@ class HTMLValidator:
     'pointer', 'purple', 'red', 'right', 'solid', 'silver', 'teal', 'top',
     'transparent', 'underline', 'white', 'yellow']
 
-  valid_css_values = re.compile('^(#[0-9a-f]+|rgb\(\d+%?,\d*%?,?\d*%?\)?|' +
-    '\d?\.?\d?\d(cm|em|ex|in|mm|pc|pt|px|%|,|\))?)$')
+  valid_css_values = re.compile(r'^(#[0-9a-f]+|rgb\(\d+%?,\d*%?,?\d*%?\)?|' +
+    r'\d?\.?\d?\d(cm|em|ex|in|mm|pc|pt|px|%|,|\))?)$')
 
   mathml_elements = ['annotation', 'annotation-xml', 'maction', 'math',
     'merror', 'mfrac', 'mi', 'mmultiscripts', 'mn', 'mo', 'mover', 'mpadded',
@@ -242,7 +242,7 @@ class HTMLValidator:
       element = self.element
       offset = [element.line - element.dispatcher.locator.getLineNumber(),
                 - element.dispatcher.locator.getColumnNumber()]
-      match = re.search(', at line (\d+), column (\d+)',str(msg))
+      match = re.search(r', at line (\d+), column (\d+)',str(msg))
       if match: offset[0] += int(match.group(1))-1
       element.log(NotHtml({"parent":element.parent.name, "element":element.name, "message":"Invalid HTML", "value": str(msg)}),offset)
 
@@ -265,13 +265,13 @@ class HTMLValidator:
 # Scub CSS properties for potentially evil intent
 #
 def checkStyle(style):
-  if not re.match("""^([:,;#%.\sa-zA-Z0-9!]|\w-\w|'[\s\w]+'|"[\s\w]+"|\([\d,\s]+\))*$""", style):
+  if not re.match(r"""^([:,;#%.\sa-zA-Z0-9!]|\w-\w|'[\s\w]+'|"[\s\w]+"|\([\d,\s]+\))*$""", style):
     return [style]
-  if not re.match("^(\s*[-\w]+\s*:\s*[^:;]*(;|$))*$", style):
+  if not re.match(r"^(\s*[-\w]+\s*:\s*[^:;]*(;|$))*$", style):
     return [style]
 
   unsafe = []
-  for prop,value in re.findall("([-\w]+)\s*:\s*([^:;]*)",style.lower()):
+  for prop,value in re.findall(r"([-\w]+)\s*:\s*([^:;]*)",style.lower()):
     if prop not in HTMLValidator.acceptable_css_properties:
       if prop not in unsafe: unsafe.append(prop)
     elif prop.split('-')[0] in ['background','border','margin','padding']:
@@ -358,9 +358,9 @@ class noduplicates(validatorBase):
 # valid e-mail addr-spec
 #
 class addr_spec(text):
-  domain_re = '''(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([A-Z0-9\-]+\.)+))([A-Z0-9][-A-Z0-9]*)'''
-  email_re = re.compile("([A-Z0-9_\-\+\.\']+)@" + domain_re + "$", re.I)
-  simple_email_re = re.compile('^[\w._%+-]+@[A-Za-z][\w.-]+$')
+  domain_re = r'''(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([A-Z0-9\-]+\.)+))([A-Z0-9][-A-Z0-9]*)'''
+  email_re = re.compile("([A-Z0-9_\\-\\+\\.\']+)@" + domain_re + "$", re.I)
+  simple_email_re = re.compile(r'^[\w._%+-]+@[A-Za-z][\w.-]+$')
   message = InvalidAddrSpec
   def validate(self, value=None):
     if not value: value=self.value
@@ -426,8 +426,8 @@ class MediaRange(MimeType):
 # iso8601 dateTime
 #
 class unbounded_iso8601(text):
-  iso8601_re = re.compile("^\d\d\d\d(-\d\d(-\d\d(T\d\d:\d\d(:\d\d(\.\d*)?)?" +
-                       "(Z|([+-]\d\d:\d\d))?)?)?)?$")
+  iso8601_re = re.compile(r"^\d\d\d\d(-\d\d(-\d\d(T\d\d:\d\d(:\d\d(\.\d*)?)?" +
+                       r"(Z|([+-]\d\d:\d\d))?)?)?)?$")
   message = InvalidISO8601DateTime
 
   def validate(self):
@@ -474,8 +474,8 @@ class iso8601(unbounded_iso8601):
 class w3cdtf(iso8601):
   # The same as in iso8601, except a timezone is not optional when
   #  a time is present
-  iso8601_re = re.compile("^\d\d\d\d(-\d\d(-\d\d(T\d\d:\d\d(:\d\d(\.\d*)?)?" +
-                           "(Z|([+-]\d\d:\d\d)))?)?)?$")
+  iso8601_re = re.compile(r"^\d\d\d\d(-\d\d(-\d\d(T\d\d:\d\d(:\d\d(\.\d*)?)?" +
+                           r"(Z|([+-]\d\d:\d\d)))?)?)?$")
   message = InvalidW3CDTFDate
 
 class unbounded_w3cdtf(w3cdtf):
@@ -484,12 +484,12 @@ class unbounded_w3cdtf(w3cdtf):
 class rfc3339(iso8601):
   # The same as in iso8601, except that the only thing that is optional
   # is the seconds
-  iso8601_re = re.compile("^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d*)?" +
-                           "(Z|([+-]\d\d:\d\d))$")
+  iso8601_re = re.compile(r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d*)?" +
+                           r"(Z|([+-]\d\d:\d\d))$")
   message = InvalidRFC3339Date
 
 class iso8601_date(iso8601):
-  date_re = re.compile("^\d\d\d\d-\d\d-\d\d$")
+  date_re = re.compile(r"^\d\d\d\d-\d\d-\d\d$")
   def validate(self):
     if iso8601.validate(self):
       if not self.date_re.search(self.value):
@@ -614,14 +614,14 @@ class xmlbase(rfc3987):
 # rfc822 dateTime (+Y2K extension)
 #
 class rfc822(text):
-  rfc822_re = re.compile("(((mon)|(tue)|(wed)|(thu)|(fri)|(sat)|(sun))\s*,\s*)?" +
-    "\d\d?\s+((jan)|(feb)|(mar)|(apr)|(may)|(jun)|(jul)|(aug)|(sep)|(oct)|" +
-    "(nov)|(dec))\s+\d\d(\d\d)?\s+\d\d:\d\d(:\d\d)?\s+(([+-]\d\d\d\d)|" +
+  rfc822_re = re.compile(r"(((mon)|(tue)|(wed)|(thu)|(fri)|(sat)|(sun))\s*,\s*)?" +
+    r"\d\d?\s+((jan)|(feb)|(mar)|(apr)|(may)|(jun)|(jul)|(aug)|(sep)|(oct)|" +
+    r"(nov)|(dec))\s+\d\d(\d\d)?\s+\d\d:\d\d(:\d\d)?\s+(([+-]\d\d\d\d)|" +
     "(ut)|(gmt)|(est)|(edt)|(cst)|(cdt)|(mst)|(mdt)|(pst)|(pdt)|[a-ik-z])?$",
     re.UNICODE)
   rfc2822_re = re.compile("(((Mon)|(Tue)|(Wed)|(Thu)|(Fri)|(Sat)|(Sun)), )?" +
-    "\d\d? ((Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|" +
-    "(Nov)|(Dec)) \d\d\d\d \d\d:\d\d(:\d\d)? (([+-]?\d\d[03]0)|" +
+    r"\d\d? ((Jan)|(Feb)|(Mar)|(Apr)|(May)|(Jun)|(Jul)|(Aug)|(Sep)|(Oct)|" +
+    r"(Nov)|(Dec)) \d\d\d\d \d\d:\d\d(:\d\d)? (([+-]?\d\d[03]0)|" +
     "(UT)|(GMT)|(EST)|(EDT)|(CST)|(CDT)|(MST)|(MDT)|(PST)|(PDT)|Z)$")
   def validate(self):
     if self.rfc2822_re.match(self.value):
@@ -646,7 +646,7 @@ class rfc822(text):
     else:
       value1,value2 = '', self.value
       value2 = re.sub(r'[\\](.)','',value2)
-      while value1!=value2: value1,value2=value2,re.sub('\([^(]*?\)',' ',value2)
+      while value1!=value2: value1,value2=value2,re.sub(r'\([^(]*?\)',' ',value2)
       if not self.rfc822_re.match(value2.strip().lower()):
         self.log(InvalidRFC2822Date({"parent":self.parent.name, "element":self.name, "value":self.value}))
       else:
@@ -657,7 +657,7 @@ class rfc822(text):
 #
 from html.entities import name2codepoint
 def decodehtml(data):
-  chunks=re.split('&#?(\w+);',data)
+  chunks=re.split(r'&#?(\w+);',data)
 
   for i in range(1,len(chunks),2):
     if chunks[i].isdigit():
@@ -675,9 +675,9 @@ def decodehtml(data):
 # Scan HTML for relative URLs
 #
 class absUrlMixin:
-  anchor_re = re.compile('<a\s+href=(?:"(.*?)"|\'(.*?)\'|([\w-]+))[\s>]', re.IGNORECASE)
-  img_re = re.compile('<img\s+[^>]*src=(?:"(.*?)"|\'(.*?)\'|([\w-]+))[\s>]', re.IGNORECASE)
-  absref_re = re.compile("\w+:")
+  anchor_re = re.compile('<a\\s+href=(?:"(.*?)"|\'(.*?)\'|([\\w-]+))[\\s>]', re.IGNORECASE)
+  img_re = re.compile('<img\\s+[^>]*src=(?:"(.*?)"|\'(.*?)\'|([\\w-]+))[\\s>]', re.IGNORECASE)
+  absref_re = re.compile(r"\w+:")
   def validateAbsUrl(self,value):
     refs = self.img_re.findall(self.value) + self.anchor_re.findall(self.value)
     for ref in [reduce(lambda a,b: a or b, x) for x in refs]:
@@ -717,8 +717,8 @@ class nonemail(text):
 # Elements for which html is discouraged, also checks for relative URLs
 #
 class nonhtml(text,safeHtmlMixin):#,absUrlMixin):
-  htmlEndTag_re = re.compile("</(\w+)>")
-  htmlEntity_re = re.compile("&(#?\w+)")
+  htmlEndTag_re = re.compile(r"</(\w+)>")
+  htmlEntity_re = re.compile(r"&(#?\w+)")
   def start(self):
     nonhtml.startline = self.__dict__['startline'] = self.line
   def prevalidate(self):
@@ -826,12 +826,12 @@ class Integer(text):
 
 class Float(text):
   def validate(self, name=None):
-    if not re.match('\d+\.?\d*$', self.value):
+    if not re.match(r'\d+\.?\d*$', self.value):
       self.log(InvalidFloat({"attr":name or self.name, "value":self.value}))
 
 class alphanumeric(text):
   def validate(self):
-    if not re.match('^\s*[A-Za-z0-9]+\s*$', self.value):
+    if not re.match(r'^\s*[A-Za-z0-9]+\s*$', self.value):
       self.log(InvalidAlphanum({"attr":self.name, "value":self.value}))
 
 class percentType(text):
@@ -868,7 +868,7 @@ class longitude(text):
       self.log(InvalidLongitude({"parent":self.parent.name, "element":self.name, "value":self.value}))
 
 class httpURL(text):
-  http_re = re.compile("(http|https)://" + addr_spec.domain_re + '(?::\d+)?' + '(/|$)', re.IGNORECASE)
+  http_re = re.compile("(http|https)://" + addr_spec.domain_re + r'(?::\d+)?' + '(/|$)', re.IGNORECASE)
   def validate(self):
     if not self.http_re.match(self.value):
       self.log(InvalidURLAttribute({"parent":self.parent.name, "element":self.name, "value":self.value}))
@@ -970,7 +970,7 @@ class truefalsestrict(text):
       self.log(InvalidTrueFalse({"parent":self.parent.name, "element":self.name,"value":self.value}))
 
 class duration(text):
-  duration_re = re.compile("\d+(:[0-5][0-9](:[0-5][0-9])?)?$")
+  duration_re = re.compile(r"\d+(:[0-5][0-9](:[0-5][0-9])?)?$")
   def validate(self):
     if not self.duration_re.match(self.value):
       self.log(InvalidDuration({"parent":self.parent.name, "element":self.name
@@ -993,7 +993,7 @@ class keywords(text):
 
 class commaSeparatedIntegers(text):
   def validate(self):
-    if not re.match("^\d+(,\s*\d+)*$", self.value):
+    if not re.match(r"^\d+(,\s*\d+)*$", self.value):
       self.log(InvalidCommaSeparatedIntegers({"parent":self.parent.name,
         "element":self.name}))
 

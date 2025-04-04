@@ -47,7 +47,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
   from .base import SAXDispatcher
   from io import StringIO
 
-  if re.match("^\s+<\?xml",aString) and re.search("<generator.*wordpress.*</generator>",aString):
+  if re.match(r"^\s+<\?xml",aString) and re.search("<generator.*wordpress.*</generator>",aString):
     lt = aString.find('<'); gt = aString.find('>')
     if lt > 0 and gt > 0 and lt < gt:
       loggedEvents.append(logging.WPBlankLine({'line':1,'column':1}))
@@ -72,7 +72,7 @@ def _validate(aString, firstOccurrenceOnly, loggedEvents, base, encoding, selfUR
   # experimental RSS-Profile support
   validator.rssCharData = [s.find('&#x')>=0 for s in aString.split('\n')]
 
-  xmlver = re.match("^<\?\s*xml\s+version\s*=\s*['\"]([-a-zA-Z0-9_.:]*)['\"]",aString)
+  xmlver = re.match("^<\\?\\s*xml\\s+version\\s*=\\s*['\"]([-a-zA-Z0-9_.:]*)['\"]",aString)
   if xmlver and xmlver.group(1) != '1.0':
     validator.log(logging.BadXmlVersion({"version":xmlver.group(1)}))
 

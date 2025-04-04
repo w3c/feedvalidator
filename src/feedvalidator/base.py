@@ -95,7 +95,7 @@ unsupported_namespaces = {
 
 def near_miss(ns):
   try:
-    return re.match(".*\w", ns).group().lower()
+    return re.match(r".*\w", ns).group().lower()
   except:
     return ns
 
