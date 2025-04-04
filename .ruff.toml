@@ -1,0 +1,9 @@
+fix = true
+extend-exclude = [
+  "*.cgi", # Python 2 code
+]
+target-version = "py310"
+
+lint.select = [
+  "W605", # invalid-escape-sequence
+]
