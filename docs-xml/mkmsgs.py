@@ -94,7 +94,7 @@ def buildTestSuite():
 if __name__ == '__main__':
   import re
   for dir, id, msg, html, xml in missing():
-    msg = re.sub("%\(\w+\)\w?", "<code>foo</code>", msg)
+    msg = re.sub(r"%\(\w+\)\w?", "<code>foo</code>", msg)
     if not path.exists(html):
       pass
     if not path.exists(xml):

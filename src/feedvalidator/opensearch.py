@@ -63,7 +63,7 @@ class Url(validatorBase):
     # self.validate_optional_attribute((None,'rel'), text)
 
 class Template(rfc2396_full):
-  tparam = re.compile("{((?:[-a-zA-Z0-9._~]|%[a-fA-F0-9]{2})+:?(?:[-a-zA-Z0-9._~]|%[a-fA-F0-9]{2})*)\??}")
+  tparam = re.compile(r"{((?:[-a-zA-Z0-9._~]|%[a-fA-F0-9]{2})+:?(?:[-a-zA-Z0-9._~]|%[a-fA-F0-9]{2})*)\??}")
   valuelist = ['searchTerms', 'count', 'startIndex', 'startPage', 'language',
     'inputEncoding', 'outputEncoding']
 
@@ -127,7 +127,7 @@ class UrlEncoded(validatorBase):
     from urllib.parse import quote, unquote
     import re
     for value in self.value.split():
-      value = re.sub('%\w\w', lambda x: x.group(0).upper(), value)
+      value = re.sub(r'%\w\w', lambda x: x.group(0).upper(), value)
       if value != quote(unquote(value)):
         self.log(NotURLEncoded({}))
         break

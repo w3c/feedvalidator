@@ -32,7 +32,7 @@ def asText(x):
 
 import re
 
-wsRE = re.compile('\s+')
+wsRE = re.compile(r'\s+')
 
 def trimWS(s):
   s = wsRE.sub(' ', s)
@@ -43,7 +43,7 @@ def trimWS(s):
 
   return s
 
-secRe = re.compile("<div id='(\w+)'>\n(.*?\n)</div>\n", re.DOTALL)
+secRe = re.compile("<div id='(\\w+)'>\n(.*?\n)</div>\n", re.DOTALL)
 
 import codecs
 
@@ -67,7 +67,7 @@ def writeDoc(x, h):
 
 
   for (sec, txt) in secRe.findall(t):
-    r = re.compile('<h2>' + sec + '</h2>\s*<div class="docbody">\s*()</div>', re.IGNORECASE)
+    r = re.compile('<h2>' + sec + r'</h2>\s*<div class="docbody">\s*()</div>', re.IGNORECASE)
     idx = r.search(doc).start(1)
     doc = doc[:idx] + txt + doc[idx:]
 

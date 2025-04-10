@@ -76,7 +76,7 @@ class opmlHead(validatorBase, extension_everywhere):
     return positiveInteger(), nonblank(), noduplicates()
 
 class commaSeparatedLines(text):
-  linenumbers_re=re.compile('^(\d+(,\s*\d+)*)?$')
+  linenumbers_re=re.compile(r'^(\d+(,\s*\d+)*)?$')
   def validate(self):
     if not self.linenumbers_re.match(self.value):
       self.log(InvalidExpansionState({"parent":self.parent.name, "element":self.name, "value":self.value}))

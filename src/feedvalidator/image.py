@@ -70,7 +70,7 @@ class url(rfc2396_full):
     rfc2396_full.validate(self)
     import re
     ext = self.value.split('.')[-1].lower()
-    if re.match("^\w+$", ext) and ext not in ['jpg','jpeg','gif','png']:
+    if re.match(r"^\w+$", ext) and ext not in ['jpg','jpeg','gif','png']:
       self.log(ImageUrlFormat({"parent":self.parent.name, "element":self.name}))
 
 class title(nonhtml):

@@ -80,7 +80,7 @@ def _qnu(s,safe=''):
   return res
 
 # Match an optional port specification
-portRe = re.compile(':(\d*)$')
+portRe = re.compile(r':(\d*)$')
 
 def _normPort(netloc,defPort):
   nl = netloc.lower()
@@ -146,7 +146,7 @@ def _normPath(p):
   return '/'.join([_qnu(c, PCHAR) for c in l])
 
 # From RFC 2396bis, with added end-of-string marker
-uriRe = re.compile('^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$')
+uriRe = re.compile(r'^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$')
 
 def _canonical(s):
   m = uriRe.match(s)

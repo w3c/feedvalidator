@@ -1063,7 +1063,7 @@ class coordinates(text):
        self.log(InvalidKmlLatitude({"parent":self.parent.name, "element":self.name, "value":lat}))
       # Third coordinate value (altitude) has to be float, if present
       if len(point) == 3:
-        if not re.match('\d+\.?\d*$', point[2]):
+        if not re.match(r'\d+\.?\d*$', point[2]):
           self.log(InvalidFloat({"attr":self.name, "value":point[2]}))
 
 class angle360(text):
@@ -1079,5 +1079,5 @@ class angle360(text):
 
 class FloatWithNegative(text):
   def validate(self, name=None):
-    if not re.match('-?\d+\.?\d*$', self.value):
+    if not re.match(r'-?\d+\.?\d*$', self.value):
       self.log(InvalidFloat({"attr":name or self.name, "value":self.value}))

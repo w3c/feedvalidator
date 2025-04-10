@@ -57,9 +57,9 @@ class TestCase(unittest.TestCase):
           raise self.failureException("unexpected %s.%s with a value of %s" % \
              (theClass.__name__, k, v))
 
-desc_re = re.compile("<!--\s*Description:\s*(.*?)\s*Expect:\s*(!?)(\w*)(?:{(.*?)})?\s*-->")
+desc_re = re.compile(r"<!--\s*Description:\s*(.*?)\s*Expect:\s*(!?)(\w*)(?:{(.*?)})?\s*-->")
 
-validome_re = re.compile("<!--\s*Description:\s*(.*?)\s*Message:\s*(!?)(\w*).*?\s*-->", re.S)
+validome_re = re.compile(r"<!--\s*Description:\s*(.*?)\s*Message:\s*(!?)(\w*).*?\s*-->", re.S)
 
 def getDescription(xmlfile):
   """Extract description and exception from XML file

@@ -247,7 +247,7 @@ class media_title(nonhtml):
       nonhtml.validate(self, ContainsUndeclaredHTML)
 
 class media_thumbnail(positiveInteger,rfc2396_full):
-  npt_re = re.compile("^(now)|(\d+(\.\d+)?)|(\d+:\d\d:\d\d(\.\d+)?)$")
+  npt_re = re.compile(r"^(now)|(\d+(\.\d+)?)|(\d+:\d\d:\d\d(\.\d+)?)$")
   def getExpectedAttrNames(self):
     return [(None,'height'),(None,'time'),(None,'url'),(None, 'width')]
   def validate(self):
@@ -295,7 +295,7 @@ class media_content(validatorBase, media_elements, extension_everywhere):
       ]
   def validate(self):
     self.value = self.attrs.get((None,'bitrate'))
-    if self.value and not re.match('\d+\.?\d*', self.value):
+    if self.value and not re.match(r'\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'bitrate', "value":self.value}))
 
@@ -304,7 +304,7 @@ class media_content(validatorBase, media_elements, extension_everywhere):
     if self.value: nonNegativeInteger.validate(self)
 
     self.value = self.attrs.get((None,'duration'))
-    if self.value and not re.match('\d+\.?\d*', self.value):
+    if self.value and not re.match(r'\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'duration', "value":self.value}))
 
@@ -317,7 +317,7 @@ class media_content(validatorBase, media_elements, extension_everywhere):
     if self.value: positiveInteger.validate(self)
 
     self.value = self.attrs.get((None,'framerate'))
-    if self.value and not re.match('\d+\.?\d*', self.value):
+    if self.value and not re.match(r'\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'framerate', "value":self.value}))
 
@@ -336,7 +336,7 @@ class media_content(validatorBase, media_elements, extension_everywhere):
       self.log(InvalidMediaMedium({"parent":self.parent.name, "element":self.name, "value": self.value}))
 
     self.value = self.attrs.get((None,'samplingrate'))
-    if self.value and not re.match('\d+\.?\d*', self.value):
+    if self.value and not re.match(r'\d+\.?\d*', self.value):
       self.log(InvalidFloat({"parent":self.parent.name, "element":self.name,
         "attr": 'samplingrate', "value":self.value}))
 
