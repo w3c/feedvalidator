@@ -121,12 +121,12 @@ html>body .borderBR {
 /* ----- footer ----- */
 
 address {
-  font-size: x-small;
+  font-size: smaller;
   font-style: normal;
 }
 
 #poweredby {
-  font-size: x-small;
+  font-size: smaller;
   background: transparent;
   color: #333;
 }
