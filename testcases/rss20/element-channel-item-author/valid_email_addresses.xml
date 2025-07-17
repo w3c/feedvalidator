@@ -12,5 +12,6 @@
 <channel>
  <item><author>user@example.com</author></item>
  <item><author>P.O'Neill@example.ie</author></item>
+ <item><author>~@example.ie</author></item>
 </channel>
 </rss>
