@@ -1,0 +1,13 @@
+<fvdoc>
+<div xmlns='http://www.w3.org/1999/xhtml'>
+<div id='message'>
+<p>HTTP Error</p>
+</div>
+<div id='explanation'>
+<p>The feed couldn't be validated because there the validator was blocked by CloudFlare WebApp's Firewall. The validator can be identified by its User-Agent string <code>FeedValidator/1.3</code> to be specifically authorized to access that resource.</p>
+</div>
+<div id='solution'>
+<p>Deactive the WebApp Firewall or allow-list the feedvalidator user agent <code>FeedValidator/1.3</code>.</p>
+</div>
+</div>
+</fvdoc>
