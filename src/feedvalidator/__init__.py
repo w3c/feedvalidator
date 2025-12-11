@@ -240,6 +240,8 @@ def validateURL(url, firstOccurrenceOnly=1, wantRawData=0, groupEvents=0):
       raise
 
     except urllib.error.HTTPError as status:
+      if status.code == 403 and status.headers.get("cf-mitigated") == "challenge":
+        ValidationFailure(logging.CloudflareHttpError({'status': status}))
       raise ValidationFailure(logging.HttpError({'status': status}))
     except urllib.error.URLError as x:
       raise ValidationFailure(logging.HttpError({'status': x.reason}))

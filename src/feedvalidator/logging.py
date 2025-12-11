@@ -134,6 +134,7 @@ class AtomLinkNotEmpty(Warning): pass
 class UnregisteredAtomLinkRel(Warning): pass
 
 class HttpError(Error): pass
+class CloudflareHttpError(HttpError): pass
 class IOError(Error): pass
 class UnknownEncoding(Error): pass
 

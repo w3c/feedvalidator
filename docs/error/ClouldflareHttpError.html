@@ -5,7 +5,7 @@
 @import "../../css/documentation.css";
 @import "../../css/validator/base.css";
 </style>
-    <title>HTTP Error</title>
+    <title>Blocked by CloudFlare Web Apps Firewall</title>
   </head>
 
   <body>
@@ -19,24 +19,17 @@
     <div id="main" class="doc">
 <h2>Message</h2>
 <div class="docbody">
-<p>HTTP Error</p>
+<p>Blocked by CloudFlare Web Apps Firewall</p>
 </div>
 <h2>Explanation</h2>
 
 <div class="docbody">
-<p>Your feed couldn't be validated because there was a problem downloading
-it from the web server. You should try to diagnose this using a web browser,
-and make sure that the URL you supplied resolves to an accessible file.</p>
-<p>This usually means that the URL was wrong, or that permissions on
-the server don't allow us to fetch that file. The error shows the
-message that the server sent, which may help.</p>
-
-<p>If the error is "403 Forbidden" and your Web site uses a Web App Firewall, you may need to allow-list the feedvalidator User-Agent: <code>FeedValidator/1.3"</code>.</p>
+<p>The feed couldn't be validated because there the validator was blocked by CloudFlare WebApp's Firewall. The validator can be identified by its User-Agent string <code>FeedValidator/1.3</code> to be specifically authorized to access that resource.
 
 </div>
 <h2>Solution</h2>
 <div class="docbody">
-<p>Make sure this URL can be downloaded with a browser, then try again.</p>
+<p>Deactive the WebApp Firewall or allow-list the feedvalidator user agent <code>FeedValidator/1.3</code>.</p>
 </div>
 <h2>Not clear?  Disagree?</h2>
 <div class="docbody">
