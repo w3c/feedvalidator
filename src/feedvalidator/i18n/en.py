@@ -95,6 +95,7 @@ messages = {
   BadXmlVersion:           "Incorrect XML Version: %(version)s",
   UnregisteredAtomLinkRel: "Unregistered link relationship",
   HttpError:               "Server returned %(status)s",
+  CloudflareHttpError:     "Feedvalidator blocked by CloudFlare WebApps Firewall (server returned %(status)s)",
   IOError:                 "%(exception)s (%(message)s; misconfigured server?)",
   ObscureEncoding:         "Obscure XML character encoding: %(encoding)s",
   NonstdEncoding:          "This encoding is not mandated by the XML specification: %(encoding)s",
