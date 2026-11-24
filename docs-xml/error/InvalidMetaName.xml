@@ -7,7 +7,7 @@
 <p>Within a feed, the only expected value for <code>name</code> is <code>robots</code></p>
 </div>
 <div id='solution'>
-<p>Consult the <a href="http://www.robotstxt.org/wc/meta-user.html">documentation for the Robots META tag</a> for further details.</p>
+<p>Consult the <a href="https://www.robotstxt.org/meta.html">documentation for the Robots META tag</a> for further details.</p>
 </div>
 </div>
 </fvdoc>
