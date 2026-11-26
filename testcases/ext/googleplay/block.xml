@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Description:  googleplay:block is yes or no
+  Expect:       InvalidYesNo{element:googleplay:block}
+-->
+
+<rss xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0" version="2.0">
+  <channel>
+    <title>All About Everything</title>
+    <link>http://www.example.com/podcasts/everything/index.html</link>
+    <description>All About Everything is a show about everything.</description>
+    <googleplay:block>true</googleplay:block>
+    <item>
+      <title>Episode 1</title>
+      <guid>http://www.example.com/podcasts/everything/episode1.mp3</guid>
+
+    </item>
+  </channel>
+</rss>
