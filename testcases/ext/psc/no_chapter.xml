@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Description:  psc:chapters with no psc:chapter
+  Expect:       MissingElement{parent:psc:chapters,element:psc:chapter}
+-->
+
+<rss xmlns:psc="http://podlove.org/simple-chapters" version="2.0">
+  <channel>
+    <title>All About Everything</title>
+    <link>http://www.example.com/podcasts/everything/index.html</link>
+    <description>All About Everything is a show about everything.</description>
+    <item>
+      <title>Episode 1</title>
+      <guid>http://www.example.com/podcasts/everything/episode1.mp3</guid>
+      <psc:chapters version="1.2">
+      </psc:chapters>
+    </item>
+  </channel>
+</rss>

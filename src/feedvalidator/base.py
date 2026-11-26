@@ -49,6 +49,7 @@ namespaces = {
   "http://www.opml.org/spec2":                      "opml",
   "http://www.w3.org/1999/02/22-rdf-syntax-ns#":    "rdf",
   "http://www.w3.org/2000/01/rdf-schema#":          "rdfs",
+  "http://podlove.org/simple-chapters":             "psc",
   "http://purl.org/rss/1.0/modules/reference/":     "ref",
   "http://purl.org/rss/1.0/modules/richequiv/":     "reqv",
   "http://purl.org/rss/1.0/modules/rss091#":        "rss091",
@@ -91,8 +92,7 @@ unsupported_namespaces = {
   "http://schema.org/": ("Schema.org", "https://schema.org/"),
   "https://podcastindex.org/namespace/1.0": ("Podcasting 2.0", "https://podcastindex.org/"),
   "https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md": ("Podcasting 2.0", "https://github.com/Podcastindex-org/podcast-namespace/"),
-  "http://www.google.com/schemas/play-podcasts/1.0": ("Google Play Podcasts", "https://www.google.com/schemas/play-podcasts/1.0/play-podcasts.xsd"),
-  "http://podlove.org/simple-chapters": ("Podlove Simple Chapters", "https://podlove.org/simple-chapters/")
+  "http://www.google.com/schemas/play-podcasts/1.0": ("Google Play Podcasts", "https://www.google.com/schemas/play-podcasts/1.0/play-podcasts.xsd")
 }
 
 def near_miss(ns):

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Description:  Podlove Simple Chapters namespace is recognized but not validated
-  Expect:       UnsupportedNamespace{namespace:http://podlove.org/simple-chapters}
+  Description:  Podlove Simple Chapters, as in the specification's example
+  Expect:       !Error
 -->
 
 <rss xmlns:psc="http://podlove.org/simple-chapters" version="2.0">
@@ -13,7 +13,10 @@
       <title>Episode 1</title>
       <guid>http://www.example.com/podcasts/everything/episode1.mp3</guid>
       <psc:chapters version="1.2">
-        <psc:chapter start="00:00:00.000" title="Introduction" />
+        <psc:chapter start="0" title="Welcome" />
+        <psc:chapter start="3:07" title="Introducing Podlove" href="http://podlove.org/" />
+        <psc:chapter start="8:26.250" title="Podlove WordPress Plugin" href="http://podlove.org/podlove-podcast-publisher" image="http://podlove.org/images/plugin.png" />
+        <psc:chapter start="01:35:52" title="Resumée" />
       </psc:chapters>
     </item>
   </channel>
