@@ -353,6 +353,9 @@ class extension_item(extension_channel_item):
     self.log(CommentRSS({"parent":self.parent.name, "element":self.name}))
     return rfc2396_full(), noduplicates()
 
+  def do_psc_chapters(self):
+    return psc_chapters()
+
   def do_wiki_diff(self):
      return text()
 
@@ -1301,3 +1304,50 @@ class Questionable(extension_everywhere):
   def do_app_categories(self):
     from .categories import categories
     return categories()
+
+#
+# Podlove Simple Chapters: https://podlove.org/simple-chapters/
+#
+class psc_chapters(validatorBase):
+  def getExpectedAttrNames(self):
+    return [(None, 'version')]
+
+  def prevalidate(self):
+    # "There must be only one <psc:chapters> element."
+    if self.name in self.parent.children:
+      self.log(DuplicateElement({"parent":self.parent.name, "element":self.name}))
+
+  def do_psc_chapter(self):
+    return psc_chapter()
+
+  def validate(self):
+    # "The <psc:chapters> elements contains one or more <psc:chapter> elements."
+    if 'psc_chapter' not in self.children:
+      self.log(MissingElement({"parent":self.name.replace("_",":"), "element":"psc:chapter"}))
+
+class psc_chapter(rfc2396_full):
+  # Normal Play Time, as the examples in the specification write it:
+  # seconds ("37"), minutes and seconds ("7:48"), or hours, minutes and
+  # seconds ("01:35:52"), each with an optional fraction ("35:12.250").
+  npt_re = re.compile(r"^(\d+(\.\d+)?|(\d+:)?\d+:\d\d(\.\d+)?)$")
+
+  def getExpectedAttrNames(self):
+    return [(None, 'start'), (None, 'title'), (None, 'href'), (None, 'image')]
+
+  def validate(self):
+    start = self.attrs.get((None, 'start'))
+    if start is None:
+      self.log(MissingAttribute({"parent":self.parent.name, "element":self.name, "attr":"start"}))
+    elif not psc_chapter.npt_re.match(start):
+      self.log(InvalidNPTTime({"parent":self.parent.name, "element":self.name, "attr":"start", "value":start}))
+    else:
+      self.log(ValidNPTTime({"parent":self.parent.name, "element":self.name, "attr":"start", "value":start}))
+
+    if self.attrs.get((None, 'title')) is None:
+      self.log(MissingAttribute({"parent":self.parent.name, "element":self.name, "attr":"title"}))
+
+    for attr in ['href', 'image']:
+      self.value = self.attrs.get((None, attr))
+      if self.value:
+        self.name = attr
+        rfc2396_full.validate(self)

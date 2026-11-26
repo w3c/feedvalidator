@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Description:  Podlove Simple Chapters in an Atom entry
+  Expect:       !Error
+-->
+
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:psc="http://podlove.org/simple-chapters">
+  <title>All About Everything</title>
+  <link href="http://www.example.com/podcasts/everything/"/>
+  <updated>2026-11-26T12:00:00Z</updated>
+  <author><name>John Doe</name></author>
+  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+  <entry>
+    <title>Episode 1</title>
+    <link href="http://www.example.com/podcasts/everything/episode1"/>
+    <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+    <updated>2026-11-26T12:00:00Z</updated>
+    <summary>First episode</summary>
+    <psc:chapters version="1.2">
+      <psc:chapter start="0" title="Welcome" />
+      <psc:chapter start="3:07" title="Introducing Podlove" href="http://podlove.org/" />
+    </psc:chapters>
+  </entry>
+</feed>
