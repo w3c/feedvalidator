@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Description:  Google Play Podcasts elements in the channel and an item
+  Expect:       !Error
+-->
+
+<rss xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0" version="2.0">
+  <channel>
+    <title>All About Everything</title>
+    <link>http://www.example.com/podcasts/everything/index.html</link>
+    <description>All About Everything is a show about everything.</description>
+    <googleplay:author>John Doe</googleplay:author>
+    <googleplay:email>john.doe@example.com</googleplay:email>
+    <googleplay:image href="http://www.example.com/podcasts/everything/artwork.jpg"/>
+    <googleplay:description>A show about everything.</googleplay:description>
+    <googleplay:explicit>no</googleplay:explicit>
+    <googleplay:block>no</googleplay:block>
+    <googleplay:newFeedUrl>http://www.example.com/podcasts/everything/feed.xml</googleplay:newFeedUrl>
+    <googleplay:category text="Technology"/>
+    <googleplay:category text="News &amp; Politics"/>
+    <item>
+      <title>Episode 1</title>
+      <guid>http://www.example.com/podcasts/everything/episode1.mp3</guid>
+      <googleplay:author>Jane Doe</googleplay:author>
+      <googleplay:image href="http://www.example.com/podcasts/everything/episode1.jpg"/>
+      <googleplay:description>The first episode.</googleplay:description>
+      <googleplay:explicit>clean</googleplay:explicit>
+      <googleplay:block>yes</googleplay:block>
+    </item>
+  </channel>
+</rss>

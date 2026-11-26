@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Description:  Google Play Podcasts namespace is recognized but not validated
-  Expect:       UnsupportedNamespace{namespace:http://www.google.com/schemas/play-podcasts/1.0}
+  Description:  googleplay:email is only specified in the channel
+  Expect:       UndefinedElement{element:googleplay:email}
 -->
 
 <rss xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0" version="2.0">
@@ -9,6 +9,11 @@
     <title>All About Everything</title>
     <link>http://www.example.com/podcasts/everything/index.html</link>
     <description>All About Everything is a show about everything.</description>
-    <googleplay:author>John Doe</googleplay:author>
+
+    <item>
+      <title>Episode 1</title>
+      <guid>http://www.example.com/podcasts/everything/episode1.mp3</guid>
+      <googleplay:email>john.doe@example.com</googleplay:email>
+    </item>
   </channel>
 </rss>

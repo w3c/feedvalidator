@@ -269,6 +269,20 @@ class extension_channel_item(extension_everywhere, media_elements):
   def do_taxo_topics(self):
     return eater()
 
+  # Google Play Podcasts, in <channel> and <item>:
+  # https://www.google.com/schemas/play-podcasts/1.0/play-podcasts.xsd
+  def do_googleplay_author(self):
+    return lengthLimitedText(255), noduplicates()
+
+  def do_googleplay_description(self):
+    return lengthLimitedText(4000), noduplicates()
+
+  def do_googleplay_image(self):
+    return googleplay_image(), noduplicates()
+
+  def do_googleplay_block(self):
+    return yesno(), noduplicates()
+
   def do_l_link(self):
     return l_link()
 
@@ -352,6 +366,11 @@ class extension_item(extension_channel_item):
   def do_wfw_commentRSS(self):
     self.log(CommentRSS({"parent":self.parent.name, "element":self.name}))
     return rfc2396_full(), noduplicates()
+
+  def do_googleplay_explicit(self):
+    # 'clean' "can only be used in the <item> tag"
+    from .itunes import yesnoclean
+    return yesnoclean(), noduplicates()
 
   def do_wiki_diff(self):
      return text()
@@ -932,6 +951,21 @@ class extension_entry(extension_item):
 ########################################################################
 
 class extension_channel(extension_channel_item):
+  # Google Play Podcasts elements specified only in the <channel> tag.
+  def do_googleplay_email(self):
+    return email(), noduplicates()
+
+  def do_googleplay_explicit(self):
+    return yesno(), noduplicates()
+
+  def do_googleplay_newFeedUrl(self):
+    return rfc2396_full(), noduplicates()
+
+  def do_googleplay_category(self):
+    # "If more than one category is specified, only the first one will be
+    # used", so more than one is allowed.
+    return googleplay_category()
+
   def do_admin_generatorAgent(self):
     if "generator" in self.children:
       self.log(DuplicateSemantics({"core":"generator", "ext":"admin:generatorAgent"}))
@@ -1301,3 +1335,21 @@ class Questionable(extension_everywhere):
   def do_app_categories(self):
     from .categories import categories
     return categories()
+
+#
+# Google Play Podcasts:
+# https://www.google.com/schemas/play-podcasts/1.0/play-podcasts.xsd
+#
+class googleplay_image(validatorBase):
+  def getExpectedAttrNames(self):
+    return [(None, 'href')]
+
+  def prevalidate(self):
+    self.validate_required_attribute((None, 'href'), rfc2396_full)
+
+class googleplay_category(validatorBase):
+  def getExpectedAttrNames(self):
+    return [(None, 'text')]
+
+  def prevalidate(self):
+    self.validate_required_attribute((None, 'text'), nonblank)

@@ -39,6 +39,7 @@ namespaces = {
   "http://purl.org/rss/1.0/modules/image/":         "image",
   "urn:atom-extension:indexing":                    "indexing",
   "http://www.itunes.com/dtds/podcast-1.0.dtd":     "itunes",
+  "http://www.google.com/schemas/play-podcasts/1.0": "googleplay",
   "http://rssnamespace.org/feedburner/ext/1.0":     "feedburner",
   "http://xmlns.com/foaf/0.1/":                     "foaf",
   "http://purl.org/rss/1.0/modules/link/":          "l",
@@ -91,7 +92,6 @@ unsupported_namespaces = {
   "http://schema.org/": ("Schema.org", "https://schema.org/"),
   "https://podcastindex.org/namespace/1.0": ("Podcasting 2.0", "https://podcastindex.org/"),
   "https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md": ("Podcasting 2.0", "https://github.com/Podcastindex-org/podcast-namespace/"),
-  "http://www.google.com/schemas/play-podcasts/1.0": ("Google Play Podcasts", "https://www.google.com/schemas/play-podcasts/1.0/play-podcasts.xsd"),
   "http://podlove.org/simple-chapters": ("Podlove Simple Chapters", "https://podlove.org/simple-chapters/")
 }
 
