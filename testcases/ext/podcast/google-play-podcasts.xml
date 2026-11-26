@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Description:  Google Play Podcasts namespace is recognized but not validated
+  Expect:       UnsupportedNamespace{namespace:http://www.google.com/schemas/play-podcasts/1.0}
+-->
+
+<rss xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0" version="2.0">
+  <channel>
+    <title>All About Everything</title>
+    <link>http://www.example.com/podcasts/everything/index.html</link>
+    <description>All About Everything is a show about everything.</description>
+    <googleplay:author>John Doe</googleplay:author>
+  </channel>
+</rss>
